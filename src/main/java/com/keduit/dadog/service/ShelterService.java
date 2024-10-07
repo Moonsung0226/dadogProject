@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ShelterService {
@@ -73,7 +72,6 @@ public class ShelterService {
 
                         // items 배열 확인
                         if (items.isArray()) {
-
                             // items 배열 순회하며 엔티티에 저장
                             for (JsonNode item : items) {
                                 String careAddr = item.path("careAddr").asText();
@@ -124,16 +122,15 @@ public class ShelterService {
     }
 
     // 특정 검색어로 보호소를 검색하는 메서드
-    public List<Shelter> searchShelters(String searchTerm) {
-        List<Shelter> allShelters = shelterRepository.findAll();
-
-        // 전체 검색 (보호소명과 주소에 검색어가 포함된 경우)
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            return allShelters.stream()
-                    .filter(shelter -> shelter.getShelNm().contains(searchTerm) || shelter.getShelAddr().contains(searchTerm))
-                    .collect(Collectors.toList());
+    public List<Shelter> searchShelters(String filter, String searchTerm) {
+        // 필터에 따라 검색어로 보호소 검색
+        if ("name".equals(filter)) {
+            return shelterRepository.findByShelNmContaining(searchTerm.trim());
+        } else if ("city".equals(filter)) {
+            return shelterRepository.findByShelCityContaining(searchTerm.trim());
+        } else if ("all".equals(filter)) {
+            return shelterRepository.findByShelNmContainingOrShelCityContaining(searchTerm.trim(), searchTerm.trim());
         }
-
-        return allShelters; // 검색어가 없으면 모든 보호소 반환
+        return shelterRepository.findAll(); // 기본적으로 모든 보호소 반환
     }
 }

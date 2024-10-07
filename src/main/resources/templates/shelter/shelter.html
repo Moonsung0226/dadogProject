@@ -4,19 +4,19 @@
       layout:decorate="~{layouts/layout}">
 
 <div layout:fragment="mainContent">
-
     <h1>보호소 목록</h1>
     <section class="top-section">
         <article class="top-left">
-            <form id="searchForm" action="/dadoc/shelter" method="get">
-                <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter">
-                    <option value="all" selected>전체</option>
-                    <option value="city">지역</option>
-                    <option value="name">보호소명</option>
+            <form id="searchForm" method="get" action="/dadog/shelter">
+                <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter"
+                        th:value="${filter}">
+                    <option value="all" th:selected="${filter == 'all'}">전체</option>
+                    <option value="city" th:selected="${filter == 'city'}">지역</option>
+                    <option value="name" th:selected="${filter == 'name'}">보호소명</option>
                 </select>
                 <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="검색어를 입력하세요"
                        th:value="${keyword != null ? keyword : ''}">
-                <button type="submit" class="btn btn-outline-success">검색</button>
+                <button type="button" class="btn btn-outline-success" onclick="return searchForm()">검색</button>
             </form>
         </article>
     </section>
@@ -24,24 +24,58 @@
         <article class="bottom-left">
             <table class="table table-hover">
                 <thead>
-                <tr>
-                    <th scope="col">지역</th>
-                    <th scope="col">보호소명</th>
-                    <th scope="col">주소</th>
-                </tr>
+                    <tr>
+                        <th scope="col">지역</th>
+                        <th scope="col">보호소명</th>
+                        <th scope="col">주소</th>
+                    </tr>
                 </thead>
-                <tbody>
-                <tr th:each="shelter : ${shelters}">
-                    <td th:text="${shelter.shelCity}"></td>
-                    <td th:text="${shelter.shelNm}"></td>
-                    <td th:text="${shelter.shelAddr}"></td>
-                </tr>
+                <tbody id="shelterTableBody">
+                    <tr th:each="shelter : ${shelters}">
+                        <td th:text="${shelter.shelCity}"></td>
+                        <td th:text="${shelter.shelNm}"></td>
+                        <td th:text="${shelter.shelAddr}"></td>
+                    </tr>
                 </tbody>
             </table>
-            <div th:if="${#lists.isEmpty(shelters)}">
-                <p>검색 결과가 없습니다.</p>
-            </div>
         </article>
     </section>
 </div>
-</html>
+
+<script>
+    function searchForm(event) {
+        event.preventDefault(); // 기본 제출 방지
+        const keyword = document.getElementById('searchInput').value.trim();
+        const filter = document.getElementById('shelterSelect').value;
+        console.log(keyword, "===========", filter);
+        if (keyword) {
+            // AJAX를 통해 검색 결과를 확인합니다.
+            fetch(`/dadog/shelter?filter=${filter}&keyword=${encodeURIComponent(keyword)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('네트워크 응답이 좋지 않습니다.');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // 검색 결과를 가져와서 DOM에 추가합니다.
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const shelterRows = doc.querySelectorAll('#shelterTableBody tr');
+
+                    // 검색 결과가 없을 경우 alert 띄우기
+                    if (shelterRows.length === 0) {
+                        alert('검색 결과가 없습니다.');
+                    } else {
+                        // 결과가 있는 경우 현재 페이지에 업데이트
+                        document.getElementById('shelterTableBody').innerHTML = doc.getElementById('shelterTableBody').innerHTML;
+                    }
+                })
+                .catch(error => {
+                    console.error('문제가 발생했습니다:', error);
+                });
+        } else {
+            alert('검색어를 입력하세요.');
+        }
+    }
+</script>
