@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class MainController {
 
-    @GetMapping("/dadoc/main")
+    @GetMapping("/dadog/main")
     public String mainPage() {
         return "main";
     }

@@ -32,9 +32,9 @@ public class Adopt {
     @Column(name = "adopt_age")
     private String adoptAge;
 
-    //공고 시작일
-    @Column(name = "adopt_sdt")
-    private String adoptSdt;
+    //공고 종료일
+    @Column(name = "adopt_edt")
+    private String adoptEdt;
 
     //보호소 이름
     @Column(name = "adopt_carenm")
@@ -58,6 +58,7 @@ public class Adopt {
 
     //현황
     @Column(name = "current")
+    @Enumerated(EnumType.STRING)
     private Current current;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
