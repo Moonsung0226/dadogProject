@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="mainContent">
+    <h1>보호소 목록</h1>
+    <section class="top-section">
+        <article class="top-left">
+            <form id="searchForm" action="/dadoc/shelter" method="get">
+                <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter">
+                    <option value="all" selected>전체</option>
+                    <option value="city">지역</option>
+                    <option value="name">보호소명</option>
+                </select>
+                <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="검색어를 입력하세요"
+                       th:value="${keyword != null ? keyword : ''}">
+                <button type="submit" class="btn btn-outline-success">검색</button>
+            </form>
+        </article>
+    </section>
+    <section class="bottom-section">
+        <article class="bottom-left">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">지역</th>
+                    <th scope="col">보호소명</th>
+                    <th scope="col">주소</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="shelter : ${shelters}">
+                    <td th:text="${shelter.shelCity}"></td>
+                    <td th:text="${shelter.shelNm}"></td>
+                    <td th:text="${shelter.shelAddr}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:if="${#lists.isEmpty(shelters)}">
+                <p>검색 결과가 없습니다.</p>
+            </div>
+        </article>
+    </section>
+</div>
+</html>
