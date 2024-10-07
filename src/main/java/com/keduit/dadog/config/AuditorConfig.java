@@ -11,13 +11,13 @@ import org.springframework.web.client.RestTemplate;
 public class AuditorConfig {
 
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
     public AuditorAware<String> auditorProvider() {
 
         return new AuditorAwareImpl();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }
