@@ -19,19 +19,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        http.formLogin()
         //view 에서 form 액션을 loginPage 의 Post 로
-               .loginPage("/dadog/users/login")
-               .defaultSuccessUrl("/dadog/main")
+               .loginPage("/dadoc/users/login")
+               .defaultSuccessUrl("/dadoc/main")
                .usernameParameter("userId")
-               .failureUrl("/dadog/users/login/error")
+               .failureUrl("/dadoc/users/login/error")
                .and()
                .logout()
-               .logoutRequestMatcher(new AntPathRequestMatcher("/dadog/users/logout"))
-               .logoutSuccessUrl("/dadog/main");
+               .logoutRequestMatcher(new AntPathRequestMatcher("/dadoc/users/logout"))
+               .logoutSuccessUrl("/dadoc/main");
 
        http.authorizeHttpRequests()
-               .mvcMatchers("/", "/dadog/**","favicon.ico").permitAll()
+               .mvcMatchers("/", "/dadoc/**","favicon.ico").permitAll()
                .mvcMatchers("**/add/**",  "**/update/**", "**/delete/**").authenticated()
-               .mvcMatchers("/dadog/admin/**").hasRole("ADMIN")
+               .mvcMatchers("/dadoc/admin/**").hasRole("ADMIN")
                .anyRequest().permitAll();
 
         http.exceptionHandling()
