@@ -12,4 +12,18 @@ public class MainController {
     public String mainPage() {
         return "main";
     }
+
+
+    @GetMapping("/dadoc/sign")
+    public String signInPage() {
+        return "sign-in";
+    }
+
+//    @GetMapping("/dadoc/login")
+//    public String loginPage() {
+//        return "sign-in";
+//    }
+
 }
+
+

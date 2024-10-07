@@ -7,7 +7,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="nav-link active position-absolute start-50 translate-middle-x fs-2 fw-bold" aria-current="page" href="#">DaDoc</a>
+      <a class="nav-link active position-absolute start-50 translate-middle-x fs-2 fw-bold" aria-current="page" href="http://localhost:8082/dadoc/main">DaDoc</a>
       <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -27,9 +27,8 @@
           </li>
         </ul>
         <ul class="navbar-nav">
-          <li class="nav-item"
-              sec:authorize="isAnonymous()">
-            <a class="nav-link" href="#">로그인</a>
+          <li class="nav-item" sec:authorize="isAnonymous()">
+            <a class="nav-link" href="http://localhost:8082/dadoc/login">로그인</a>
           </li>
           <li class="nav-item"
               sec:authorize="isAnonymous()">
