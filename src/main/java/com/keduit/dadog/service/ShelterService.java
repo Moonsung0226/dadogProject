@@ -73,6 +73,7 @@ public class ShelterService {
 
                         // items 배열 확인
                         if (items.isArray()) {
+
                             // items 배열 순회하며 엔티티에 저장
                             for (JsonNode item : items) {
                                 String careAddr = item.path("careAddr").asText();
