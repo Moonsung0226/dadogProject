@@ -22,6 +22,7 @@ public class AdoptController {
         List<Adopt> adoptList =adoptService.getAdoptList();
         model.addAttribute("adoptList",adoptList);
         System.out.println(adoptList);
+
         return "adopt/adoptList";
     }
 
