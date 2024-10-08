@@ -45,6 +45,7 @@ public class User extends BaseTimeEntity{
     private String userEmail;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

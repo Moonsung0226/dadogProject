@@ -17,6 +17,6 @@ public class AdminController {
     @GetMapping("/dadog/admin/adopt/api")
     public String adoptApi() {
         adoptApiService.fetchAndSaveAdoptData();
-        return "/admin/adopt";
+        return "/main";
     }
 }
