@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="mainContent">
+  <h1>회원가입</h1>
+
+
+<body>
+
+  <!-- 사용자 CSS 추가 -->
+  <th:block layout:fragment="css">
+    <style>
+      .fieldError {
+        color: #bd2130;
+      }
+    </style>
+  </th:block>
+
+  <!-- 사용자 JS 추가 -->
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      $(() => {
+        const errorMessage = [[${errorMessage}]];
+        console.log("errorMessage =>" + errorMessage);
+        if (errorMessage != null) {
+          alert(errorMessage);
+        }
+      });
+    </script>
+  </th:block>
+
+  <div layout:fragment="content"> <!-- 콘텐츠 프래그먼트 시작 -->
+
+    <form action="/dadoc/members/new" method="post" th:object="${memberDTO}">
+      <div class="form-group">
+        <label th:for="name">이름</label>
+        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요.">
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
+      </div>
+      <div class="form-group">
+        <label th:for="email">이메일 주소</label>
+        <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요.">
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
+      </div>
+      <div class="form-group">
+        <label th:for="password">비밀번호</label>
+        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요.">
+        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>
+      </div>
+      <div class="form-group">
+        <label th:for="address">주소</label>
+        <input type="text" class="form-control" id="address" th:field="*{address}" placeholder="주소를 입력하세요.">
+        <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError"></p>
+      </div>
+      <div style="text-align:center">
+        <button type="submit" class="btn btn-primary w-100">제출</button>
+      </div>
+      <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+    </form>
+
+
+</body>
+</div>
+</html>
