@@ -14,6 +14,15 @@ import javax.validation.constraints.NotEmpty;
 public class UserDTO {
 
     private String name;
+    private String id;
+    private String confirmPassword; // 추가
+    private String tel;
+    private String dob; // 생일
+    private String gender; // 성별
+    private String howDidYouHear; // 어떻게 알았냐
+    private String otherSource; // 기타이유
+
+
 
     @NotEmpty(message = "이메일은 필수 입력입니다")
     @Email(message = "이메일 형식으로 입력해주세요")

@@ -45,6 +45,7 @@ public class User extends BaseTimeEntity{
     private String userEmail;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -61,9 +62,11 @@ public class User extends BaseTimeEntity{
 
     public static User createUser(UserDTO userDTO, PasswordEncoder passwordEncoder) {
         User user = new User();
+        user.setUserId(userDTO.getId());
         user.setUserName(userDTO.getName());
         user.setUserEmail(userDTO.getEmail());
         user.setUserAddr(userDTO.getAddress());
+        user.setUserTel(userDTO.getTel());
         String password = passwordEncoder.encode(userDTO.getPassword());
         user.setUserPwd(password);
         user.setRole(Role.USER);

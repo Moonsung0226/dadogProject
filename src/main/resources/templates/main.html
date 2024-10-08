@@ -5,13 +5,26 @@
 
 <div layout:fragment="mainContent">
   <h1>환영합니다!</h1>
-  <p>로그인에 성공하셨습니다.</p>
+  <p></p>
 </div>
 
-<div th:if="${session.message}" class="alert alert-info">
-  <span th:text="${session.message}"></span>
-  <th:block th:text="${#session.removeAttribute('message')}"/>
-</div>
+
+
+
+
+
+
+
+
+
+<!--<div th:if="${message}" class="alert alert-success" role="alert">-->
+<!--  <span th:text="${message}"></span>-->
+<!--</div>-->
+
+<!--<div th:if="${session.message}" class="alert alert-info">-->
+<!--  <span th:text="${session.message}"></span>-->
+<!--  <th:block th:text="${#session.removeAttribute('message')}"/>-->
+<!--</div>-->
 
 
 
