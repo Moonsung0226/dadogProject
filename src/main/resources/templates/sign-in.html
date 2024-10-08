@@ -44,16 +44,14 @@
 <body>
 <div layout:fragment="mainContent">
   <main class="form-signin">
-    <form>
-
-      <h1 class="h3 mb-3 fw-normal text-center">로그인</h1> <!-- 가운데 정렬 추가 -->
-
+    <form action="/dadoc/users/login" method="post">
+      <h1 class="h3 mb-3 fw-normal text-center">로그인</h1>
       <div class="form-floating">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <input type="email" class="form-control" id="floatingInput" name="userId" placeholder="name@example.com">
         <label for="floatingInput">이메일</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
         <label for="floatingPassword">비밀번호</label>
       </div>
 
@@ -76,6 +74,7 @@
         <div th:if="${errorMessage}" th:text="${errorMessage}"></div> <!-- 오류 메시지 출력 -->
       </div>
 
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     </form>
   </main>
 </div>

@@ -1,5 +1,6 @@
 package com.keduit.dadog.service;
 
+import com.keduit.dadog.dto.MemberDTO;
 import com.keduit.dadog.entity.Member;
 import com.keduit.dadog.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Member saveMember(Member member) {
         validateMember(member);
@@ -25,7 +28,7 @@ public class MemberService implements UserDetailsService {
     private void validateMember(Member member) {
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if (findMember != null) {
-            throw new IllegalStateException("이미 가입된 회원 입니다.");
+            throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
 
@@ -41,5 +44,11 @@ public class MemberService implements UserDetailsService {
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
+    }
+
+    public Member registerMember(MemberDTO memberDTO) {
+        Member member = Member.createMember(memberDTO, passwordEncoder);
+        validateMember(member); // 중복 검증
+        return memberRepository.save(member);
     }
 }
