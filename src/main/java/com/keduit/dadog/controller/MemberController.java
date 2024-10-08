@@ -1,9 +1,9 @@
 package com.keduit.dadog.controller;
 
 import javax.validation.Valid;
-import com.keduit.dadog.dto.MemberDTO;
-import com.keduit.dadog.entity.Member;
-import com.keduit.dadog.service.MemberService;
+import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.User;
+import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -15,30 +15,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/dadoc/members")
+@RequestMapping("/dadog/members")
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/new")
     public String memberForm(Model model) {
-        model.addAttribute("memberDTO", new MemberDTO());
+        model.addAttribute("userDTO", new UserDTO());
         return "member/MemberForm";
     }
 
 
     @PostMapping("/new")
-    public String memberForm(@Valid MemberDTO memberDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String memberForm(@Valid UserDTO userDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "member/MemberForm";
         }
 
         try {
-            Member member = Member.createMember(memberDTO, passwordEncoder);
-            memberService.saveMember(member);
+            User user = User.createUser(userDTO, passwordEncoder);
+            userService.saveUser(user);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/MemberForm";
@@ -52,7 +52,7 @@ public class MemberController {
 
 
 //    @PostMapping("/login")
-//    public String loginMember(@Valid MemberDTO memberDTO, BindingResult bindingResult, Model model) {
+//    public String loginMember(@Valid UserDTO memberDTO, BindingResult bindingResult, Model model) {
 //        if (bindingResult.hasErrors()) {
 //            return "member/memberLoginForm"; // 로그인 폼으로 다시 돌아감
 //        }

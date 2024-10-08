@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 @ToString
-public class MemberDTO {
+public class UserDTO {
 
     private String name;
 

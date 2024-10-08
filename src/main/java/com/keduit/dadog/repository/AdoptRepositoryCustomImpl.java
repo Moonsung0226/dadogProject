@@ -1,4 +1,4 @@
-package com.keduit.dadog.Repository;
+package com.keduit.dadog.repository;
 
 import com.keduit.dadog.dto.AdoptSearchDTO;
 import com.keduit.dadog.entity.Adopt;

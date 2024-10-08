@@ -15,11 +15,11 @@ public class KakaoHomeController {   // final로 설정하여 파이널로 선�
 
     private final KakaoService kakaoService;
 
-    @GetMapping("/dadoc/login")
+    @GetMapping("/dadog/login")
     public String login(Model model) { // 웹페이지로 사용자를 리다이렉트 하고, 해당 페이지에서는 kakao 로그인 url을 사용할수 있도록 모델에 추가
             model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
 
-        return "sign-in";
+        return "/member/sign-in";
     }
 
 

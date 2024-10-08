@@ -2,9 +2,11 @@ package com.keduit.dadog.entity;
 
 
 import com.keduit.dadog.constant.Role;
+import com.keduit.dadog.dto.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_addr")
     private String userAddr;
 
+    @Column(name = "user_name")
+    private String userName;
+
     @Column(name = "user_tel")
     private String userTel;
 
@@ -53,4 +58,15 @@ public class User extends BaseTimeEntity{
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
     private List<Board> boardList = new ArrayList<>();  //부모가 지워지면 해당 board 가 같이 지워짐
+
+    public static User createUser(UserDTO userDTO, PasswordEncoder passwordEncoder) {
+        User user = new User();
+        user.setUserName(userDTO.getName());
+        user.setUserEmail(userDTO.getEmail());
+        user.setUserAddr(userDTO.getAddress());
+        String password = passwordEncoder.encode(userDTO.getPassword());
+        user.setUserPwd(password);
+        user.setRole(Role.USER);
+        return user;
+    }
 }

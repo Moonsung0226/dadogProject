@@ -14,7 +14,7 @@ public class MainController {
     }
 
 
-    @GetMapping("/dadoc/sign")
+    @GetMapping("/dadog/sign")
     public String signInPage() {
         return "sign-in";
     }

@@ -23,16 +23,16 @@ public class SecurityConfig {
 
         // 로그인 및 로그아웃 설정
         http.formLogin()
-                .loginPage("/dadoc/users/login") // 사용자 정의 로그인 페이지
-                .defaultSuccessUrl("/dadoc/main") // 로그인 성공 시 이동할 경로
+                .loginPage("/dadog/users/login") // 사용자 정의 로그인 페이지
+                .defaultSuccessUrl("/dadog/main") // 로그인 성공 시 이동할 경로
                 .usernameParameter("userId") // 로그인에 사용할 파라미터 이름
                 .passwordParameter("password") // 비밀번호 파라미터 이름
-                .failureUrl("/dadoc/users/login/error") // 로그인 실패 시 이동할 경로
+                .failureUrl("/dadog/users/login/error") // 로그인 실패 시 이동할 경로
                 .permitAll(); // 로그인 페이지는 인증 없이 접근 가능
 
         http.logout()
-                .logoutUrl("/dadoc/users/logout")
-                .logoutSuccessUrl("/dadoc/main")
+                .logoutUrl("/dadog/users/logout")
+                .logoutSuccessUrl("/dadog/main")
                 .addLogoutHandler((request, response, authentication) -> {
                     request.getSession().setAttribute("message", "로그아웃되었습니다.");
                 })
@@ -41,9 +41,9 @@ public class SecurityConfig {
         // 요청 권한 설정
         http.authorizeRequests()
                 .antMatchers("/", "/kakao/callback", "/css/**", "/js/**", "/favicon.ico", "/kakao_login_medium_narrow.png").permitAll() // 정적 리소스와 특정 경로 허용
-                .antMatchers("/dadoc/**").permitAll() // `/dadoc/` 경로는 모두 허용
+                .antMatchers("/dadog/**").permitAll() // `/dadog/` 경로는 모두 허용
                 .antMatchers("/**/add/**", "/**/update/**", "/**/delete/**").authenticated() // 수정, 추가, 삭제 관련 경로는 인증 필요
-                .antMatchers("/dadoc/admin/**").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
+                .antMatchers("/dadog/admin/**").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
                 .anyRequest().authenticated(); // 그 외의 모든 요청은 인증 필요
 
         // 예외 처리
