@@ -31,12 +31,13 @@ public class SecurityConfig {
                 .permitAll(); // 로그인 페이지는 인증 없이 접근 가능
 
         http.logout()
-                .logoutUrl("/dadog/users/logout")
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/dadog/main")
                 .addLogoutHandler((request, response, authentication) -> {
                     request.getSession().setAttribute("message", "로그아웃되었습니다.");
                 })
                 .permitAll();
+
 
         // 요청 권한 설정
         http.authorizeRequests()
