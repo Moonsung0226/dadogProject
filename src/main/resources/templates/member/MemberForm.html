@@ -2,37 +2,32 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
+<!-- 사용자 JS 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    $(() => {
+      const errorMessage = [[${errorMessage}]];
+      console.log("errorMessage =>" + errorMessage);
+      if (errorMessage != null) {
+        alert(errorMessage);
+      }
+    });
+  </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+    .fieldError {
+      color: #bd2130;
+    }
+  </style>
+</th:block>
+
 
 <div layout:fragment="mainContent">
   <h1>회원가입</h1>
-
-
-<body>
-
-  <!-- 사용자 CSS 추가 -->
-  <th:block layout:fragment="css">
-    <style>
-      .fieldError {
-        color: #bd2130;
-      }
-    </style>
-  </th:block>
-
-  <!-- 사용자 JS 추가 -->
-  <th:block layout:fragment="script">
-    <script th:inline="javascript">
-      $(() => {
-        const errorMessage = [[${errorMessage}]];
-        console.log("errorMessage =>" + errorMessage);
-        if (errorMessage != null) {
-          alert(errorMessage);
-        }
-      });
-    </script>
-  </th:block>
-
-  <div layout:fragment="content"> <!-- 콘텐츠 프래그먼트 시작 -->
-
+  <!-- 콘텐츠 프래그먼트 시작 -->
     <form action="/dadog/members/new" method="post" th:object="${userDTO}">
       <div class="form-group">
         <label th:for="name">이름</label>
@@ -60,8 +55,5 @@
       <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
     </form>
-
-
-</body>
 </div>
 </html>
