@@ -29,10 +29,11 @@
         ul{
             text-decoration-line: none;
         }
-        .mainBody{
+        .mainBody {
             display: grid;
-            grid-template-columns: repeat(5, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             margin: 0 auto;
+            gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
         }
         .card{
             margin: 10px;
@@ -44,7 +45,7 @@
     <form th:action="@{'/dadog/adopt' + ${adoptList.number}}" role="form" method="get" th:object="${adoptList}">
         <article class="mainBody">
             <div th:each="adopt : ${adoptList.getContent()}" class="card">
-                <a th:href="'/dadog/adopt/' + ${adoptList.number}" class="text-dark link-underline link-underline-opacity-0">
+                <a th:href="'/dadog/adopt/' + ${adopt.getAdoptNo}" class="text-dark link-underline link-underline-opacity-0">
                 <img th:src="${adopt.getAdoptImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
                     <div class="card-body">
                         <h5 class="card-title" th:text="${adopt.getAdoptKind()}"></h5>

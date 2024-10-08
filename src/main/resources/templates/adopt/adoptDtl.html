@@ -8,21 +8,23 @@
         <!-- Adopt 상세 위치-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" th:src="${adopt.getAdoptImgUrl()}" th:alt="${adopt.getAdoptNo()}" /></div>
-                    <div class="col-md-6">
-                        <div class="small mb-1">SKU: BST-498</div>
-                        <span class="display-5 fw-bolder fs-3">견종 : </span>  <span class="fs-3 display-5" th:text="${adopt.getAdoptKind()}"></span>
-                        <div class="fs-5 mb-5">
-<!--                            <span class="text-decoration-line-through">$45.00</span>-->
-<!--                            <span>$40.00</span>-->
-                        </div>
-                        <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
+                <div class="row gx-4 gx-lg-5 align-items-center  justify-content-center">
+                    <div class="col-md-5"><img class="card-img-top mb-5 mb-md-0" th:src="${adopt.getAdoptImgUrl()}" th:alt="${adopt.getAdoptNo()}" style="max-height: 450px;" /></div>
+                    <div class="col-md-5">
+                        <div class="small mb-1" th:text="'유기번호 :' +  ${adopt_no}"></div>
+                        <p><span class="display-5 fw-bolder fs-5">견종 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptKind()}"></span></p>
+                        <p><span class="display-5 fw-bolder fs-5">나이 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptAge()}"></span></p>
+                        <p><span class="display-5 fw-bolder fs-5">체중 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptWeight()}"></span></p>
+                        <p><span class="display-5 fw-bolder fs-5">보호소 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptCareNm()}"></span></p>
+                        <p><span class="display-5 fw-bolder fs-5">보호소 주소 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptCareAddr()}"></span></p>
+                        <p><span class="display-5 fw-bolder fs-5">보호소 번호 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptCareTel()}"></span></p>
+                        <p><span class="display-5 fw-bolder fs-5">공고 마감일 : </span>  <span class="fs-5 display-5" th:text="${adopt.getAdoptEdt()}"></span></p>
+                        <span class="display-5 fw-bolder fs-5"> 특이사항 </span>
+                        <p class="lead" th:text="${adopt.getAdoptSpecial()}"></p>
                         <div class="d-flex">
-                            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
                             <button class="btn btn-outline-dark flex-shrink-0" type="button">
                                 <i class="bi-cart-fill me-1"></i>
-                                Add to cart
+                                Add to WishList
                             </button>
                         </div>
                     </div>
@@ -30,111 +32,127 @@
             </div>
         </section>
         <!-- Related items section-->
-        <section class="py-5 bg-light">
-            <div class="container px-4 px-lg-5 mt-5">
-                <h2 class="fw-bolder mb-4">Related products</h2>
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+    <article id="info" class="accordion row justify-content-center">
+        <section class="py-5 bg-light accordion-item col-lg-10" id="procedure">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                   입양절차
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="container px-4 px-lg-5 mt-5 accordion-body">
+                <div class="row gx-3 gx-lg-3 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
                     <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Fancy Product</h5>
-                                    <!-- Product price-->
-                                    $40.00 - $80.00
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
+                        <div class="card h-100 p-4">
                             <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; left: 0.5rem; width: 3vw; height: 3vw; font-size: 2vw">
+                                <span class="position-absolute top-50 start-50 translate-middle">1</span>
+                            </div>                            <!-- Product image-->
+                            <img class="card-top mx-auto d-block" src="/images/procedure1.png" alt="..." width="200" height="165" />
                             <!-- Product details-->
                             <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Special Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$20.00</span>
-                                    $18.00
+                                <div class="text-center lead fw-semibold">
+                                    홈페이지에서 입양 가능한 <p>반려견 조회
                                 </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
                             </div>
                         </div>
                     </div>
                     <div class="col mb-5">
-                        <div class="card h-100">
+                        <div class="card h-100 p-4">
                             <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; left: 0.5rem; width: 3vw; height: 3vw; font-size: 2vw">
+                                <span class="position-absolute top-50 start-50 translate-middle">2</span>
+                            </div>
                             <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <img class="card-top mx-auto d-block" src="/images/procedure2.png" alt="..." width="160" height="165"/>
                             <!-- Product details-->
                             <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
+                                <div class="text-center lead fw-semibold">
+                                    홈페이지에서 입양 가능한 <p>반려견 조회
                                 </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
                             </div>
                         </div>
                     </div>
                     <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                        <div class="card h-100 p-4">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; left: 0.5rem; width: 3vw; height: 3vw; font-size: 2vw">
+                                <span class="position-absolute top-50 start-50 translate-middle">3</span>
+                            </div>                            <!-- Product image-->
+                            <img class="card-top mx-auto d-block" src="/images/procedure3.png" alt="..." width="160" height="165" />
                             <!-- Product details-->
                             <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    $40.00
+                                <div class="text-center lead fw-semibold">
+                                    홈페이지에서 입양 가능한 <p>반려견 조회
                                 </div>
                             </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100 p-4">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; left: 0.5rem; width: 3vw; height: 3vw; font-size: 2vw">
+                                <span class="position-absolute top-50 start-50 translate-middle">4</span>
+                            </div>                            <!-- Product image-->
+                            <img class="card-top mx-auto d-block" src="/images/procedure4.png" alt="..." width="160" height="165" />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center lead fw-semibold">
+                                    홈페이지에서 입양 가능한 <p>반려견 조회
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100 p-4">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; left: 0.5rem; width: 3vw; height: 3vw; font-size: 2vw">
+                                <span class="position-absolute top-50 start-50 translate-middle">5</span>
+                            </div>                            <!-- Product image-->
+                            <img class="card-top mx-auto d-block" src="/images/procedure5.png" alt="..." width="160" height="165" />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center lead fw-semibold">
+                                    홈페이지에서 입양 가능한 <p>반려견 조회
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            </div>
         </section>
-
+        <section id="precautions" class="py-5 bg-light accordion-item col-lg-10">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    입양시 유의사항
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body justify-content-center row">
+            <div class="p-5 rounded m-2 col-lg-10 precautions">
+                <h2>첫 번째, 강아지의 품종 별 성격을 체크하기</h2>
+                <p class="lead">강아지도 사람과 마찬가지로 개성이 있습니다. 강아지의 품종에 따라 운동량, 관심도, 훈련성, 건강 문제 등이 다를 수 있으므로, 자신의 생활 환경과 스타일에 맞는 강아지를 선택하는 것이 중요합니다. 예를 들어, 활동적이고 사람을 좋아하는 품종은 산책과 놀이를 자주 해주어야 하고, 조용하고 차분한 품종은 혼자 있는 시간을 잘 견디도록 해야 합니다. 또한, 강아지의 성격은 품종뿐만 아니라 출생 환경, 유전, 사회화 경험 등에 영향을 받으므로, 입양하기 전에 강아지와 충분히 시간을 보내보고 결정하시길 바랍니다.</p>
+            </div>
+            <div class="p-5 rounded m-2 col-lg-10 precautions">
+                    <h2>두 번째, 강아지의 건강 상태를 확인하기</h2>
+                    <p class="lead">강아지를 입양하기 전에는 반드시 동물 병원에서 건강 검진을 받아야 합니다. 강아지가 가진 질병이나 기생충, 접종 여부 등을 파악하고, 필요한 치료나 예방 접종을 받으세요. 또한, 강아지의 나이와 성별에 따라 중성화 수술을 고려해야 할 시기가 옵니다. 중성화 수술은 강아지의 생식기 관련 질병을 예방하고, 행동 문제를 줄여주는 효과가 있습니다.</p>
+            </div>
+            <div class="p-5 rounded m-2 col-lg-10 precautions">
+                    <h2>세 번째, 강아지를 위한 준비물을 구비하기</h2>
+                    <p class="lead">강아지가 살기 좋은 환경을 만들어주기 위해서는 몇 가지 필수 용품들이 필요합니다. 밥그릇과 물그릇, 사료와 간식, 방석과 집, 산책용 리드와 하네스, 배변패드와 배변봉투, 미용 용품과 장난감, 간식 등이 대표적입니다.이 외에도 강아지의 품종과 크기, 나이와 성격에 따라 필요한 용품들이 다를 수 있으므로, 미리 알아보고 준비하세요.</p>
+            </div>
+            <div class="p-5 rounded m-2 col-lg-10 precautions">
+                    <h2>네 번째, 강아지의 적응 기간을 존중하기</h2>
+                    <p class="lead">강아지가 새로운 집에 도착하면 처음에는 불안하고 두려워할 수 있습니다. 그러므로, 강아지가 집에 적응하는 데 필요한 시간과 공간을 주세요. 가능하면 입양하기 전에 분양처에서 사용하던 물건들을 가져와서 친숙한 냄새를 제공해 주세요. 또한, 가족 구성원들과 다른 반려동물들을 점진적으로 소개해 주고, 너무 많은 자극이나 스트레스를 주지 않도록 하세요. 분양 후 1~2주 정도는 훈련이나 산책보다는 집에 익숙해지는 것을 우선으로 하세요.</p>
+            </div>
+            <div class="p-5 rounded m-2 col-lg-10 precautions">
+                    <h2>다섯 번째, 강아지의 훈련과 사회화 훈련 시키기</h2>
+                    <p class="lead">강아지가 행복하고 건강하게 성장하기 위해서는 훈련과 사회화가 필수적입니다. 훈련은 강아지에게 기본적인 명령어와 매너를 가르쳐 주고, 보호자와의 유대감을 강화해 주는 역할을 합니다. 사회화는 강아지에게 다양한 사람과 동물, 환경에 적응하고, 불안하거나 공격적이지 않도록 도와주는 역할을 합니다. 강아지의 훈련과 사회화는 적절한 시기와 방법이 중요하므로, 미리 공부하거나 전문가의 도움을 받으세요. 훈련을 시키지 않는다면 티비에 나오는 무는 강아지, 아무 곳에서 나 배변 실수하는 강아지가 될 것입니다.</p>
+            </div>
+            </div>
+            </div>
+        </section>
+    </article>
 </div>
 </html>
