@@ -97,7 +97,7 @@ public class AdoptApiService {
 
                         if(items.isArray()){
                             for(JsonNode item : items){
-                                String kindCd = item.path("kindCd").asText();
+                                String kindCd = item.path("kindCd").asText().substring(4);
                                 String age = item.path("age").asText();
                                 String careNm = item.path("careNm").asText();
                                 String careAddr = item.path("careAddr").asText();
