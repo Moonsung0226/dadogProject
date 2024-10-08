@@ -12,4 +12,19 @@ public class MainController {
     public String mainPage() {
         return "main";
     }
-}
+
+
+    @GetMapping("/dadoc/sign")
+    public String signInPage() {
+        return "sign-in";
+    }
+
+    @GetMapping("/")
+    public String main() {
+        return "main"; // 메인 페이지의 Thymeleaf 템플릿 이름을 반환
+    }
+
+    }
+
+
+
