@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시물 상세보기</title>
+</head>
+<body>
+<h1 th:text="${board.boardTitle}"></h1>
+<p>작성자: <span th:text="${board.boardWriter}"></span></p>
+<p>내용: <span th:text="${board.boardContent}"></span></p>
+<p>조회수: <span th:text="${board.boardViews}"></span></p>
+<a th:href="@{/dadog/boards/update/{boardNo}(boardNo=${board.boardNo})}">수정</a>
+<form th:action="@{/dadog/boards/delete/{boardNo}(boardNo=${board.boardNo})}" method="post" style="display:inline;">
+    <button type="submit">삭제</button>
+</form>
+<br>
+<a href="/dadog/boards">목록으로 돌아가기</a>
+</body>
+</html>
