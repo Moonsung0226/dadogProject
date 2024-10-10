@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,7 +34,7 @@ public class Protect extends BaseTimeEntity{
 
     //발견날짜
     @Column(name = "pro_date")
-    private LocalDateTime proDate;
+    private LocalDate proDate;
 
     //특징
     @Column(name = "pro_place")

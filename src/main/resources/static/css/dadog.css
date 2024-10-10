@@ -2,3 +2,12 @@
 .precautions{
     background-color: #CCD6DF;
 }
+
+/* main.html*/
+.mainBanner{
+    padding-top: 150px;
+    padding-bottom: 150px;
+}
+section{
+    margin-bottom: 100px;
+}
