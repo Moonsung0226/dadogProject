@@ -1,10 +1,12 @@
 package com.keduit.dadog.entity;
 
+import com.keduit.dadog.dto.LostDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,7 +34,7 @@ public class Lost extends BaseTimeEntity{
 
     //실종날짜
     @Column(name = "lost_date")
-    private LocalDateTime lostDate;
+    private LocalDate lostDate;
 
     //분실장소
     @Column(name = "lost_place")
@@ -58,4 +60,15 @@ public class Lost extends BaseTimeEntity{
     @JoinColumn(name = "user_no")
     private User user;
 
+    public static Lost createLost(LostDTO lostDTO, String userName, User user) {
+        Lost lost = new Lost();
+        lost.setLostDate(lostDTO.getLostDate());
+        lost.setLostWriter(userName);
+        lost.setLostTel(lostDTO.getLostTel());
+        lost.setLostKind(lostDTO.getLostKind());
+        lost.setLostPlace(lostDTO.getLostPlace());
+        lost.setLostDetail(lostDTO.getLostDetail());
+        lost.setUser(user);
+        return lost;
+    }
 }

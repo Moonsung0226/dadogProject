@@ -3,7 +3,10 @@ package com.keduit.dadog.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,9 +14,10 @@ import java.time.LocalDateTime;
 @ToString
 public class LostDTO {
 
-    private Long lostId;
+    private Long lostNo;
 
-    private LocalDateTime lostDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate lostDate;
 
     private String lostDetail;
 
@@ -21,13 +25,9 @@ public class LostDTO {
 
     private String lostPlace;
 
+    private String imgUrl;
+
     private String lostTel;
 
     private String lostWriter;
-
-    private String lostFileName;
-    private String lostImgUrl;
-    private String lostOriImgName;
-
-
 }

@@ -27,11 +27,10 @@ public class AdoptController {
     @GetMapping({"/dadog/adopt/list/{page}","/dadog/adopt/list"})
     public String adoptList(AdoptSearchDTO adoptSearchDTO,
                             @PathVariable("page") Optional<Integer> page,
-                            Model model, Principal principal) {
+                            Model model) {
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 50);
         Page<Adopt> adoptList =adoptService.getAdoptList(adoptSearchDTO, pageable);
         System.out.println("-----------------------------------------------");
-        System.out.println(principal.getName());
         model.addAttribute("adoptSearchDTO", adoptSearchDTO);
         model.addAttribute("maxPage", 10);
         model.addAttribute("adoptList",adoptList);
@@ -39,8 +38,8 @@ public class AdoptController {
         return "adopt/adoptList";
     }
 
-    @GetMapping("/dadog/adopt/{adopt_no}")
-    public String adoptDtl(@PathVariable("adopt_no") Long adopt_no, Model model) {
+    @GetMapping("/dadog/adopt/{adoptNo}")
+    public String adoptDtl(@PathVariable("adoptNo") Long adopt_no, Model model) {
         Adopt adopt = adoptService.getAdopt(adopt_no);
         model.addAttribute("adopt", adopt);
         return "adopt/adoptDtl";
