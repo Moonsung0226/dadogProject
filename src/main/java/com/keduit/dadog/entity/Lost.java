@@ -28,6 +28,10 @@ public class Lost extends BaseTimeEntity{
     @Column(name = "lost_tel")
     private String lostTel;
 
+    //제목
+    @Column(name = "lost_title")
+    private String lostTitle;
+
     //견종
     @Column(name = "lost_kind")
     private String lostKind;
@@ -64,6 +68,7 @@ public class Lost extends BaseTimeEntity{
         Lost lost = new Lost();
         lost.setLostDate(lostDTO.getLostDate());
         lost.setLostWriter(userName);
+        lost.setLostTitle(lostDTO.getLostTitle());
         lost.setLostTel(lostDTO.getLostTel());
         lost.setLostKind(lostDTO.getLostKind());
         lost.setLostPlace(lostDTO.getLostPlace());

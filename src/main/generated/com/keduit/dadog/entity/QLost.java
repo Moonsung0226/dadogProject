@@ -45,6 +45,8 @@ public class QLost extends EntityPathBase<Lost> {
 
     public final StringPath lostTel = createString("lostTel");
 
+    public final StringPath lostTitle = createString("lostTitle");
+
     public final StringPath lostWriter = createString("lostWriter");
 
     //inherited

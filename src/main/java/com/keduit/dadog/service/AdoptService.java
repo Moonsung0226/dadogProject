@@ -24,8 +24,8 @@ public class AdoptService {
         return adoptRepository.getAdoptListPage(adoptSearchDTO, pageable);
     }
 
-    public Adopt getAdopt(Long adopt_no) {
-        return adoptRepository.findById(adopt_no).orElseThrow(EntityNotFoundException::new);
+    public Adopt getAdopt(Long adoptNo) {
+        return adoptRepository.findById(adoptNo).orElseThrow(EntityNotFoundException::new);
     }
 
 }

@@ -31,6 +31,8 @@ public class AdoptController {
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 50);
         Page<Adopt> adoptList =adoptService.getAdoptList(adoptSearchDTO, pageable);
         System.out.println("-----------------------------------------------");
+        System.out.println(adoptSearchDTO.getSearchBy());
+        System.out.println(adoptSearchDTO.getSearchQuery());
         model.addAttribute("adoptSearchDTO", adoptSearchDTO);
         model.addAttribute("maxPage", 10);
         model.addAttribute("adoptList",adoptList);

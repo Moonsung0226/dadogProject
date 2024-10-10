@@ -11,13 +11,13 @@
       <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">보호소지도</a>
+            <a class="nav-link" href="/dadog/shelter">보호소지도</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/dadog/adopt/list">입양하기</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">실종신고</a>
+            <a class="nav-link" href="/dadog/lost/list">실종신고</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">보호중</a>
@@ -43,9 +43,6 @@
               sec:authorize="isAuthenticated()">
             <a class="nav-link" href="http://localhost:8082/dadog/myPage">마이페이지</a>
           </li>
-          <li class="nav-item mx-3"
-              sec:authorize="isAuthenticated()">
-            <a class="nav-link" href="#">로그아웃</a>
           <li class="nav-item" sec:authorize="isAuthenticated()">
             <form th:action="@{/logout}" method="post" class="d-inline">
               <button type="submit" class="nav-link btn btn-link">로그아웃</button>
