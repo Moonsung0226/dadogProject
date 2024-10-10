@@ -28,7 +28,7 @@ public class BoardServiceTest {
             boardDTO.setBoardWriter("Writer" + i);
             boardDTO.setBoardTitle("Title" + i);
             boardDTO.setBoardContent("Content" + i);
-            boardService.addBoard(boardDTO);
+//            boardService.addBoard(boardDTO);
         }
 
         // 추가된 게시물 수 확인

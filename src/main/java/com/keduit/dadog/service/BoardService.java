@@ -17,12 +17,12 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Board addBoard(BoardDTO boardDTO){
+    public Board addBoard(BoardDTO boardDTO, String username){
         Board board = new Board();
-        board.setBoardWriter(boardDTO.getBoardWriter());
+        board.setBoardWriter(username);
         board.setBoardTitle(boardDTO.getBoardTitle());
         board.setBoardContent(boardDTO.getBoardContent());
-        board.setBoardViews(boardDTO.getBoardViews());
+        board.setBoardViews(0L); // 기본조회수 0으로 설정
         return boardRepository.save(board);
 
     }
@@ -37,7 +37,8 @@ public class BoardService {
 
     public Board updateBoard(Long boardNo, BoardDTO boardDTO){
         Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
-        board.setBoardWriter(boardDTO.getBoardWriter());
+
+//        board.setBoardWriter(boardDTO.getBoardWriter()); // 작성자는 수정하지 않도록
         board.setBoardTitle(boardDTO.getBoardTitle());
         board.setBoardContent(boardDTO.getBoardContent());
         board.setBoardViews(boardDTO.getBoardViews());
@@ -45,6 +46,10 @@ public class BoardService {
     }
 
     public void deleteBoard(Long boardNo){
+
+        if (!boardRepository.existsById(boardNo)){
+            throw new IllegalStateException("게시물이 존재하지 않습니다.");
+        }
         boardRepository.deleteById(boardNo);
     }
 

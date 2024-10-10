@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -21,30 +22,38 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public String getAllBoards(Model model) {
+    public String getAllBoards(Model model, Principal principal) {
         List<Board> boards = boardService.findAllBoards();
+
         model.addAttribute("boards", boards);
+        model.addAttribute("userId", principal.getName());
         return "board/list";
     }
 
     @GetMapping("/new")
-    public String addBoard(Model model) {
-        model.addAttribute("boardDTO", new BoardDTO());
+    public String addBoard(Model model, Principal principal) {
+        BoardDTO boardDTO = new BoardDTO();
+        System.out.println("------------------------" + principal.getName());
+        boardDTO.setBoardWriter(principal.getName()); // 작성자 설정
+        model.addAttribute("boardDTO", boardDTO); // 수정: 생성한 boardDTO를 모델에 추가
+        model.addAttribute("userId", principal.getName());
         return "board/add";
     }
+
     @PostMapping("/new")
     public String addBoard(@Valid @ModelAttribute("boardDTO") BoardDTO boardDTO,
-                           BindingResult bindingResult, Model model) {
+                           BindingResult bindingResult, Model model, Principal principal) {
+
+        String username = principal.getName();
+
         if (bindingResult.hasErrors()) {
-            System.out.println(" *******  BR has ERRORS : " + bindingResult.getAllErrors());
             model.addAttribute("errorMsg", "입력값에 오류가 있습니다.");
             return "board/add";
         }
 
         try {
-            boardService.addBoard(boardDTO);
+            boardService.addBoard(boardDTO, username);
         } catch (Exception e) {
-            System.out.println(" ******* Exception Occurred : " + e.getMessage());
             model.addAttribute("errorMsg", e.getMessage());
             return "board/add";
         }
@@ -52,21 +61,26 @@ public class BoardController {
     }
 
     @GetMapping("/{boardNo}")
-    public String getBoardByNo(@PathVariable Long boardNo, Model model){
+    public String getBoardByNo(@PathVariable Long boardNo, Model model,Principal principal){
         Board board = boardService.findBoardById(boardNo).orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
         model.addAttribute("board", board);
+        model.addAttribute("userId", principal.getName());
         return "board/get";
     }
 
     @GetMapping("/update/{boardNo}")
-    public String updateBoard(@PathVariable Long boardNo, Model model){
+    public String updateBoard(@PathVariable Long boardNo, Model model, Principal principal){
         Board board = boardService.findBoardById(boardNo).orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다.") );
+
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setBoardNo(board.getBoardNo());
         boardDTO.setBoardWriter(board.getBoardWriter());
         boardDTO.setBoardTitle(board.getBoardTitle());
         boardDTO.setBoardContent(board.getBoardContent());
         boardDTO.setBoardViews(board.getBoardViews());
+
+        model.addAttribute("boardDTO", boardDTO);
+        model.addAttribute("userId", principal.getName());
         return "board/update";
     }
 

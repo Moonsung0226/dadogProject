@@ -31,7 +31,7 @@
 <h1>새 게시물 작성</h1>
 <form th:action="@{/dadog/boards/new}" method="post" th:object="${boardDTO}" onsubmit="return validateForm();">
     <label for="boardWriter">작성자:</label>
-    <input type="text" id="boardWriter" th:field="*{boardWriter}" required>
+    <input type="text" id="boardWriter" th:field="*{boardWriter}" th:placeholder="${userId}" readonly>
     <br>
 
     <label for="boardTitle">제목:</label>
