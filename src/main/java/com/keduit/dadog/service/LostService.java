@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +40,6 @@ public class LostService {
     public Lost getLost(Long lostNo){
         return lostRepository.findById(lostNo).orElseThrow(EntityNotFoundException::new);
     }
-
-
 
     //실종신고 등록
     public Long addLost(LostDTO lostDTO, String userName, MultipartFile lostImg) throws Exception{
@@ -67,5 +66,21 @@ public class LostService {
         lostRepository.save(lost);
 
         return lost.getLostNo();
+    }
+
+    public void deleteLost(Long lostNo){
+        Lost lost = lostRepository.findByLostNo(lostNo);
+
+        lostRepository.delete(lost);
+    }
+
+    public boolean lostValidation(String userName, Long lostNo){
+        User user = userRepository.findByUserId(userName);
+        if(user == null) {
+            System.out.println("--------------> 카카오 유저 ");
+            user = userRepository.findByUserEmail(userName);
+        }
+        Lost lost = lostRepository.findById(lostNo).orElseThrow(EntityNotFoundException::new);
+        return Objects.equals(lost.getUser().getUserNo(), user.getUserNo());
     }
 }

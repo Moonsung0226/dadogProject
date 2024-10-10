@@ -41,5 +41,18 @@ public class FileService {
         System.out.println("----------파일 생성 완료 in FileService ------------> " + fileUploadFullUrl);
         return savedFileName;
     }
+
+    public void deleteFile(String filePath) throws Exception {
+        //저장된 파일의 경로를 이용하여 파일 객체를 생성
+        File deleteFile = new File(filePath);
+
+        //해당 파일이 있으면 삭제
+        if(deleteFile.exists()){
+            deleteFile.delete();
+            log.info("파일 삭제 완료");
+        }else{
+            log.info("파일이 존재하지 않습니다.");
+        }
+    }
 }
 

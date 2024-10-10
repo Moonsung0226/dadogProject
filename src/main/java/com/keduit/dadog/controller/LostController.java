@@ -8,13 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -68,14 +66,53 @@ public class LostController {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/dadog/lost/add";
         }
-        return "redirect:/dadog/main";
+        return "main";
     }
 
     @GetMapping("/{lostNo}")
     public String getLost(Principal principal, @PathVariable("lostNo") Long lostNo, Model model) {
        Lost lost =  lostService.getLost(lostNo);
        model.addAttribute("lost", lost);
-       model.addAttribute("userId", principal.getName());
+       if(principal != null){
+           model.addAttribute("userId", principal.getName());
+       }else {
+           model.addAttribute("userId", "none");
+       }
        return "lost/lostDtl";
+    }
+
+    @GetMapping("/update/{lostNo}")
+    public String updateLost( @PathVariable("lostNo") Long lostNo, Principal principal, Model model) {
+        System.out.println("--------------------- updateLost");
+        if(!lostService.lostValidation(principal.getName(), lostNo)){
+            System.out.println("---------------------Val 오류");
+            model.addAttribute("errorMsg", "글 작성자가 아닙니다.");
+            return "lost/lostDtl";
+        }
+       Lost lost = lostService.getLost(lostNo);
+        LostDTO lostDTO = new LostDTO();
+        lostDTO.createLostDTO(lost);
+        model.addAttribute("lostDTO", lostDTO);
+        if(principal.getName() != null){
+            model.addAttribute("userId", principal.getName());
+        }else {
+            model.addAttribute("userId", "none");
+        }
+        return "lost/lostForm";
+    }
+
+    @PostMapping("/update/{lostNo}")
+    public String updateLost(Principal principal, @PathVariable("lostNo") Long lostNo, LostDTO lostDTO, Model model) {
+
+        return null;
+    }
+
+    @DeleteMapping("/delete/{lostNo}")
+    public @ResponseBody ResponseEntity deleteLost(@PathVariable("lostId") Long lostId, Principal principal) {
+        if(lostService.lostValidation(principal.getName(), lostId)){
+
+        }
+
+        return null;
     }
 }
