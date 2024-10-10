@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
     public User kakaoLogin(UserDTO kakaoDTO) {
         String userId = kakaoDTO.getEmail().split("@")[0]; // @ 앞 부분만 아이디로 사용
         User user = userRepository.findByUserId(userId);
-
+        System.out.println("----------------user Service 유저체크");
         if (user == null) {
             user = User.builder()
                     .userEmail(kakaoDTO.getEmail())

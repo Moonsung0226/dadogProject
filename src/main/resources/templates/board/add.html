@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시물 작성</title>
+    <script>
+        function validateForm() {
+            var writer = document.getElementById("boardWriter").value;
+            var title = document.getElementById("boardTitle").value;
+            var content = document.getElementById("boardContent").value;
+            var errorMsg = "";
+
+            if (!writer) {
+                errorMsg += "작성자는 필수입니다.\n";
+            }
+            if (!title) {
+                errorMsg += "제목은 필수입니다.\n";
+            }
+            if (!content) {
+                errorMsg += "내용은 필수입니다.\n";
+            }
+
+            if (errorMsg) {
+                alert(errorMsg);
+                return false; // 폼 제출 중단
+            }
+            return true; // 폼 제출 허용
+        }
+    </script>
+</head>
+<body>
+<h1>새 게시물 작성</h1>
+<form th:action="@{/dadog/boards/new}" method="post" th:object="${boardDTO}" onsubmit="return validateForm();">
+    <label for="boardWriter">작성자:</label>
+    <input type="text" id="boardWriter" th:field="*{boardWriter}" th:placeholder="${userId}" readonly>
+    <br>
+
+    <label for="boardTitle">제목:</label>
+    <input type="text" id="boardTitle" th:field="*{boardTitle}" required>
+    <br>
+
+    <label for="boardContent">내용:</label>
+    <textarea id="boardContent" th:field="*{boardContent}" required></textarea>
+    <br>
+
+    <button type="submit">작성</button>
+    <a href="/dadog/boards">취소</a>
+</form>
+<div th:if="${errorMsg}">
+    <p style="color:red;" th:text="${errorMsg}"></p>
+</div>
+</body>
+</html>

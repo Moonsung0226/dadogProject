@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시물 수정</title>
+</head>
+<script>
+    document.querySelector('.btn-danger').addEventListener('click', function(event) {
+        if (!confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
+            event.preventDefault(); // 삭제 취소
+        }
+    });
+</script>
+<body>
+<h1>게시물 수정</h1>
+<form th:action="@{/dadog/boards/update/{boardNo}(boardNo=${boardDTO.boardNo})}" method="post" th:object="${boardDTO}">
+    <label for="boardWriter">작성자:</label>
+    <input type="text" id="boardWriter" th:field="*{boardWriter}" required readonly>
+    <br>
+
+    <label for="boardTitle">제목:</label>
+    <input type="text" id="boardTitle" th:field="*{boardTitle}" required>
+    <br>
+
+    <label for="boardContent">내용:</label>
+    <textarea id="boardContent" th:field="*{boardContent}" required></textarea>
+    <br>
+
+    <button type="submit">수정</button>
+    <a href="/dadog/boards">취소</a>
+</form>
+<!-- 삭제 버튼 추가 -->
+<form th:action="@{/dadog/boards/delete/{boardNo}(boardNo=${boardDTO.boardNo})}" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-danger">삭제</button>
+</form>
+<div th:if="${errorMsg}">
+    <p style="color:red;" th:text="${errorMsg}"></p>
+</div>
+</body>
+</html>
