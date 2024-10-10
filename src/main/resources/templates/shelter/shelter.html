@@ -3,79 +3,360 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
 
-<div layout:fragment="mainContent">
-    <h1>보호소 목록</h1>
-    <section class="top-section">
-        <article class="top-left">
-            <form id="searchForm" method="get" action="/dadog/shelter">
-                <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter"
-                        th:value="${filter}">
-                    <option value="all" th:selected="${filter == 'all'}">전체</option>
-                    <option value="city" th:selected="${filter == 'city'}">지역</option>
-                    <option value="name" th:selected="${filter == 'name'}">보호소명</option>
-                </select>
-                <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="검색어를 입력하세요"
-                       th:value="${keyword != null ? keyword : ''}">
-                <button type="button" class="btn btn-outline-success" onclick="return searchForm()">검색</button>
-            </form>
-        </article>
-    </section>
-    <section class="bottom-section">
-        <article class="bottom-left">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">지역</th>
-                        <th scope="col">보호소명</th>
-                        <th scope="col">주소</th>
-                    </tr>
-                </thead>
-                <tbody id="shelterTableBody">
-                    <tr th:each="shelter : ${shelters}">
-                        <td th:text="${shelter.shelCity}"></td>
-                        <td th:text="${shelter.shelNm}"></td>
-                        <td th:text="${shelter.shelAddr}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </article>
-    </section>
-</div>
+<!-- 사용자 css 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .top-section, .bottom-section {
+            display: flex;
+            width: 80%; /* 섹션이 전체 페이지의 80% 너비를 차지 */
+            margin: 0 auto; /* 중앙 정렬 */
+        }
 
-<script>
-    function searchForm(event) {
-        event.preventDefault(); // 기본 제출 방지
-        const keyword = document.getElementById('searchInput').value.trim();
-        const filter = document.getElementById('shelterSelect').value;
-        console.log(keyword, "===========", filter);
-        if (keyword) {
-            // AJAX를 통해 검색 결과를 확인합니다.
-            fetch(`/dadog/shelter?filter=${filter}&keyword=${encodeURIComponent(keyword)}`)
+        .top-section, .bottom-section {
+            padding-bottom: 50px;
+            padding-top: 50px;
+        }
+
+        .top-section {
+            margin-top: 50px;
+            background-color: whitesmoke;
+        }
+
+        .top-left, .top-right, .bottom-left, .bottom-right {
+            width: 50%; /* 각 요소가 섹션의 50% 너비를 차지하도록 설정 */
+            box-sizing: border-box;
+            justify-content: center; /* 가로로 중앙 정렬 */
+            align-items: center; /* 세로로 중앙 정렬 */
+        }
+
+        .top-left, .top-right, .bottom-left {
+            display: flex;
+            flex-direction: column; /* 세로 방향으로 정렬 */
+        }
+
+        /* top-left */
+        .top-left {
+            -webkit-box-shadow: 9px 1px 8px -12px rgba(66, 68, 90, 1);
+            -moz-box-shadow: 9px 1px 8px -12px rgba(66, 68, 90, 1);
+            box-shadow: 9px 1px 8px -12px rgba(66, 68, 90, 1);
+        }
+        .top-left h1 {
+            margin-bottom: 40px;
+        }
+        .search-container {
+            width: 80%;
+        }
+        .top-left p {
+            padding-top: 60px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .top-left p span {
+            color: darkgreen;
+            font-weight: bold;
+        }
+
+        /* top-right */
+        .image-container {
+            position: relative; /* 버튼의 위치가 이미지 컨테이너를 기준으로 설정되도록 함 */
+            display: inline-block; /* 이미지를 인라인 블록으로 처리 */
+        }
+        .image-container img {
+            width: 100%; /* 이미지가 컨테이너 너비에 맞게 조정되도록 설정 */
+            height: auto; /* 이미지 비율을 유지 */
+        }
+        .image-container button {
+            position: absolute; /* 버튼을 이미지 위에 고정 */
+            transform: translate(-50%, -50%); /* 버튼을 중앙에 맞추기 위한 transform */
+        }
+
+        /* bottom-left */
+        .city-list {
+            width: 140px; /* 지역 열 고정 너비 */
+        }
+        .shelNm-list {
+            width: 180px; /* 보호소명 열 고정 너비 */
+        }
+        a {
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 부모 요소의 글자 색상 사용 */
+            cursor: pointer;
+        }
+        a:hover {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</th:block>
+
+<!-- 사용자 js 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        let currentPage = 0; // 현재 페이지
+        const pageSize = 7; // 페이지당 항목 수
+        let map; // 카카오 지도 객체
+
+        function initMap() {
+            const mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            // 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
+            map = new kakao.maps.Map(mapContainer, mapOption);
+        }
+
+        // 주소 클릭 시 카카오지도
+        function searchAddress(address, shelterName) {
+            const geocoder = new kakao.maps.services.Geocoder();
+            geocoder.addressSearch(address, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    const latLng = new kakao.maps.LatLng(result[0].y, result[0].x);
+                    map.setCenter(latLng); // 지도 중심 이동
+                    new kakao.maps.Marker({
+                        position: latLng,
+                        map: map
+                    }); // 마커 추가
+
+                    // 정보창 생성
+                    const infoWindowContent = `
+                <div class="info" style="display: flex; flex-direction: column; align-items: center; max-width: 250px; word-break: break-word;">
+                    <div class="title"><p style="margin: 10px; font-weight: bold; font-size: 1.2em">${shelterName}</p></div>
+                    <div class="ellipsis" style="margin: 5px; text-align: center">${address}</div>
+                    <button class="btn btn-primary btn-sm" style="margin: 10px" onclick="openKakaoMap('${address}', '${latLng.getLat()}', '${latLng.getLng()}')">길찾기</button>
+                </div>`;
+
+                    const infoWindow = new kakao.maps.InfoWindow({
+                        content: infoWindowContent
+                    });
+                    infoWindow.open(map, new kakao.maps.Marker({ position: latLng })); // 마커 위치에 정보창 열기
+                } else {
+                    alert('주소를 찾을 수 없습니다.');
+                }
+            });
+        }
+
+        function openKakaoMap(address, lat, lng) {
+            const encodedAddress = encodeURIComponent(address);
+            // 카카오맵 길찾기 URL: 주소를 사용하여 검색합니다.
+            const kakaoMapUrl = `https://map.kakao.com/link/map/${encodedAddress},${lat},${lng}`;
+            window.open(kakaoMapUrl, '_blank');
+        }
+
+        function updatePagination(totalPages) {
+            const paginationList = document.querySelector('.pagination');
+            paginationList.innerHTML = ''; // 기존 페이지네이션 비우기
+
+            // 이전 페이지 버튼
+            if (currentPage > 0) {
+                const prevItem = document.createElement('li');
+                prevItem.className = 'page-item';
+                prevItem.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1})" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                              </a>`;
+                paginationList.appendChild(prevItem);
+            }
+
+            // 페이지 번호 버튼
+            const pageButtonsCount = 5; // 표시할 페이지 번호 수
+            const startPage = Math.max(0, currentPage - Math.floor(pageButtonsCount / 2));
+            const endPage = Math.min(totalPages - 1, startPage + pageButtonsCount - 1);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = 'page-item' + (i === currentPage ? ' active' : '');
+                pageItem.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i})">${i + 1}</a>`;
+                paginationList.appendChild(pageItem);
+            }
+
+            // 다음 페이지 버튼
+            if (currentPage < totalPages - 1) {
+                const nextItem = document.createElement('li');
+                nextItem.className = 'page-item';
+                nextItem.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1})" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                              </a>`;
+                paginationList.appendChild(nextItem);
+            }
+        }
+
+        function changePage(page) {
+            currentPage = page; // 현재 페이지 업데이트
+            searchForm(); // 검색 결과를 갱신
+        }
+
+        function searchForm() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            const filter = document.getElementById('shelterSelect').value;
+
+            // 검색어가 입력되지 않은 경우
+            if (!keyword) {
+                alert('검색어를 입력하세요.');
+                return; // 사이트 이동하지 않음
+            }
+
+            // 검색 결과가 있는 경우에만 URL로 이동
+            fetch(`/dadog/shelter?filter=${filter}&keyword=${encodeURIComponent(keyword)}&page=0`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/html' // HTML 응답을 요청
+                }
+            })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('네트워크 응답이 좋지 않습니다.');
+                    if (response.ok) {
+                        return response.text(); // HTML 응답으로 처리
+                    } else {
+                        throw new Error('네트워크 응답이 올바르지 않습니다.');
                     }
-                    return response.text();
                 })
                 .then(html => {
-                    // 검색 결과를 가져와서 DOM에 추가합니다.
+                    // HTML을 DOM에 삽입하거나, 다른 방식으로 페이지를 업데이트 할 수 있습니다.
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
-                    const shelterRows = doc.querySelectorAll('#shelterTableBody tr');
 
-                    // 검색 결과가 없을 경우 alert 띄우기
-                    if (shelterRows.length === 0) {
-                        alert('검색 결과가 없습니다.');
+                    // 검색 결과가 있는지 확인
+                    const shelterList = doc.querySelector('#shelterTableBody');
+                    if (shelterList && shelterList.children.length > 0) {
+                        // 검색 결과가 있을 경우 URL 이동
+                        document.open();
+                        document.write(html); // 새 HTML로 페이지를 업데이트
+                        document.close();
                     } else {
-                        // 결과가 있는 경우 현재 페이지에 업데이트
-                        document.getElementById('shelterTableBody').innerHTML = doc.getElementById('shelterTableBody').innerHTML;
+                        // 검색 결과가 없을 경우 알림
+                        alert('검색 결과가 없습니다.');
                     }
                 })
                 .catch(error => {
-                    console.error('문제가 발생했습니다:', error);
+                    alert(`오류: ${error.message}`); // 오류 메시지
                 });
-        } else {
-            alert('검색어를 입력하세요.');
         }
-    }
-</script>
+
+        // 지역 버튼
+        document.addEventListener('DOMContentLoaded', () => {
+            // region-button 클래스를 가진 버튼에만 클릭 이벤트 추가
+            document.querySelectorAll('.region-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const city = this.getAttribute('data-value'); // data-value 속성 값 가져오기
+                    console.log(`Clicked city: ${city}`); // 클릭한 도시 로그
+
+                    // 페이지 이동 URL 설정
+                    const url = `/dadog/shelter?filter=city&keyword=${encodeURIComponent(city)}&page=0`;
+                    window.location.href = url; // 해당 URL로 이동
+                });
+            });
+
+            // Enter로 검색
+            document.getElementById('searchInput').addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // 기본 Enter 동작 방지
+                    searchForm(); // searchForm 함수 호출
+                }
+            });
+        });
+    </script>
+</th:block>
+
+
+<div layout:fragment="mainContent">
+    <section class="top-section">
+        <article class="top-left">
+            <h1>보호소 목록</h1>
+            <div class="search-container" style="position: relative">
+                <form id="searchForm" method="get" action="/dadog/shelter">
+                    <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter"
+                            th:value="${filter}" style="margin-bottom: 10px">
+                        <option value="all" th:selected="${filter == 'all'}">전체</option>
+                        <option value="city" th:selected="${filter == 'city'}">지역</option>
+                        <option value="name" th:selected="${filter == 'name'}">보호소명</option>
+                    </select>
+                    <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="검색어를 입력하세요"
+                           th:value="${keyword != null ? keyword : ''}" style="margin-bottom: 20px">
+                    <button type="button" class="btn btn-outline-success" id="searchButton" onclick="searchForm()" style="position: absolute; right: 0">검색</button>
+                </form>
+                <p><span>지도를 클릭하거나 검색을 이용</span>하여<br>보호소 정보를 확인하세요.</p>
+            </div>
+        </article>
+        <article class="top-right">
+            <div class="image-container">
+                <img src="/korea_map.png" alt="korea map">
+
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="서울" style="top: 20%; left: 33%;">서울</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="인천" style="top: 17%; left: 25%;">인천</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="경기" style="top: 28%; left: 39%;">경기</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="강원" style="top: 20%; left: 63%;">강원</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="부산" style="top: 68%; left: 78%;">부산</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="대구" style="top: 54%; left: 65%;">대구</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="울산" style="top: 60%; left: 82%;">울산</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="광주" style="top: 67%; left: 35%;">광주</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="대전" style="top: 45%; left: 41%;">대전</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="세종" style="top: 39%; left: 39%;">세종</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="충청북도" style="top: 35%; left: 52%;">충북</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="충청남도" style="top: 40%; left: 23%;">충남</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="경상북도" style="top: 43%; left: 70%;">경북</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="경상남도" style="top: 65%; left: 61%;">경남</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="전라북도" style="top: 56%; left: 37%;">전북</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="전라남도" style="top: 75%; left: 30%;">전남</button>
+                <button type="button" class="btn btn-success btn-sm region-button" data-value="제주" style="top: 96%; left: 22%;">제주</button>
+            </div>
+        </article>
+
+    </section>
+    <section class="bottom-section" style="display: flex;">
+        <article class="bottom-left" style="flex: 1;">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col" class="city-list">지역</th>
+                    <th scope="col" class="shelNm-list">보호소명</th>
+                    <th scope="col">주소</th>
+                </tr>
+                </thead>
+                <tbody id="shelterTableBody">
+                <tr th:each="shelter : ${shelters}">
+                    <td th:text="${shelter.shelCity}" class="city-list"></td>
+                    <td th:text="${shelter.shelNm}" class="shelNm-list"></td>
+                    <td>
+                        <a href="javascript:void(0);"
+                           onclick="searchAddress(this.dataset.address, this.dataset.shelterName)"
+                           th:text="${shelter.shelAddr}"
+                           th:attr="data-address=${shelter.shelAddr}, data-shelter-name=${shelter.shelNm}"></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <!-- 이전 버튼: 이전 페이지 그룹이 있을 때만 표시 -->
+                    <li class="page-item" th:if="${currentGroupStart > 1}">
+                        <a class="page-link" th:href="@{/dadog/shelter(page=${currentGroupStart - 5}, filter=${filter}, keyword=${keyword})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- 페이지 번호 버튼 -->
+                    <li th:each="page : ${#numbers.sequence(currentGroupStart, currentGroupEnd)}"
+                        class="page-item"
+                        th:classappend="${page == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/dadog/shelter(page=${page}, filter=${filter}, keyword=${keyword})}" th:text="${page}"></a>
+                    </li>
+
+                    <!-- 다음 버튼: 다음 페이지 그룹이 있을 때만 표시 -->
+                    <li class="page-item" th:if="${currentGroupEnd < totalPages}">
+                        <a class="page-link" th:href="@{/dadog/shelter(page=${currentGroupEnd + 1}, filter=${filter}, keyword=${keyword})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </article>
+        <article class="bottom-right" style="flex: 1; padding-left: 20px;">
+            <div id="map" style="height:350px;"></div>
+            <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d51ec91e1592b4a474e7fa951f77e737&libraries=services"></script>
+            <script>
+                // 지도를 초기화하는 함수 호출
+                initMap();
+            </script>
+        </article>
+    </section>
+</div>
