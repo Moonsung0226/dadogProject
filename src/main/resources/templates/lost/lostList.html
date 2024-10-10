@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    $(() => {
+      $('#searchBtn').on("click",(e) => {
+        e.preventDefault();
+        page(0)
+      });
+    });
+    function page(page){
+      const searchBy = $("#searchBy").val();
+      const searchQuery = $("#searchQuery").val();
+
+      location.href="/dadog/lost/list/" + page + "?searchBy=" + searchBy + "&searchQuery=" + searchQuery;
+    }
+  </script>
+</th:block>
+
+<th:block layout:fragment="css">
+  <style>
+    h1{
+      text-align: center;
+    }
+    ul{
+      text-decoration-line: none;
+    }
+    .mainBody {
+      width: 80%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
+      margin: 0 auto;
+      gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
+    }
+    .card{
+      margin: 10px;
+    }
+
+  </style>
+</th:block>
+<div layout:fragment="mainContent">
+  <form th:action="@{'/dadog/lost' + ${lostList.number}}" role="form" method="get" th:object="${lostList}">
+    <article class="mainBody">
+      <div th:each="lost : ${lostList.getContent()}" class="card">
+        <a th:href="'/dadog/lost/' + ${lost.getLostNo()}" class="text-dark link-underline link-underline-opacity-0">
+          <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${lost.getLostTitle()}"></h5>
+            <p th:text="${lost.getLostKind()}" class="card-text"></p>
+            <p th:text="${lost.getLostPlace()}" class="card-text"></p>
+            <p th:text="${lost.getLostTel()}" class="card-text"></p>
+            <p th:text="${lost.getLostDate()}" class="card-text"></p>
+          </div>
+        </a>
+      </div>
+    </article>
+    <div th:with="start=${(lostList.number / maxPage) * maxPage + 1},
+            end=${(lostList.totalPages == 0 ? 1 :
+            (start + (maxPage - 1) < lostList.totalPages ? start + (maxPage - 1):
+            lostList.totalPages))}">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${lostList.first} ? 'disabled'">
+          <a th:onclick="'javascript: page(' + ${lostList.number -1} + ')'" aria-label="Previous" class="page-link">
+            <span aria-hidden="true">Previous</span>
+          </a>
+        </li>
+        <li class="page-item" th:each="page: ${#numbers.sequence(start,end)}"
+            th:classappend="${lostList.number eq page -1}? 'active' : ''">
+          <a th:onclick="'javascript: page(' +${page -1} + ')'" th:inline="text" class="page-link">[[${page}]]
+          </a>
+        </li>
+        <li class="page-item" th:classappend="${lostList.last} ? 'disabled'">
+          <a th:onclick="'javascript: page(' + ${lostList.number +1} + ')'" aria-label="Next" class="page-link">
+            <span aria-hidden="true">Next</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="form-inline justify-content-center" th:object="${lostSearchDTO}">
+      <select th:field="*{searchBy}" class="form-control" id="searchBy" style="width: auto;">
+        <option value="kind">견종</option>
+        <option value="title">제목</option>
+        <option value="detail">글 내용</option>
+        <option value="place">실종장소</option>
+      </select>
+      <input th:field="*{searchQuery}" class="form-control" id="searchQuery" placeholder="검색어">
+      <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+    </div>
+  </form>
+</div>
+</html>

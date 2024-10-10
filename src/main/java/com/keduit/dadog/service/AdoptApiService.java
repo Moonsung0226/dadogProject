@@ -2,7 +2,7 @@ package com.keduit.dadog.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keduit.dadog.Repository.AdoptRepository;
+import com.keduit.dadog.repository.AdoptRepository;
 import com.keduit.dadog.constant.Current;
 import com.keduit.dadog.entity.Adopt;
 import org.slf4j.Logger;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -34,7 +36,7 @@ public class AdoptApiService {
     //받아올 타입
     private final String type = "&_type=json";
 
-    LocalDate today = LocalDate.now();
+    LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
 
     // 10일 빼기
     LocalDate dateMinus10Days = today.minusDays(10);
@@ -97,7 +99,7 @@ public class AdoptApiService {
 
                         if(items.isArray()){
                             for(JsonNode item : items){
-                                String kindCd = item.path("kindCd").asText();
+                                String kindCd = item.path("kindCd").asText().substring(4);
                                 String age = item.path("age").asText();
                                 String careNm = item.path("careNm").asText();
                                 String careAddr = item.path("careAddr").asText();

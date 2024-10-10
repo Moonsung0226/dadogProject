@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>회원가입 및 결제</title>
+
+  <!-- 사용자 CSS 추가 -->
+  <th:block layout:fragment="css">
+    <style>
+      .fieldError {
+        color: #bd2130;
+      }
+      .form-container {
+        margin: 0 auto;
+        max-width: 800px; /* 최대 너비 설정 */
+        padding: 20px; /* 내부 여백 */
+        background-color: #f9f9f9; /* 배경색 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 */
+      }
+      h1 {
+        text-align: center; /* 제목 중앙 정렬 */
+      }
+      .btn-primary {
+        width: 100%; /* 버튼 너비 100% */
+      }
+      #successMessage {
+        color: green; /* 성공 메시지 색상 */
+        text-align: center;
+      }
+    </style>
+  </th:block>
+
+  <!-- 사용자 JS 추가 -->
+  <script th:inline="javascript">
+    $(document).ready(() => {
+      const errorMessage = [[${errorMessage}]];
+      console.log("errorMessage =>", errorMessage);
+      if (errorMessage) {
+        alert(errorMessage);
+      }
+
+      // 비밀번호 확인 유효성 검사
+      $('form').on('submit', function (e) {
+        const password = $('#password').val();
+        const confirmPassword = $('#confirmPassword').val();
+        const successMessageDiv = $('#successMessage');
+
+        // 이전 성공 메시지 지우기
+        successMessageDiv.text('');
+
+        // 필수 체크박스 유효성 검사
+        const termsRequired = $('#termsRequired').is(':checked');
+        const privacyRequired = $('#privacyRequired').is(':checked');
+
+        if (!termsRequired || !privacyRequired) {
+          e.preventDefault(); // 폼 제출 방지
+          alert('[필수] 이용약관 및 개인정보 수집 및 이용 동의에 체크해야 합니다.');
+          return; // 더 이상 진행하지 않음
+        }
+
+        if (password !== confirmPassword) {
+          e.preventDefault(); // 폼 제출 방지
+          alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        } else if (password.length < 8) { // 비밀번호 길이 체크
+          e.preventDefault(); // 폼 제출 방지
+          alert('비밀번호는 최소 8자 이상이어야 합니다.');
+        } else {
+          successMessageDiv.text('비밀번호가 일치합니다.');
+        }
+      });
+    });
+  </script>
+
+  </th:block>
+</head>
+<body>
+
+<div layout:fragment="mainContent">
+  <div class="col-md-7 col-lg-12">
+    <div class="form-container">
+      <h1>회원가입</h1>
+      <hr class="my-4">
+      <form action="/dadog/members/new" method="post" th:object="${userDTO}" class="needs-validation" novalidate>
+        <div class="row g-3">
+
+          <!-- Name Field -->
+          <div class="col-sm-12">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." required>
+            <div class="invalid-feedback">유효한 이름을 입력해 주세요.</div>
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
+          </div>
+
+          <!-- id Field -->
+          <div class="col-sm-12">
+            <label for="id" class="form-label">아이디</label>
+            <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력하세요." required>
+            <div class="invalid-feedback">유효한 아이디를 입력해 주세요.</div>
+            <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="fieldError"></p>
+          </div>
+
+
+          <!-- Password Field -->
+          <div class="col-12">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="8자 이상 비밀번호를 입력하세요." required>
+            <div class="invalid-feedback">비밀번호가 필요합니다.</div>
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="col-12">
+            <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+            <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required>
+            <div class="invalid-feedback">비밀번호 확인이 필요합니다.</div>
+            <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="fieldError"></p>
+          </div>
+
+
+          <!-- Telephone Field -->
+          <div class="col-12">
+            <label for="tel" class="form-label">휴대폰 번호</label>
+            <input type="tel" class="form-control" id="tel" th:field="*{tel}" placeholder="010-0000-0000" pattern="^010-\d{4}-\d{4}$" required>
+            <div class="invalid-feedback">유효한 휴대폰 번호를 입력해 주세요. (예: 010-4444-4444)</div>
+            <p th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" class="fieldError"></p>
+          </div>
+
+          <!-- Email Field -->
+          <div class="col-sm-12">
+            <label for="email" class="form-label">이메일 주소</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required>
+            <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
+            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
+          </div>
+
+          <!-- Address Field -->
+          <div class="col-12">
+            <label for="address" class="form-label">주소</label>
+            <input type="text" class="form-control" id="address" th:field="*{address}" placeholder="주소를 입력하세요." required>
+            <div class="invalid-feedback">유효한 주소를 입력해 주세요.</div>
+            <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError"></p>
+          </div>
+
+          <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          <hr class="my-4">
+
+          <h1>추가정보(선택사항)</h1>
+
+          <!-- Date of Birth Field -->
+          <div class="col-12">
+            <label for="dob" class="form-label">생년월일</label>
+            <input type="date" class="form-control" id="dob" th:field="*{dob}" required>
+            <div class="invalid-feedback">생년월일이 필요합니다.</div>
+          </div>
+
+          <!-- Gender Field -->
+          <div class="col-12">
+            <label>성별</label><br>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="genderMale" th:field="*{gender}" value="male" required>
+              <label class="form-check-label" for="genderMale">남성</label>
+            </div>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="genderFemale" th:field="*{gender}" value="female" required>
+              <label class="form-check-label" for="genderFemale">여성</label>
+            </div>
+            <div class="invalid-feedback">성별을 선택해야 합니다.</div>
+          </div>
+
+          <!-- How Did You Hear Field -->
+          <div class="col-12">
+            <label for="howDidYouHear" class="form-label">다독이다를 어떻게 알게 되셨나요?</label>
+            <select class="form-select" id="howDidYouHear" th:field="*{howDidYouHear}" required>
+              <option value="" disabled selected>선택해 주세요</option>
+              <option value="offline">오프라인 광고</option>
+              <option value="online">온라인 광고</option>
+              <option value="referral">주변 지인 추천</option>
+              <option value="other">기타</option>
+            </select>
+            <div class="invalid-feedback">출처를 선택해야 합니다.</div>
+          </div>
+
+          <!-- Other Source Field -->
+          <div class="col-12" id="otherSource" style="display:none;">
+            <label for="otherSourceInput" class="form-label">어떻게 알게되셨어여?</label>
+            <input type="text" class="form-control" id="otherSourceInput" placeholder="입력해주세요." th:field="*{otherSource}">
+          </div>
+
+          <script>
+            document.getElementById("howDidYouHear").addEventListener("change", function() {
+              const selectedValue = this.value;
+              const otherSourceField = document.getElementById("otherSource");
+              if (selectedValue === "other") {
+                otherSourceField.style.display = "block";
+              } else {
+                otherSourceField.style.display = "none";
+              }
+            });
+          </script>
+
+          <hr class="my-4">
+          <h1>이용약관 동의</h1>
+          <div class="col-12 form-check">
+            <input type="checkbox" class="form-check-input" id="terms" onclick="toggleAllCheckboxes(this)">
+            <label class="form-check-label" for="terms">전체 동의합니다.</label>
+            <p>선택항목에 동의하지 않은 경우도 회원가입 및 일반적인 서비스를 이용할 수 있습니다.</p>
+          </div>
+
+          <!-- Required Consent Items -->
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="termsRequired" required>
+            <label class="form-check-label" for="termsRequired" >[필수] 이용약관 동의</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="privacyRequired" required>
+            <label class="form-check-label" for="privacyRequired" >[필수] 개인정보 수집 및 이용 동의</label>
+          </div>
+
+          <!-- Optional Consent Item -->
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="snsOptional">
+            <label class="form-check-label" for="snsOptional">[선택] SNS(문자, 카카오톡 등)으로 혜택과 유용한 정보를 보내드려도 될까요?</label>
+          </div>
+
+          <div id="successMessage"></div> <!-- 성공 메시지를 표시할 영역 -->
+          <hr class="my-4">
+          <p>
+            본인은 만14세 이상이며,
+            <a href="이용약관링크" style="text-decoration: underline;">이용약관</a>,
+            <a href="개인정보수집링크" style="text-decoration: underline;">개인정보 수집 및 이용 내용</a>을 확인하였으며,
+            동의합니다.
+          </p>
+
+
+          <div style="text-align:center">
+            <button type="submit" class="btn btn-primary">가입하기</button>
+          </div>
+
+
+
+          <script>
+            function toggleAllCheckboxes(source) {
+              const checkboxes = document.querySelectorAll('.form-check-input');
+              checkboxes.forEach((checkbox) => {
+                if (checkbox !== source && checkbox.id !== 'genderMale' && checkbox.id !== 'genderFemale') {
+                  checkbox.checked = source.checked;
+                }
+              });
+            }
+          </script>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
