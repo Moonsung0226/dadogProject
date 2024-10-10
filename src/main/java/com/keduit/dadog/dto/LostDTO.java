@@ -23,6 +23,8 @@ public class LostDTO {
 
     private String lostKind;
 
+    private String lostTitle;
+
     private String lostPlace;
 
     private String imgUrl;

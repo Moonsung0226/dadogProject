@@ -45,7 +45,7 @@
     <form th:action="@{'/dadog/adopt' + ${adoptList.number}}" role="form" method="get" th:object="${adoptList}">
         <article class="mainBody">
             <div th:each="adopt : ${adoptList.getContent()}" class="card">
-                <a th:href="'/dadog/adopt/' + ${adopt.getAdoptNo}" class="text-dark link-underline link-underline-opacity-0">
+                <a th:href="'/dadog/adopt/' + ${adopt.getAdoptNo()}" class="text-dark link-underline link-underline-opacity-0">
                 <img th:src="${adopt.getAdoptImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
                     <div class="card-body">
                         <h5 class="card-title" th:text="${adopt.getAdoptKind()}"></h5>
