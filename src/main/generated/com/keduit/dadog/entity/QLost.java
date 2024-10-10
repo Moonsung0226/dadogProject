@@ -27,7 +27,7 @@ public class QLost extends EntityPathBase<Lost> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createTime = _super.createTime;
 
-    public final DateTimePath<java.time.LocalDateTime> lostDate = createDateTime("lostDate", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> lostDate = createDate("lostDate", java.time.LocalDate.class);
 
     public final StringPath lostDetail = createString("lostDetail");
 
@@ -44,6 +44,8 @@ public class QLost extends EntityPathBase<Lost> {
     public final StringPath lostPlace = createString("lostPlace");
 
     public final StringPath lostTel = createString("lostTel");
+
+    public final StringPath lostTitle = createString("lostTitle");
 
     public final StringPath lostWriter = createString("lostWriter");
 
