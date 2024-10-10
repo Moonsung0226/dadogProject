@@ -38,8 +38,8 @@ public class MemberController {
         }
 
         try {
-            User user = User.createUser(userDTO, passwordEncoder);
-            userService.saveUser(user);
+            // 회원 등록 메서드 호출
+            userService.registerMember(userDTO); // 회원 등록
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/MemberForm";
@@ -48,6 +48,8 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
         return "redirect:/";
     }
+
+
 
     // 로그아웃
     @PostMapping("/logout")
@@ -58,10 +60,33 @@ public class MemberController {
         return "redirect:/";
     }
 
+
     @GetMapping("/login/error")
     public String loginError(Model model) {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해 주세요.");
         return "member/memberLoginForm"; // 경로 수정
     }
+
+    @PostMapping("/members/new")
+    public String registerUser(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model) {
+        // 비밀번호와 비밀번호 확인 검사
+        if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "error.userDTO", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        // 비밀번호 길이 검사 (최소 8자)
+        if (userDTO.getPassword().length() < 8) {
+            bindingResult.rejectValue("password", "error.userDTO", "비밀번호는 최소 8자 이상이어야 합니다.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "members/new"; // 에러가 있을 경우 원래 폼으로 돌아가기
+        }
+
+        // 사용자 등록 로직
+        userService.registerMember(userDTO); // 메소드 이름 변경
+        return "redirect:/login"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
+    }
+
 
 }

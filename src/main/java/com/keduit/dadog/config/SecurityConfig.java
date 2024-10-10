@@ -45,7 +45,6 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/", "/kakao/callback", "/css/**", "/js/**", "/favicon.ico", "/kakao_login_medium_narrow.png").permitAll() // 정적 리소스와 특정 경로 허용
                 .antMatchers("/dadog/**").permitAll() // `/dadog/` 경로는 모두 허용
-                .antMatchers("/**/add/**", "/**/update/**", "/**/delete/**").authenticated() // 수정, 추가, 삭제 관련 경로는 인증 필요
                 .antMatchers("/dadog/admin/**").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
                 .anyRequest().authenticated(); // 그 외의 모든 요청은 인증 필요
 
