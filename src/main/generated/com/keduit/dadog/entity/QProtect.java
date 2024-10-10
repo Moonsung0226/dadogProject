@@ -27,7 +27,7 @@ public class QProtect extends EntityPathBase<Protect> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createTime = _super.createTime;
 
-    public final DateTimePath<java.time.LocalDateTime> proDate = createDateTime("proDate", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> proDate = createDate("proDate", java.time.LocalDate.class);
 
     public final StringPath proFileName = createString("proFileName");
 
