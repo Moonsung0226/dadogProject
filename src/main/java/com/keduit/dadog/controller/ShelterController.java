@@ -26,7 +26,7 @@ public class ShelterController {
     @GetMapping("/dadog/shelter/api")
     public String fetchAndSaveShelterData() {
         shelterService.fetchAndSaveShelterData(); // 서비스 메서드 호출
-        return "Shelter data fetching initiated.";
+        return "shelter/shelter";
     }
 
     @GetMapping("/dadog/shelter")

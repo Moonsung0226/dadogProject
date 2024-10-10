@@ -12,9 +12,14 @@
             margin: 0 auto; /* 중앙 정렬 */
         }
 
+        .top-section, .bottom-section {
+            padding-bottom: 50px;
+            padding-top: 50px;
+        }
+
         .top-section {
-            margin-bottom: 100px;
-            margin-top: 100px;
+            margin-top: 50px;
+            background-color: whitesmoke;
         }
 
         .top-left, .top-right, .bottom-left, .bottom-right {
@@ -24,23 +29,62 @@
             align-items: center; /* 세로로 중앙 정렬 */
         }
 
-        .top-right {
-            display: flex;.
+        .top-left, .top-right, .bottom-left {
+            display: flex;
+            flex-direction: column; /* 세로 방향으로 정렬 */
         }
 
+        /* top-left */
+        .top-left {
+            -webkit-box-shadow: 9px 1px 8px -12px rgba(66, 68, 90, 1);
+            -moz-box-shadow: 9px 1px 8px -12px rgba(66, 68, 90, 1);
+            box-shadow: 9px 1px 8px -12px rgba(66, 68, 90, 1);
+        }
+        .top-left h1 {
+            margin-bottom: 40px;
+        }
+        .search-container {
+            width: 80%;
+        }
+        .top-left p {
+            padding-top: 60px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .top-left p span {
+            color: darkgreen;
+            font-weight: bold;
+        }
+
+        /* top-right */
         .image-container {
             position: relative; /* 버튼의 위치가 이미지 컨테이너를 기준으로 설정되도록 함 */
             display: inline-block; /* 이미지를 인라인 블록으로 처리 */
         }
-
         .image-container img {
             width: 100%; /* 이미지가 컨테이너 너비에 맞게 조정되도록 설정 */
             height: auto; /* 이미지 비율을 유지 */
         }
-
         .image-container button {
             position: absolute; /* 버튼을 이미지 위에 고정 */
             transform: translate(-50%, -50%); /* 버튼을 중앙에 맞추기 위한 transform */
+        }
+
+        /* bottom-left */
+        .city-list {
+            width: 140px; /* 지역 열 고정 너비 */
+        }
+        .shelNm-list {
+            width: 180px; /* 보호소명 열 고정 너비 */
+        }
+        a {
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 부모 요소의 글자 색상 사용 */
+            cursor: pointer;
+        }
+        a:hover {
+            color: green;
+            font-weight: bold;
         }
     </style>
 </th:block>
@@ -77,10 +121,10 @@
 
                     // 정보창 생성
                     const infoWindowContent = `
-                <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px; word-break: break-word;">
-                    <strong>${shelterName}</strong>
-                    <div class="ellipsis" style="margin: 5px;">${address}</div>
-                    <button style="margin: 5px;" onclick="openKakaoMap('${address}', '${latLng.getLat()}', '${latLng.getLng()}')">길찾기</button>
+                <div class="info" style="display: flex; flex-direction: column; align-items: center; max-width: 250px; word-break: break-word;">
+                    <div class="title"><p style="margin: 10px; font-weight: bold; font-size: 1.2em">${shelterName}</p></div>
+                    <div class="ellipsis" style="margin: 5px; text-align: center">${address}</div>
+                    <button class="btn btn-primary btn-sm" style="margin: 10px" onclick="openKakaoMap('${address}', '${latLng.getLat()}', '${latLng.getLng()}')">길찾기</button>
                 </div>`;
 
                     const infoWindow = new kakao.maps.InfoWindow({
@@ -146,32 +190,46 @@
             const keyword = document.getElementById('searchInput').value.trim();
             const filter = document.getElementById('shelterSelect').value;
 
-            // keyword가 비어있지 않은 경우에만 URL로 이동
-            if (keyword) {
-                const url = `/dadog/shelter?filter=${filter}&keyword=${encodeURIComponent(keyword)}&page=0`;
-                console.log(url); // 요청 URL 확인
-                window.location.href = url; // 해당 URL로 이동
-            } else {
+            // 검색어가 입력되지 않은 경우
+            if (!keyword) {
                 alert('검색어를 입력하세요.');
+                return; // 사이트 이동하지 않음
             }
-        }
 
-        function renderShelters(shelters) {
-            const shelterTableBody = document.getElementById('shelterTableBody');
-            shelterTableBody.innerHTML = ''; // 기존 내용 비우기
-            shelters.forEach(shelter => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-            <td>${shelter.shelCity}</td>
-            <td>${shelter.shelNm}</td>
-            <td>
-                <a href="#"
-                   onclick="searchAddress('${shelter.shelAddr}', '${shelter.shelNm}')"
-                   th:text="${shelter.shelAddr}">${shelter.shelAddr}</a>
-            </td>
-        `;
-                shelterTableBody.appendChild(row);
-            });
+            // 검색 결과가 있는 경우에만 URL로 이동
+            fetch(`/dadog/shelter?filter=${filter}&keyword=${encodeURIComponent(keyword)}&page=0`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/html' // HTML 응답을 요청
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); // HTML 응답으로 처리
+                    } else {
+                        throw new Error('네트워크 응답이 올바르지 않습니다.');
+                    }
+                })
+                .then(html => {
+                    // HTML을 DOM에 삽입하거나, 다른 방식으로 페이지를 업데이트 할 수 있습니다.
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // 검색 결과가 있는지 확인
+                    const shelterList = doc.querySelector('#shelterTableBody');
+                    if (shelterList && shelterList.children.length > 0) {
+                        // 검색 결과가 있을 경우 URL 이동
+                        document.open();
+                        document.write(html); // 새 HTML로 페이지를 업데이트
+                        document.close();
+                    } else {
+                        // 검색 결과가 없을 경우 알림
+                        alert('검색 결과가 없습니다.');
+                    }
+                })
+                .catch(error => {
+                    alert(`오류: ${error.message}`); // 오류 메시지
+                });
         }
 
         // 지역 버튼
@@ -188,12 +246,7 @@
                 });
             });
 
-            // 검색 버튼과 입력 필드에 이벤트 리스너 추가
-            document.getElementById('searchButton').addEventListener('click', function(event) {
-                event.preventDefault(); // 기본 폼 동작 방지
-                searchForm();
-            });
-
+            // Enter로 검색
             document.getElementById('searchInput').addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault(); // 기본 Enter 동작 방지
@@ -206,20 +259,23 @@
 
 
 <div layout:fragment="mainContent">
-    <h1>보호소 목록</h1>
     <section class="top-section">
         <article class="top-left">
-            <form id="searchForm" method="get" action="/dadog/shelter" style="width: 500px">
-                <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter"
-                        th:value="${filter}">
-                    <option value="all" th:selected="${filter == 'all'}">전체</option>
-                    <option value="city" th:selected="${filter == 'city'}">지역</option>
-                    <option value="name" th:selected="${filter == 'name'}">보호소명</option>
-                </select>
-                <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="검색어를 입력하세요"
-                       th:value="${keyword != null ? keyword : ''}">
-                <button type="button" class="btn btn-outline-success" id="searchButton" onclick="searchForm()">검색</button>
-            </form>
+            <h1>보호소 목록</h1>
+            <div class="search-container" style="position: relative">
+                <form id="searchForm" method="get" action="/dadog/shelter">
+                    <select class="form-select" aria-label="Shelter filter select" id="shelterSelect" name="filter"
+                            th:value="${filter}" style="margin-bottom: 10px">
+                        <option value="all" th:selected="${filter == 'all'}">전체</option>
+                        <option value="city" th:selected="${filter == 'city'}">지역</option>
+                        <option value="name" th:selected="${filter == 'name'}">보호소명</option>
+                    </select>
+                    <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="검색어를 입력하세요"
+                           th:value="${keyword != null ? keyword : ''}" style="margin-bottom: 20px">
+                    <button type="button" class="btn btn-outline-success" id="searchButton" onclick="searchForm()" style="position: absolute; right: 0">검색</button>
+                </form>
+                <p><span>지도를 클릭하거나 검색을 이용</span>하여<br>보호소 정보를 확인하세요.</p>
+            </div>
         </article>
         <article class="top-right">
             <div class="image-container">
@@ -251,17 +307,17 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th scope="col">지역</th>
-                    <th scope="col">보호소명</th>
+                    <th scope="col" class="city-list">지역</th>
+                    <th scope="col" class="shelNm-list">보호소명</th>
                     <th scope="col">주소</th>
                 </tr>
                 </thead>
                 <tbody id="shelterTableBody">
                 <tr th:each="shelter : ${shelters}">
-                    <td th:text="${shelter.shelCity}"></td>
-                    <td th:text="${shelter.shelNm}"></td>
+                    <td th:text="${shelter.shelCity}" class="city-list"></td>
+                    <td th:text="${shelter.shelNm}" class="shelNm-list"></td>
                     <td>
-                        <a href="#"
+                        <a href="javascript:void(0);"
                            onclick="searchAddress(this.dataset.address, this.dataset.shelterName)"
                            th:text="${shelter.shelAddr}"
                            th:attr="data-address=${shelter.shelAddr}, data-shelter-name=${shelter.shelNm}"></a>
