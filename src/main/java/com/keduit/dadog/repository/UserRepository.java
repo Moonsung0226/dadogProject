@@ -1,4 +1,4 @@
-package com.keduit.dadog.repository;
+package com.keduit.dadog.Repository;
 
 import com.keduit.dadog.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

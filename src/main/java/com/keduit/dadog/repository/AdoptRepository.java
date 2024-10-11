@@ -1,7 +1,8 @@
-package com.keduit.dadog.repository;
+package com.keduit.dadog.Repository;
 
 import com.keduit.dadog.entity.Adopt;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AdoptRepository extends JpaRepository<Adopt, Long> ,AdoptRepositoryCustom{
+public interface AdoptRepository extends JpaRepository<Adopt, Long> , com.keduit.dadog.repository.AdoptRepositoryCustom {
 }
