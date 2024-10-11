@@ -1,6 +1,7 @@
 package com.keduit.dadog.controller;
 
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/dadog")
@@ -23,16 +25,10 @@ public class MyMemberFormController {
 
     // GET 요청 처리: 회원 정보 가져오기
     @GetMapping("/myMemberForm")
-    public String mymemberform(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        UserDTO userDTO = (UserDTO) session.getAttribute("userDTO"); // 세션에서 사용자 정보 가져오기
-
-        System.out.println("UserDTO from session: " + userDTO); // null 체크
-        if (userDTO == null) {
-            // 사용자 정보가 없을 경우 처리 (예: 로그인 페이지로 리다이렉션)
-            return "redirect:/main"; // 로그인 페이지 URL로 수정
-        }
-
+    public String myMemberForm(HttpServletRequest request, Model model, Principal principal) {
+        User user = userService.getUser(principal.getName());
+        UserDTO userDTO = new UserDTO();
+        userDTO.createUserDTO(user);
         model.addAttribute("userDTO", userDTO); // 세션에서 가져온 사용자 정보를 모델에 추가
 
         return "mypage/myMemberForm"; // Thymeleaf 템플릿 경로
@@ -64,5 +60,8 @@ public class MyMemberFormController {
             return "redirect:/login"; // 실패 시 로그인 페이지로 리다이렉션
         }
     }
+
+
+
 
 }

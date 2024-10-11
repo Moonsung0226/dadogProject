@@ -1,5 +1,6 @@
 package com.keduit.dadog.dto;
 
+import com.keduit.dadog.entity.User;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -52,5 +53,15 @@ public class UserDTO {
         this.password = password;
         this.address = address;
         this.nickname = nickname;
+    }
+
+    public UserDTO createUserDTO(User user){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(user.getUserName());
+        userDTO.setId(user.getUserId());
+        userDTO.setEmail(user.getUserEmail());
+        userDTO.setTel(user.getUserTel());
+        userDTO.setAddress(user.getUserAddr());
+        return userDTO;
     }
 }
