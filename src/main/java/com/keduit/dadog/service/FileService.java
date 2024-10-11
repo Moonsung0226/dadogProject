@@ -14,7 +14,7 @@ import java.io.File;
 public class FileService {
 
     // 사진마다 고유한 uuid 를 붙여서 폴더에 저장
-    public String uploadLostFile(String uploadPath, String originalFileName, byte[] fileData) {
+    public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) {
         // 중복되지 않는 고유의 값을 구성할 때 사용하는 범용 고유 식별자
         UUID uuid = UUID.randomUUID();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));

@@ -35,7 +35,7 @@
       }
     }
 
-    function deleteLost(lostNo) {
+    function deleteProtect(proNo) {
       const header = $("meta[name='_csrf_header']").attr('content');
       const token = $("meta[name='_csrf']").attr('content');
 
@@ -45,8 +45,8 @@
         return; // 처리 중지
       }
 
-      const url = "/dadog/lost/" + lostNo;
-      const paramData = {lostNo : lostNo};
+      const url = "/dadog/protect/" + proNo;
+      const paramData = {proNo : proNo};
       const param = JSON.stringify(paramData);
 
       $.ajax({
@@ -61,7 +61,7 @@
         cache: false,
         success : function (result, status){
           alert("게시글이 삭제되었습니다.");
-          location.href="/dadog/lost/list"
+          location.href="/dadog/protect/list"
         },
         error : function (xhr, status, error){
           console.log("error ===> " + status);
@@ -81,53 +81,53 @@
 <div layout:fragment="mainContent">
   <div class="container mt-5">
     <h2>글쓰기</h2>
-    <form role="form" method="post" th:object="${lostDTO}" enctype="multipart/form-data">
+    <form role="form" method="post" th:object="${protectDTO}" enctype="multipart/form-data">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!-- CSRF 토큰 추가 -->
-    <input type="hidden" th:field="*{lostNo}">
+    <input type="hidden" th:field="*{proNo}">
     <div class="form-group">
-      <input type="file" class="form-control-file" name="lostImg" accept="image/*" onchange="previewImage(event)">
+      <input type="file" class="form-control-file" name="protectImg" accept="image/*" onchange="previewImage(event)">
     </div>
     <div class="row">
       <div class="col-md-6 d-flex justify-content-center align-items-center">
         <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid">
-        <img th:if="${!#strings.isEmpty(lostDTO.getImgUrl())}" th:src="*{imgUrl}" alt="#" class="imagePreview2" id="imagePreview2">
+        <img th:if="${!#strings.isEmpty(protectDTO.getImgUrl())}" th:src="*{imgUrl}" alt="#" class="imagePreview2" id="imagePreview2">
       </div>
       <div class="col-md-6">
         <div class="form-group mb-3">
-          <label for="lostWriter">작성자</label>
-          <input type="text" class="form-control" id="lostWriter" th:value="${userId}" th:field="${userId}" th:placeholder="${userId}" readonly>
+          <label for="protectWriter">작성자</label>
+          <input type="text" class="form-control" id="protectWriter" th:value="${userId}" th:field="${userId}" th:placeholder="${userId}" readonly>
         </div>
         <div class="form-group mb-3">
-          <label for="lostTitle">제목</label>
-          <input type="text" class="form-control" id="lostTitle" placeholder="제목" th:field="*{lostTitle}">
+          <label for="protectTitle">제목</label>
+          <input type="text" class="form-control" id="protectTitle" placeholder="제목" th:field="*{proTitle}">
         </div>
         <div class="form-group mb-3">
-          <label for="lostTel">전화번호</label>
-          <input type="text" class="form-control" id="lostTel" placeholder="전화번호" th:field="*{lostTel}">
+          <label for="protectTel">전화번호</label>
+          <input type="text" class="form-control" id="protectTel" placeholder="전화번호" th:field="*{proTel}">
         </div>
         <div class="form-group mb-3">
-          <label for="lostKind">견종</label>
-          <input type="text" class="form-control" id="lostKind" placeholder="견종" th:field="*{lostKind}">
+          <label for="protectKind">견종</label>
+          <input type="text" class="form-control" id="protectKind" placeholder="견종" th:field="*{proKind}">
         </div>
         <div class="form-group mb-3">
-          <label for="lostPlace">실종 장소</label>
-          <input type="text" class="form-control" id="lostPlace" placeholder="실종 장소" th:field="*{lostPlace}">
+          <label for="protectPlace">실종 장소</label>
+          <input type="text" class="form-control" id="protectPlace" placeholder="실종 장소" th:field="*{proPlace}">
         </div>
         <div class="form-group mb-3">
-          <label for="lostDate">실종 날짜</label>
-          <input type="date" class="form-control" id="lostDate" th:field="*{lostDate}">
+          <label for="protectDate">실종 날짜</label>
+          <input type="date" class="form-control" id="protectDate" th:field="*{proDate}">
         </div>
       </div>
     </div>
     <div class="form-group mt-3">
-      <label for="lostDetail">상세정보</label>
-      <textarea class="form-control" id="lostDetail" rows="5" placeholder="글을 작성하세요..." th:field="*{lostDetail}"></textarea>
+      <label for="protectDetail">상세정보</label>
+      <textarea class="form-control" id="protectDetail" rows="5" placeholder="글을 작성하세요..." th:field="*{proDetail}"></textarea>
     </div>
     <div class="d-flex justify-content-end">
-    <button th:if="${lostDTO.getLostNo() == null}" type="submit" th:formaction="@{/dadog/lost/add}" class="btn btn-outline-dark">제출</button>
-      <div th:unless="${#strings.isEmpty(lostDTO.lostNo)}">
-        <button class="btn btn-outline-dark" type="submit"  th:formaction="@{'/dadog/lost/' + ${lostDTO.getLostNo()}}">수정</button>
-        <button class="btn btn-outline-dark" type="button" th:value="${lostDTO.lostNo}" th:onclick="deleteLost(this.value)">삭제</button>
+    <button th:if="${protectDTO.getProNo() == null}" type="submit" th:formaction="@{/dadog/protect/add}" class="btn btn-outline-dark">제출</button>
+      <div th:unless="${#strings.isEmpty(protectDTO.proNo)}">
+        <button class="btn btn-outline-dark" type="submit"  th:formaction="@{'/dadog/protect/' + ${protectDTO.getProNo()}}">수정</button>
+        <button class="btn btn-outline-dark" type="button" th:value="${protectDTO.proNo}" th:onclick="deleteProtect(this.value)">삭제</button>
       </div>
     </div>
   </form>
