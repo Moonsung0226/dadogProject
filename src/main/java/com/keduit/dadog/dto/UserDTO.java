@@ -64,4 +64,14 @@ public class UserDTO {
         userDTO.setAddress(user.getUserAddr());
         return userDTO;
     }
+
+    public User toEntity() {
+        User user = new User();
+        user.setUserName(name);
+        user.setUserId(id);
+        user.setUserEmail(email);
+        user.setUserTel(tel);
+        user.setUserAddr(address);
+        return user;
+    }
 }

@@ -2,10 +2,12 @@ package com.keduit.dadog.controller;
 
 import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
+import com.keduit.dadog.repository.UserRepository;
 import com.keduit.dadog.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,9 +22,11 @@ import java.util.List;
 public class MyPageController {
 
     private final UserService userService; // UserService 필드
+    private final UserRepository userRepository;
 
-    public MyPageController(UserService userService) {
+    public MyPageController(UserService userService, UserRepository userRepository) {
         this.userService = userService; // 생성자 주입
+        this.userRepository = userRepository;
     }
 
 
@@ -51,7 +55,7 @@ public class MyPageController {
     public String myMemberForm(HttpServletRequest request, Model model, Principal principal) {
         User user = userService.getUser(principal.getName());
         UserDTO userDTO = new UserDTO();
-        userDTO.createUserDTO(user);
+        userDTO=userDTO.createUserDTO(user);
         model.addAttribute("userDTO", userDTO); // 세션에서 가져온 사용자 정보를 모델에 추가
 
         return "myPage/myMemberForm"; // Thymeleaf 템플릿 경로
@@ -67,6 +71,27 @@ public class MyPageController {
         model.addAttribute("userDTO", userDTO); // 수정된 사용자 정보 모델에 추가
 
         return "myPage/myMemberForm"; // 변경 후 같은 페이지로 리다이렉션
+    }
+
+    @GetMapping("/myPage/{id}/edit")
+    public String edit(@PathVariable Long id, Model model) {
+        User userEntity = userRepository.findById(id).orElse(null);
+        model.addAttribute("user", userEntity);
+        return "myPage/edit";
+    }
+
+    @PostMapping("/myPage/update")
+    public String update(UserDTO userDTO) {
+        User userEntity = userDTO.toEntity();
+
+        // userId를 Long으로 변환
+        Long userId = Long.valueOf(userEntity.getUserId());
+        User target = userRepository.findById(userId).orElse(null);
+
+        if (target != null) {
+            userRepository.save(userEntity);
+        }
+        return "redirect:/dadog/myPage/myMemberForm";
     }
 
 

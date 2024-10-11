@@ -88,10 +88,16 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    @Transactional
     public void updateUser(UserDTO userDTO) {
-        User user = userRepository.findByUserId(userDTO.getId());
+        System.out.println("User ID from DTO: " + userDTO.getId()); // 여기 추가
+        System.out.println("Updating user with ID: " + userDTO.getId());
+
+        User user = getUser(userDTO.getId());
+        System.out.println("Retrieved user: " + user);
+
         if (user == null) {
-            throw new IllegalStateException("사용자를 찾을 수 없습니다.");
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
 
         user.setUserName(userDTO.getName());
@@ -106,4 +112,6 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
     }
+
+
 }
