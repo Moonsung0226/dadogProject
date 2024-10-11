@@ -67,6 +67,9 @@ public class AdoptController {
         String userName = principal.getName();
         Long wishNo;
         wishNo = wishService.addWish(wishDTO, userName);
+        if(wishNo == 0L) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(wishNo, HttpStatus.OK);
     }
 }

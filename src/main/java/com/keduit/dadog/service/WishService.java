@@ -20,20 +20,24 @@ public class WishService {
     private final UserRepository userRepository;
     private final AdoptRepository adoptRepository;
 
-    public Long addWish(WishDTO wishDTO,String userName) {
+    public Long addWish(WishDTO wishDTO, String userName) {
+        //TODO: 중복체크 필요
         Adopt adopt = adoptRepository.findById(wishDTO.getAdoptNo()).orElseThrow(EntityNotFoundException::new);
-
         User user = userRepository.findByUserId(userName);
-        if(user == null){
+
+        if (user == null) {
             user = userRepository.findByUserEmail(userName);
         }
-        System.out.println("---------------user->" + user);
-        Wish wish = new Wish();
-        wish = wish.createWish(user,adopt);
-        System.out.println("-------------wish->" + wish);
-        wishRepository.save(wish);
-
-        return wish.getWishNo();
+        Wish wishData = wishRepository.findByUserAndAdopt(user, adopt);
+        //같은 종을 담으려고 하면
+        if (wishData == null) {
+            //처음 찜목록 추가시
+            Wish wish = new Wish();
+            wish = wish.createWish(user, adopt);
+            wishRepository.save(wish);
+            return wish.getWishNo();
+        } else {
+            return 0L;
+        }
     }
-
 }
