@@ -43,7 +43,7 @@ dependencies {
 
 	//쿼리 dsl 을 사용하기 위한 라이브러리 jpa, Qclass 를 찾아줄 apt
 	implementation 'com.querydsl:querydsl-apt:5.0.0'
-	implementation 'com.querydsl:querydsl-jpa:'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
 	implementation 'com.querydsl:querydsl-core'
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
 	annotationProcessor 'javax.persistence:javax.persistence-api'
@@ -53,6 +53,7 @@ dependencies {
 	//json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
+
 // Querydsl 빌드 옵션 설정
 def generated = 'src/main/generated'
 
