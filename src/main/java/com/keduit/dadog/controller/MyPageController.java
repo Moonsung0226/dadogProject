@@ -10,13 +10,12 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class MyPageController {
 
-// 마이페이지
+    // 마이페이지
     @GetMapping("/dadog/myPage") // 경로 앞에 '/' 추가
     public String mypage(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
 
         return "mypage/mypage";
     }
-
 
 }
