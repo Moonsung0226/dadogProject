@@ -76,4 +76,19 @@ public class Lost extends BaseTimeEntity{
         lost.setUser(user);
         return lost;
     }
+
+    public void updateLost(LostDTO lostDTO){
+        this.lostTitle = lostDTO.getLostTitle();
+        this.lostTel = lostDTO.getLostTel();
+        this.lostDate = lostDTO.getLostDate();
+        this.lostPlace = lostDTO.getLostPlace();
+        this.lostDetail = lostDTO.getLostDetail();
+        this.lostKind = lostDTO.getLostKind();
+    }
+
+    public void updateImg(String lostOriName, String lostImgUrl, String lostFileName) {
+        this.lostImgUrl = lostImgUrl;
+        this.lostFileName = lostFileName;
+        this.lostOriName = lostOriName;
+    }
 }

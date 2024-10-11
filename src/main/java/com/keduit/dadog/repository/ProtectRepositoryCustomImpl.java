@@ -1,8 +1,8 @@
 package com.keduit.dadog.repository;
 
 import com.keduit.dadog.dto.SearchDTO;
-import com.keduit.dadog.entity.Lost;
-import com.keduit.dadog.entity.QLost;
+import com.keduit.dadog.entity.Protect;
+import com.keduit.dadog.entity.QProtect;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,38 +14,35 @@ import org.thymeleaf.util.StringUtils;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-public class LostRepositoryCustomImpl implements LostRepositoryCustom {
+public class ProtectRepositoryCustomImpl implements ProtectRepositoryCustom {
 
     private JPAQueryFactory queryFactory;
-
-    public LostRepositoryCustomImpl(EntityManager em) {this.queryFactory = new JPAQueryFactory(em);}
+    public ProtectRepositoryCustomImpl(EntityManager em) {this.queryFactory = new JPAQueryFactory(em);}
 
     private BooleanExpression searchByLike(String searchBy, String searchQuery){
         if(StringUtils.equals("kind",searchBy)){
-            return QLost.lost.lostKind.like("%" + searchQuery + "%");
+            return QProtect.protect.proKind.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("place",searchBy)){
-            return QLost.lost.lostPlace.like("%" + searchQuery + "%");
+            return QProtect.protect.proKind.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("detail",searchBy)){
-            return QLost.lost.lostDetail.like("%" + searchQuery + "%");
+            return QProtect.protect.proDetail.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("title",searchBy)){
-            System.out.println("-------여기");
-            return QLost.lost.lostTitle.like("%" + searchQuery + "%");
+            return QProtect.protect.proTitle.like("%" + searchQuery + "%");
         }
         return null;
     }
 
     @Override
-    public Page<Lost> getAdoptListPage(SearchDTO searchDTO, Pageable pageable) {
-
-        List<Lost> result = queryFactory.selectFrom(QLost.lost)
+    public Page<Protect> getProtectListPage(SearchDTO searchDTO, Pageable pageable) {
+        List<Protect> result = queryFactory.selectFrom(QProtect.protect)
                 .where(searchByLike(searchDTO.getSearchBy(), searchDTO.getSearchQuery()))
-                .orderBy(QLost.lost.lostNo.desc())
+                .orderBy(QProtect.protect.proNo.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         Long total = queryFactory.select(Wildcard.count)
-                .from(QLost.lost)
+                .from(QProtect.protect)
                 .where(searchByLike(searchDTO.getSearchBy(), searchDTO.getSearchQuery()))
                 .fetchOne();
         return new PageImpl<>(result, pageable, total);

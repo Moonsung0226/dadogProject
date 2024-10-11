@@ -29,6 +29,8 @@ public class QProtect extends EntityPathBase<Protect> {
 
     public final DatePath<java.time.LocalDate> proDate = createDate("proDate", java.time.LocalDate.class);
 
+    public final StringPath proDetail = createString("proDetail");
+
     public final StringPath proFileName = createString("proFileName");
 
     public final StringPath proImgUrl = createString("proImgUrl");
@@ -42,6 +44,8 @@ public class QProtect extends EntityPathBase<Protect> {
     public final StringPath proPlace = createString("proPlace");
 
     public final StringPath proTel = createString("proTel");
+
+    public final StringPath proTitle = createString("proTitle");
 
     public final StringPath proWriter = createString("proWriter");
 
