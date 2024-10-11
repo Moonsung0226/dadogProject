@@ -1,4 +1,4 @@
-package com.keduit.dadog.Repository;
+package com.keduit.dadog.repository;
 
 import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.User;

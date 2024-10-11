@@ -3,7 +3,7 @@ package com.keduit.dadog.service;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
-import com.keduit.dadog.Repository.UserRepository;
+import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
