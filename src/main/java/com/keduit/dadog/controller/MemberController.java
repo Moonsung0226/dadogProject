@@ -47,7 +47,7 @@ public class MemberController {
         }
 
         redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
-        return "redirect:/";
+        return "redirect:/dadog/main";
     }
 
 
@@ -58,7 +58,7 @@ public class MemberController {
         // 세션 무효화
         session.invalidate();
         redirectAttributes.addFlashAttribute("message", "성공적으로 로그아웃되었습니다.");
-        return "redirect:/";
+        return "redirect:/dadog/main";
     }
 
 
@@ -89,20 +89,20 @@ public class MemberController {
         return "redirect:/login"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
     }
 
-    // 로그인 처리
-    @PostMapping("/login")
-    public String login(UserDTO userDTO, HttpServletRequest request) {
-        // 로그인 로직 (예: 사용자 인증)
-        if (userService.isValidUser(userDTO)) { // UserService의 메서드를 사용하여 사용자의 유효성을 검사
-            HttpSession session = request.getSession(); // 현재 세션을 가져옴
-            session.setAttribute("userDTO", userDTO); // UserDTO를 세션에 저장
-            System.out.println("UserDTO saved to session: " + userDTO); // 디버깅용 로그
-            return "redirect:/dadog/myMemberForm"; // 로그인 후 이동할 페이지
-        } else {
-            // 로그인 실패 시 처리
-            return "redirect:/login"; // 실패 시 로그인 페이지로 리다이렉션
-        }
-    }
+//    // 로그인 처리
+//    @PostMapping("/login")
+//    public String login(UserDTO userDTO, HttpServletRequest request) {
+//        // 로그인 로직 (예: 사용자 인증)
+//        if (userService.isValidUser(userDTO)) { // UserService의 메서드를 사용하여 사용자의 유효성을 검사
+//            HttpSession session = request.getSession(); // 현재 세션을 가져옴
+//            session.setAttribute("userDTO", userDTO); // UserDTO를 세션에 저장
+//            System.out.println("UserDTO saved to session: " + userDTO); // 디버깅용 로그
+//            return "redirect:/dadog/myMemberForm"; // 로그인 후 이동할 페이지
+//        } else {
+//            // 로그인 실패 시 처리
+//            return "redirect:/login"; // 실패 시 로그인 페이지로 리다이렉션
+//        }
+//    }
 
 
 }

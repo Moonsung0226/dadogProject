@@ -45,4 +45,13 @@ public class ProtectDTO {
         this.proWriter = protect.getProWriter();
         return protectDTO;
     }
+
+    public ProtectDTO mainProtect(Protect protect) {
+        ProtectDTO protectDTO = new ProtectDTO();
+        protectDTO.setProNo(protect.getProNo());
+        protectDTO.setProDate(protect.getProDate());
+        protectDTO.setProPlace(protect.getProPlace());
+        protectDTO.setImgUrl(protect.getProImgUrl());
+        return protectDTO;
+    }
 }

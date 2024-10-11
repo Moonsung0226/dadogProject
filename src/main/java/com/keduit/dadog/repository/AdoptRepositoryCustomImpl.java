@@ -43,6 +43,14 @@ public class AdoptRepositoryCustomImpl implements AdoptRepositoryCustom{
         return null;
     }
 
+    public List<Adopt> mainAdoptList(){
+        List<Adopt> result = queryFactory.selectFrom(QAdopt.adopt)
+                .orderBy(QAdopt.adopt.adoptEdt.asc())
+                .limit(4)
+                .fetch();
+        return result;
+    }
+
     @Override
     public Page<Adopt> getAdoptListPage(AdoptSearchDTO adoptSearchDTO, Pageable pageable) {
 

@@ -71,7 +71,7 @@ public class LostController {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/dadog/lost/add";
         }
-        return "main";
+        return "redirect:/dadog/main";
     }
 
     @GetMapping("/{lostNo}")

@@ -26,4 +26,11 @@ public class Wish extends BaseTimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adopt_no")
     private Adopt adopt;
+
+    public Wish createWish(User user, Adopt adopt) {
+        Wish wish = new Wish();
+        wish.setUser(user);
+        wish.setAdopt(adopt);
+        return wish;
+    }
 }

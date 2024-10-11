@@ -55,9 +55,9 @@ public class MyPageController {
     public String myMemberForm(HttpServletRequest request, Model model, Principal principal) {
         User user = userService.getUser(principal.getName());
         UserDTO userDTO = new UserDTO();
-        userDTO=userDTO.createUserDTO(user);
+        userDTO = userDTO.createUserDTO(user);
         model.addAttribute("userDTO", userDTO); // 세션에서 가져온 사용자 정보를 모델에 추가
-
+        System.out.println("--------------userDTO --> " + userDTO);
         return "myPage/myMemberForm"; // Thymeleaf 템플릿 경로
     }
 
