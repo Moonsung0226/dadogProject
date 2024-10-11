@@ -18,6 +18,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -114,5 +115,9 @@ public class LostService {
         }
         Lost lost = lostRepository.findById(lostNo).orElseThrow(EntityNotFoundException::new);
         return Objects.equals(lost.getUser().getUserNo(), user.getUserNo());
+    }
+
+    public List<Lost> findAllLost() {
+        return lostRepository.findAll(); // 모든 Lost 엔티티를 반환
     }
 }

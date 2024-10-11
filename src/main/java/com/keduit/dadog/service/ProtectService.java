@@ -17,6 +17,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -113,5 +114,9 @@ public class ProtectService {
         }
         Protect protect = protectRepository.findById(proNo).orElseThrow(EntityNotFoundException::new);
         return Objects.equals(protect.getUser().getUserNo(), user.getUserNo());
+    }
+
+    public List<Protect> findAllProtects() {
+        return protectRepository.findAll(); // 모든 Protect 엔티티를 반환
     }
 }

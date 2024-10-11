@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/adminLayout}">
+
+<div layout:fragment="mainContent">
+    <section class="top-section">
+        <article class="top-left">
+            <div class="card" style="flex: 1; margin-right: 10px;">
+                <h5 class="card-header">Lost Information</h5>
+                <div class="card-body">
+                    <ul>
+                        <li th:each="lost : ${lostList}" th:text="${lost.lostTitle}"></li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+        <article class="top-right">
+            <div class="card" style="flex: 1; margin-left: 10px;">
+                <h5 class="card-header">Adopt Information</h5>
+                <div class="card-body">
+                    <ul>
+                        <li th:each="adopt : ${adoptList}" th:text="${adopt.adoptCareNm}"></li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </section>
+    <section class="middle-section">
+        <article class="middle-left">
+            <div class="card" style="flex: 1; margin-right: 10px;">
+                <h5 class="card-header">Board Information</h5>
+                <div class="card-body">
+                    <ul>
+                        <li th:each="board : ${boardList}" th:text="${board.boardTitle}"></li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+        <article class="middle-right">
+            <div class="card" style="flex: 1; margin-left: 10px;">
+                <h5 class="card-header">Protect Information</h5>
+                <div class="card-body">
+                    <ul>
+                        <li th:each="protect : ${protectList}" th:text="${protect.proTitle}"></li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </section>
+    <section class="bottom-section">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">User ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telephone</th>
+                <th scope="col">Role</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider" th:each="user : ${userList}">
+            <tr>
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.userEmail}"></td>
+                <td th:text="${user.userTel}"></td>
+                <td th:text="${user.role}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </section>
+</div>
+</html>

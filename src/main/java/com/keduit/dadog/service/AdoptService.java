@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 
 @Service
@@ -26,6 +27,10 @@ public class AdoptService {
 
     public Adopt getAdopt(Long adoptNo) {
         return adoptRepository.findById(adoptNo).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<Adopt> findAllAdopt() {
+        return adoptRepository.findAll(); // 모든 Adopt 엔티티를 반환
     }
 
 }

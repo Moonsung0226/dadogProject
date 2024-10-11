@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -105,5 +107,9 @@ public class UserService implements UserDetailsService {
         user.setUserAddr(userDTO.getAddress());
 
         userRepository.save(user);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll(); // 모든 User 엔티티를 반환
     }
 }
