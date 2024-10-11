@@ -25,6 +25,15 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User getUser(String userName){
+        //카카오 유저를 위해 userEmail 로 한번 더 검색
+        User user = userRepository.findByUserId(userName);
+        if(user == null){
+            user = userRepository.findByUserEmail(userName);
+        }
+        return user;
+    }
+
     private void validateUser(User user) {
         User findUser = userRepository.findByUserId(user.getUserId());
         if (findUser != null) {

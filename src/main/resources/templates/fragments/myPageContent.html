@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="body" class="flex-shrink-0 p-3" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+        <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+        <span class="fs-2 fw-semibold">마이페이지</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+        <li class="mb-1">
+            <button class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                내가 쓴 글
+            </button>
+            <div class="collapse" id="home-collapse" style="">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li class="ms-5 fs-6"><a href="/dadog/myPage/myLost" class="link-body-emphasis d-inline-flex text-decoration-none rounded">실종신고</a></li>
+                    <li class="ms-5 fs-6"><a href="/dadog/myPage/myProtect" class="link-body-emphasis d-inline-flex text-decoration-none rounded">입양하기</a></li>
+                    <li class="ms-5 fs-6"><a href="/dadog/myPage/myWriting" class="link-body-emphasis d-inline-flex text-decoration-none rounded">자유게시판</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <a href="/dadog/myPage/myAdopt" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                입양현황
+            </a>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+            <button class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                회원정보
+            </button>
+            <div class="collapse" id="account-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li class="ms-5 fs-6"><a href="/dadog/myPage/myMemberForm" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원정보</a></li>
+                    <li class="ms-5 fs-6"><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 탈퇴</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
