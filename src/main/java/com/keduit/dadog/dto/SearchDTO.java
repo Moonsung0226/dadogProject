@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LostSearchDTO {
+public class SearchDTO {
     private String searchBy;
 
     private String searchQuery = "";
