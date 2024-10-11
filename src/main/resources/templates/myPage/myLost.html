@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/myPageLayout}">
+
+<div layout:fragment="mainContent">
+    <div class="container mt-5">
+        <h1>내가 쓴 실종신고</h1>
+
+<!--        <div class="row">-->
+<!--            <div th:if="${#lists.isEmpty(posts)}" class="col-12">-->
+<!--                <div class="alert alert-warning" role="alert">-->
+<!--                    작성한 실종신고가 없습니다.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-md-4" th:each="post : ${posts}">-->
+<!--                <div class="card mb-4">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title" th:text="${post.title}">게시글 제목</h5>-->
+<!--                        <p class="card-text" th:text="${post.content}">게시글 내용</p>-->
+<!--                        <p class="card-text">-->
+<!--                            <small class="text-muted" th:text="${post.author}">작성자</small>-->
+<!--                            <small class="text-muted" th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd')}">작성일</small>-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+</div>
+</html>

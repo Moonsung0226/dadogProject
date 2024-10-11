@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}">
-
-<head>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>회원정보 변경</title>
-
+      layout:decorate="~{layouts/myPageLayout}">
     <!-- 사용자 CSS 추가 -->
     <th:block layout:fragment="css">
         <style>
@@ -34,51 +29,50 @@
         </style>
     </th:block>
 
+    <th:block layout:fragment="script">
     <!-- 사용자 JS 추가 -->
-    <script th:inline="javascript">
-        $(document).ready(() => {
-            const successMessage = [[${successMessage}]];
-            if (successMessage) {
-                alert(successMessage);
-            }
-
-            // 비밀번호 확인 유효성 검사
-            $('form').on('submit', function (e) {
-                const password = $('#password').val();
-                const confirmPassword = $('#confirmPassword').val();
-                const successMessageDiv = $('#successMessage');
-
-                // 이전 성공 메시지 지우기
-                successMessageDiv.text('');
-
-                // 필수 체크박스 유효성 검사
-                const termsRequired = $('#termsRequired').is(':checked');
-                const privacyRequired = $('#privacyRequired').is(':checked');
-
-                if (!termsRequired || !privacyRequired) {
-                    e.preventDefault(); // 폼 제출 방지
-                    alert('[필수] 이용약관 및 개인정보 수집 및 이용 동의에 체크해야 합니다.');
-                    return; // 더 이상 진행하지 않음
+        <script th:inline="javascript">
+            $(document).ready(() => {
+                const successMessage = [[${successMessage}]];
+                if (successMessage) {
+                    alert(successMessage);
                 }
 
-                if (password !== confirmPassword) {
-                    e.preventDefault(); // 폼 제출 방지
-                    alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-                } else if (password.length < 8) { // 비밀번호 길이 체크
-                    e.preventDefault(); // 폼 제출 방지
-                    alert('비밀번호는 최소 8자 이상이어야 합니다.');
-                } else {
-                    successMessageDiv.text('비밀번호가 일치합니다.');
-                }
+                // 비밀번호 확인 유효성 검사
+                $('form').on('submit', function (e) {
+                    const password = $('#password').val();
+                    const confirmPassword = $('#confirmPassword').val();
+                    const successMessageDiv = $('#successMessage');
+
+                    // 이전 성공 메시지 지우기
+                    successMessageDiv.text('');
+
+                    // 필수 체크박스 유효성 검사
+                    const termsRequired = $('#termsRequired').is(':checked');
+                    const privacyRequired = $('#privacyRequired').is(':checked');
+
+                    if (!termsRequired || !privacyRequired) {
+                        e.preventDefault(); // 폼 제출 방지
+                        alert('[필수] 이용약관 및 개인정보 수집 및 이용 동의에 체크해야 합니다.');
+                        return; // 더 이상 진행하지 않음
+                    }
+
+                    if (password !== confirmPassword) {
+                        e.preventDefault(); // 폼 제출 방지
+                        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                    } else if (password.length < 8) { // 비밀번호 길이 체크
+                        e.preventDefault(); // 폼 제출 방지
+                        alert('비밀번호는 최소 8자 이상이어야 합니다.');
+                    } else {
+                        successMessageDiv.text('비밀번호가 일치합니다.');
+                    }
+                });
             });
-        });
-    </script>
-
-</head>
-<body>
+        </script>
+    </th:block>
 
 <div layout:fragment="mainContent">
-    <div class="col-md-7 col-lg-12">
+    <div class="col-md-7 col-lg-12 mt-5 mb-5">
         <div class="form-container">
             <h1>회원정보변경</h1>
             <hr class="my-4">
@@ -162,5 +156,4 @@
         </div>
     </div>
 </div>
-</body>
 </html>
