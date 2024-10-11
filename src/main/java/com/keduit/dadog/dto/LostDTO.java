@@ -1,5 +1,6 @@
 package com.keduit.dadog.dto;
 
+import com.keduit.dadog.entity.Adopt;
 import com.keduit.dadog.entity.Lost;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +46,16 @@ public class LostDTO {
         this.imgUrl = lost.getLostImgUrl();
         this.lostTel = lost.getLostTel();
         this.lostWriter = lost.getLostWriter();
+        return lostDTO;
+    }
+
+    public LostDTO mainLost(Lost lost) {
+        LostDTO lostDTO = new LostDTO();
+        lostDTO.setLostNo(lost.getLostNo());
+        lostDTO.setLostDate(lost.getLostDate());
+        lostDTO.setLostKind(lost.getLostKind());
+        lostDTO.setLostPlace(lost.getLostPlace());
+        lostDTO.setImgUrl(lost.getLostImgUrl());
         return lostDTO;
     }
 }
