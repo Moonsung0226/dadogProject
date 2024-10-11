@@ -40,76 +40,22 @@
       <p class="lead my-3">현재 입양 가능한 아이들</p>
     </div>
     <div class="container">
-      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <div class="col">
+      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" >
+        <div class="col" th:each="adopt : ${adoptDTOList}">
           <div class="card h-100">
             <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
+            <img class="card-img-top" th:src="${adopt.getAdopt_imgurl()}" alt="..." style="object-fit: cover" width="200" height="250">
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
+                <h5 class="fw-bolder" th:text="'견종 : ' + ${adopt.getAdopt_kind()}"></h5>
+                <p th:text="'종료일 : ' + ${adopt.getAdopt_edt()}"></p>
+                <p th:text="'보호소명 : ' + ${adopt.getAdopt_carenm()}"></p>
               </div>
             </div>
             <!-- Product actions-->
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Sale badge-->
-
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Sale badge-->
-
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
+              <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="'/dadog/adopt/'+${adopt.getAdopt_no()}">상세보기</a></div>
             </div>
           </div>
         </div>
@@ -118,80 +64,26 @@
   </section>
   <section class="py-5 bg-warning">
     <div class="text-center w-100 pb-4 lh-1">
-      <h3>입양하기</h3>
-      <p class="lead my-3">현재 입양 가능한 아이들</p>
+      <h3>실종신고</h3>
+      <p class="lead my-3">강아지를 찾습니다</p>
     </div>
     <div class="container">
       <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <div class="col">
+        <div class="col" th:each="lost : ${lostDTOList}">
           <div class="card h-100">
-            <!-- image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Sale badge-->
-
             <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
+            <img class="card-img-top" th:src="${lost.getImgUrl()}" alt="..." style="object-fit: cover" width="200" height="250">
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
+                <h5 class="fw-bolder" th:text="'견종 : ' + ${lost.getLostKind()}"></h5>
+                <p th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
+                <p th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
               </div>
             </div>
             <!-- Product actions-->
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Sale badge-->
-
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
+              <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="'/dadog/lost/' + ${lost.getLostNo()}">상세보기</a></div>
             </div>
           </div>
         </div>
@@ -200,86 +92,32 @@
   </section>
   <section class="py-5 bg-warning">
     <div class="text-center w-100 pb-4 lh-1">
-      <h3>입양하기</h3>
-      <p class="lead my-3">현재 입양 가능한 아이들</p>
+      <h3>보호중</h3>
+      <p class="lead my-3">현재 민간 보호중인 유기견</p>
     </div>
     <div class="container">
       <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <div class="col">
+        <div class="col" th:each="protect : ${protectDTOList}">
           <div class="card h-100">
             <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
+            <img class="card-img-top" th:src="${protect.getImgUrl()}" alt="..." style="object-fit: cover" width="200" height="250">
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
+                <h5 class="fw-bolder" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
+                <p th:text="'분실날짜 : ' + ${protect.getProDate()}"></p>
               </div>
             </div>
             <!-- Product actions-->
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Sale badge-->
-
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Sale badge-->
-
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100">
-            <!-- Product image-->
-            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-            <!-- Product details-->
-            <div class="card-body p-4">
-              <div class="text-center">
-                <h5 class="fw-bolder">견종 : 머시기</h5>
-                간략한 정보
-              </div>
-            </div>
-            <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
+              <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="'/dadog/protect/' + ${protect.getProNo()}">상세보기</a></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
 </div>
 
 

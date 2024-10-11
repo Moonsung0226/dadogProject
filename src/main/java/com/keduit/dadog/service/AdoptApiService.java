@@ -99,6 +99,7 @@ public class AdoptApiService {
 
                         if(items.isArray()){
                             for(JsonNode item : items){
+
                                 String kindCd = item.path("kindCd").asText().substring(4);
                                 String age = item.path("age").asText();
                                 String careNm = item.path("careNm").asText();
@@ -108,13 +109,18 @@ public class AdoptApiService {
                                 String specialMark = item.path("specialMark").asText();
                                 String popfile = item.path("popfile").asText();
                                 String noticeEdt = item.path("noticeEdt").asText();
+                                String formattedNoticeEdt = null;
+                                if (noticeEdt.length() == 8) { // 8자리 숫자인지 확인
+                                    LocalDate date = LocalDate.parse(noticeEdt, DateTimeFormatter.ofPattern("yyyyMMdd"));
+                                    formattedNoticeEdt = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                }
 
                                 Adopt adopt = new Adopt();
                                 adopt.setAdoptKind(kindCd);
                                 adopt.setAdoptAge(age);
                                 adopt.setAdoptCareNm(careNm);
                                 adopt.setAdoptImgUrl(popfile);
-                                adopt.setAdoptEdt(noticeEdt);
+                                adopt.setAdoptEdt(formattedNoticeEdt);
                                 adopt.setAdoptWeight(weight);
                                 adopt.setAdoptSpecial(specialMark);
                                 adopt.setAdoptCareTel(careTel);
