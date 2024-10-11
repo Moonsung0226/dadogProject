@@ -16,6 +16,10 @@
 
       location.href="/dadog/lost/list/" + page + "?searchBy=" + searchBy + "&searchQuery=" + searchQuery;
     }
+
+    function addLost(){
+      location.href="/dadog/lost/add";
+    }
   </script>
 </th:block>
 
@@ -87,6 +91,9 @@
       </select>
       <input th:field="*{searchQuery}" class="form-control" id="searchQuery" placeholder="검색어">
       <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+      <button class="btn btn-outline-dark" type="button" onclick="addLost()">
+        글쓰기
+      </button>
     </div>
   </form>
 </div>
