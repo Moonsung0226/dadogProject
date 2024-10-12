@@ -5,6 +5,8 @@ import com.keduit.dadog.entity.Board;
 import com.keduit.dadog.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,13 +24,40 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public String getAllBoards(Model model, Principal principal) {
-        List<Board> boards = boardService.findAllBoards();
+    public String getAllBoards(Model model, Principal principal,
+                               @RequestParam(value = "keyword", required = false) String keyword,
+                               @RequestParam(value = "searchType", required = false) String searchType,
+                               Pageable pageable) {
 
-        model.addAttribute("boards", boards);
-        model.addAttribute("userId", principal.getName());
+        Page<BoardDTO> boardPage;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            switch (searchType) {
+                case "title":
+                    boardPage = boardService.searchByTitle(keyword, pageable);
+                    break;
+                case "content":
+                    boardPage = boardService.searchByContent(keyword, pageable);
+                    break;
+                case "writer":
+                    boardPage = boardService.searchByWriter(keyword, pageable);
+                    break;
+                default:
+                    boardPage = boardService.paging(pageable);
+                    break;
+            }
+        } else {
+            boardPage = boardService.paging(pageable);
+        }
+
+        model.addAttribute("userId", (principal != null) ? principal.getName() : "Anonymous");
+        model.addAttribute("boards", boardPage);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("searchType", searchType);
+
         return "board/list";
     }
+
 
     @GetMapping("/new")
     public String addBoard(Model model, Principal principal) {
@@ -48,10 +77,12 @@ public class BoardController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMsg", "입력값에 오류가 있습니다.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
             return "board/add";
         }
 
         try {
+
             boardService.addBoard(boardDTO, username);
         } catch (Exception e) {
             model.addAttribute("errorMsg", e.getMessage());
@@ -80,7 +111,7 @@ public class BoardController {
         boardDTO.setBoardViews(board.getBoardViews());
 
         model.addAttribute("boardDTO", boardDTO);
-        model.addAttribute("userId", principal.getName());
+        model.addAttribute("userId", (principal != null) ? principal.getName() : "Anonymous");
         return "board/update";
     }
 

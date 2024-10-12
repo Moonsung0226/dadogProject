@@ -1,13 +1,12 @@
 package com.keduit.dadog.dto;
 
-import com.keduit.dadog.entity.Board;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -28,6 +27,19 @@ public class BoardDTO {
 
     private Long boardViews; // 조회수
 
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+
+    public BoardDTO(Long boardNo, String boardWriter, String boardTitle, String boardContent, Long boardViews, LocalDateTime createTime, LocalDateTime updateTime) {
+        this.boardNo = boardNo;
+        this.boardWriter = boardWriter;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardViews = boardViews;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
 
 
+    public BoardDTO() {}
 }

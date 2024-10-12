@@ -8,11 +8,21 @@
 <p>작성자: <span th:text="${board.boardWriter}"></span></p>
 <p>내용: <span th:text="${board.boardContent}"></span></p>
 <p>조회수: <span th:text="${board.boardViews}"></span></p>
-<a th:href="@{/dadog/boards/update/{boardNo}(boardNo=${board.boardNo})}">수정</a>
+
+<!-- 수정 버튼 -->
+<form th:action="@{/dadog/boards/update/{boardNo}(boardNo=${board.boardNo})}" method="get" style="display:inline;">
+    <button type="submit">수정</button>
+</form>
+
+<!-- 삭제 버튼 -->
 <form th:action="@{/dadog/boards/delete/{boardNo}(boardNo=${board.boardNo})}" method="post" style="display:inline;">
     <button type="submit">삭제</button>
 </form>
-<br>
-<a href="/dadog/boards">목록으로 돌아가기</a>
+
+<!-- 목록으로 돌아가기 -->
+<form th:action="@{/dadog/boards}" method="get" style="display:inline;">
+    <button type="submit">목록으로 돌아가기</button>
+</form>
+
 </body>
 </html>
