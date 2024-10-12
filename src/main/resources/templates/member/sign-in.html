@@ -16,14 +16,29 @@
 
   <style>
     .form-signin {
-      max-width: 500px; /* Increased width */
+      max-width: 500px;
       padding: 1.5rem;
       margin: auto;
+      border-radius: 10px;
+
     }
 
-    .form-signin input[type="email"], .form-signin input[type="password"] {
-      width: 400px;
-      margin-bottom: 10px;
+    .form-floating {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-signin input[type="text"],
+    .form-signin input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-signin input[type="text"]:focus,
+    .form-signin input[type="password"]:focus {
+      border-color: cornflowerblue;
+      box-shadow: 0 0 5px rgba(0, 149, 255, 0.5);
     }
 
     a {
@@ -31,12 +46,12 @@
     }
 
     .kakao-login {
-      text-align: center; /* 부모 요소를 가운데 정렬 */
+      text-align: center;
     }
 
     .kakao-login img {
-      width: 190px; /* 카카오 로그인 이미지 크기 */
-      height: 45px; /* 카카오 로그인 이미지 크기 */
+      width: 190px;
+      height: 45px;
       display: inline-block;
     }
   </style>
@@ -47,7 +62,7 @@
     <form action="/dadog/users/login" method="post">
       <h1 class="h3 mb-3 fw-normal text-center">로그인</h1>
       <div class="form-floating">
-        <input type="id" class="form-control" id="floatingInput" name="userId" placeholder="">
+        <input type="text" class="form-control" id="floatingInput" name="userId" placeholder="">
         <label for="floatingInput">아이디</label>
       </div>
       <div class="form-floating">
@@ -55,15 +70,15 @@
         <label for="floatingPassword">비밀번호</label>
       </div>
 
-      <div class="form-check text-start my-3">
-        <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">
-          Remember me
-        </label>
-      </div>
+<!--      <div class="form-check text-start my-3">-->
+<!--        <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">-->
+<!--        <label class="form-check-label" for="flexCheckDefault">-->
+<!--          Remember me-->
+<!--        </label>-->
+<!--      </div>-->
 
       <div class="text-center">
-        <button class="btn w-50 py-2" type="submit" style="background-color: cornflowerblue; color: black;">로그인</button> <!-- 가로 길이 100%로 변경 -->
+        <button class="btn w-50 py-2" type="submit" style="background-color: cornflowerblue; color: black;">로그인</button>
       </div>
 
       <p></p>
@@ -71,7 +86,7 @@
         <a th:href="${kakaoUrl}" class="kakao-login">
           <img src="/kakao_login_medium_narrow.png" alt="카카오 로그인">
         </a>
-        <div th:if="${errorMessage}" th:text="${errorMessage}"></div> <!-- 오류 메시지 출력 -->
+        <div th:if="${errorMessage}" th:text="${errorMessage}"></div>
       </div>
 
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

@@ -34,7 +34,6 @@
 </th:block>
 
 <th:block layout:fragment="script">
-    <!-- 사용자 JS 추가 -->
     <script th:inline="javascript">
         $(document).ready(() => {
             const successMessage = [[${successMessage}]];
@@ -42,24 +41,39 @@
                 alert(successMessage);
             }
 
-            // 비밀번호 확인 유효성 검사
+            // 비밀번호 확인 실시간 유효성 검사
+            $('#password, #confirmPassword').on('input', function() {
+                const password = $('#password').val();
+                const confirmPassword = $('#confirmPassword').val();
+                const messageDiv = $('#passwordMatchMessage');
+
+                if (password === '' && confirmPassword === '') {
+                    messageDiv.text('');
+                } else if (password === confirmPassword) {
+                    messageDiv.text('비밀번호가 일치합니다.').css('color', 'green');
+                } else {
+                    messageDiv.text('비밀번호가 일치하지 않습니다.').css('color', 'red');
+                }
+            });
+
+            // 폼 제출 시 유효성 검사
             $('form').on('submit', function (e) {
                 const password = $('#password').val();
                 const confirmPassword = $('#confirmPassword').val();
-                const successMessageDiv = $('#successMessage');
 
-                // 이전 성공 메시지 지우기
-                successMessageDiv.text('');
+                // 비밀번호 필드가 비어있지 않은 경우에만 검증
+                if (password !== '' || confirmPassword !== '') {
+                    if (password !== confirmPassword) {
+                        e.preventDefault(); // 폼 제출 방지
+                        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                        return;
+                    }
 
-
-                if (password !== confirmPassword) {
-                    e.preventDefault(); // 폼 제출 방지
-                    alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-                } else if (password.length < 8) { // 비밀번호 길이 체크
-                    e.preventDefault(); // 폼 제출 방지
-                    alert('비밀번호는 최소 8자 이상이어야 합니다.');
-                } else {
-                    successMessageDiv.text('비밀번호가 일치합니다.');
+                    if (password.length < 8) {
+                        e.preventDefault(); // 폼 제출 방지
+                        alert('비밀번호는 최소 8자 이상이어야 합니다.');
+                        return;
+                    }
                 }
             });
         });
@@ -107,6 +121,7 @@
                         <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required>
                         <div class="invalid-feedback">비밀번호 확인이 필요합니다.</div>
                         <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="fieldError"></p>
+                        <div id="passwordMatchMessage"></div> <!-- 비밀번호 일치 여부 메시지 -->
                     </div>
 
                     <!-- Telephone Field -->
@@ -123,6 +138,7 @@
                         <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required>
                         <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
                         <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
+                        <div id="emailFeedback"></div> <!-- 이메일 중복 확인 메시지 -->
                     </div>
 
                     <!-- Address Field -->
