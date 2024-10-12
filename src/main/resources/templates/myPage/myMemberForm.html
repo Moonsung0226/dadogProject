@@ -51,15 +51,6 @@
                 // 이전 성공 메시지 지우기
                 successMessageDiv.text('');
 
-                // // 필수 체크박스 유효성 검사
-                // const termsRequired = $('#termsRequired').is(':checked');
-                // const privacyRequired = $('#privacyRequired').is(':checked');
-                //
-                // if (!termsRequired || !privacyRequired) {
-                //     e.preventDefault(); // 폼 제출 방지
-                //     alert('[필수] 이용약관 및 개인정보 수집 및 이용 동의에 체크해야 합니다.');
-                //     return; // 더 이상 진행하지 않음
-                // }
 
                 if (password !== confirmPassword) {
                     e.preventDefault(); // 폼 제출 방지
@@ -81,12 +72,15 @@
             <h1>회원정보변경</h1>
             <hr class="my-4">
             <form th:action="@{/dadog/myPage/myMemberForm}" method="post" th:object="${userDTO}">
+                <input type="hidden" th:field="*{id}" />
+
+
                 <div class="row g-3">
 
                     <!-- Name Field -->
                     <div class="col-sm-12">
                         <label for="name" class="form-label">이름</label>
-                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." disabled>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." readonly>
                         <div class="invalid-feedback">유효한 이름을 입력해 주세요.</div>
                         <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
                     </div>
@@ -139,14 +133,6 @@
                         <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError"></p>
                     </div>
 
-                    <!-- Terms and Privacy Agreement -->
-<!--                    <div class="col-12 form-check">-->
-<!--                        <input type="checkbox" class="form-check-input" id="termsRequired" required>-->
-<!--                        <label class="form-check-label" for="termsRequired">이용약관에 동의합니다.</label>-->
-<!--                        <input type="checkbox" class="form-check-input" id="privacyRequired" required>-->
-<!--                        <label class="form-check-label" for="privacyRequired">개인정보 수집 및 이용에 동의합니다.</label>-->
-<!--                        <div class="invalid-feedback">이용약관 및 개인정보 수집 동의가 필요합니다.</div>-->
-<!--                    </div>-->
 
                     <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 

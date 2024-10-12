@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,10 +27,10 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User getUser(String userName){
-        //카카오 유저를 위해 userEmail 로 한번 더 검색
+    public User getUser(String userName) {
+        // 카카오 유저를 위해 userEmail로 한번 더 검색
         User user = userRepository.findByUserId(userName);
-        if(user == null){
+        if (user == null) {
             user = userRepository.findByUserEmail(userName);
         }
         return user;
@@ -88,30 +90,34 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    @Transactional
     public void updateUser(UserDTO userDTO) {
-        System.out.println("User ID from DTO: " + userDTO.getId()); // 여기 추가
-        System.out.println("Updating user with ID: " + userDTO.getId());
-
-        User user = getUser(userDTO.getId());
-        System.out.println("Retrieved user: " + user);
-
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        // 사용자 ID 유효성 검사
+        if (userDTO.getId() == null || userDTO.getId().isEmpty()) {
+            throw new IllegalArgumentException("사용자 ID가 비어있습니다.");
         }
 
+        // 쉼표가 포함된 경우 처리
+        if (userDTO.getId().contains(",")) {
+            throw new IllegalArgumentException("사용자 ID에 쉼표를 포함할 수 없습니다.");
+        }
+
+        // 사용자 존재 여부 확인
+        User user = userRepository.findByUserId(userDTO.getId());
+        if (user == null) {
+            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        // 사용자 정보 업데이트
         user.setUserName(userDTO.getName());
         user.setUserEmail(userDTO.getEmail());
+        user.setUserTel(userDTO.getTel());
+        user.setUserAddr(userDTO.getAddress());
 
+        // 비밀번호가 제공된 경우에만 업데이트
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
         }
 
-        user.setUserTel(userDTO.getTel());
-        user.setUserAddr(userDTO.getAddress());
-
         userRepository.save(user);
     }
-
-
 }

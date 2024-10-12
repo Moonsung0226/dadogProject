@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -21,6 +22,7 @@ public class UserDTO {
     private String howDidYouHear; // 어떻게 알았냐
     private String otherSource; // 기타이유
     private long kakaoId; // 카카오 사용자 ID
+
 
     @NotEmpty(message = "이메일은 필수 입력입니다")
     @Email(message = "이메일 형식으로 입력해주세요")
@@ -42,7 +44,7 @@ public class UserDTO {
     public UserDTO(String name, String id, String confirmPassword, String tel, String dob, String gender, String howDidYouHear, String otherSource, long kakaoId, String email, String password, String address, String nickname) {
         this.name = name;
         this.id = id;
-        this.confirmPassword = confirmPassword;
+//        this.confirmPassword = confirmPassword;
         this.tel = tel;
         this.dob = dob;
         this.gender = gender;

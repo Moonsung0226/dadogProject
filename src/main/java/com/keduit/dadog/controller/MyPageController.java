@@ -6,10 +6,7 @@ import com.keduit.dadog.repository.UserRepository;
 import com.keduit.dadog.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -70,12 +67,12 @@ public class MyPageController {
         model.addAttribute("successMessage", "회원 정보가 성공적으로 변경되었습니다.");
         model.addAttribute("userDTO", userDTO); // 수정된 사용자 정보 모델에 추가
 
-        return "myPage/myMemberForm"; // 변경 후 같은 페이지로 리다이렉션
+        return "myPage/myMemberForm";
     }
 
-    @GetMapping("/myPage/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
-        User userEntity = userRepository.findById(id).orElse(null);
+    @GetMapping("/myPage/{no}/edit")
+    public String edit(@PathVariable Long no, Model model) {
+        User userEntity = userRepository.findById(no).orElse(null);
         model.addAttribute("user", userEntity);
         return "myPage/edit";
     }
@@ -93,6 +90,7 @@ public class MyPageController {
         }
         return "redirect:/dadog/myPage/myMemberForm";
     }
+
 
 
     @GetMapping("/myPage/myLost")
