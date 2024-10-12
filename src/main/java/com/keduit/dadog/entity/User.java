@@ -39,6 +39,9 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_tel")
     private String userTel;
 
+//    @Column(name = "user_nickname")
+//    private String userNickname;
+
     @Column(name = "user_email", unique = true)
     private String userEmail;
 
@@ -63,6 +66,7 @@ public class User extends BaseTimeEntity{
         User user = new User();
         user.setUserId(userDTO.getId());
         user.setUserName(userDTO.getName());
+//        user.setUserNickname(userDTO.getNickname());
         user.setUserEmail(userDTO.getEmail());
         user.setUserAddr(userDTO.getAddress());
         user.setUserTel(userDTO.getTel());

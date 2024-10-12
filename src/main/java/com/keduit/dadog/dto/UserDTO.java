@@ -64,6 +64,7 @@ public class UserDTO {
         userDTO.setEmail(user.getUserEmail());
         userDTO.setTel(user.getUserTel());
         userDTO.setAddress(user.getUserAddr());
+//        userDTO.setNickname(user.getUserNickname());
         return userDTO;
     }
 

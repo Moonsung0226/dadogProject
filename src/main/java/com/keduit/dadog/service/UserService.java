@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    // 카카오 로그인 처리
+    // 카카오 로그인 처리(카카오에는 이름 없이 닉네임을 사용하므로 닉네임을 이름으로 사용하게끔.)
     public User kakaoLogin(UserDTO kakaoDTO) {
         String userId = kakaoDTO.getEmail().split("@")[0];
         User user = userRepository.findByUserId(userId);
@@ -79,11 +79,15 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             user = User.builder()
                     .userEmail(kakaoDTO.getEmail())
-                    .userName(kakaoDTO.getName()) // 닉네임 대신 이름 사용
+                    .userName(kakaoDTO.getNickname()) // 이름 대신 닉네임 사용
                     .userId(userId)
                     .userPwd(passwordEncoder.encode("kakao_password"))
                     .role(Role.USER)
                     .build();
+            userRepository.save(user);
+        } else {
+            // 기존 사용자의 경우 닉네임 업데이트
+            user.setUserName(kakaoDTO.getNickname());
             userRepository.save(user);
         }
 
@@ -96,7 +100,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("사용자 ID가 비어있습니다.");
         }
 
-        // 쉼표가 포함된 경우 처리
+        // 쉼표가 포함된 경우 처리 하려고.
         if (userDTO.getId().contains(",")) {
             throw new IllegalArgumentException("사용자 ID에 쉼표를 포함할 수 없습니다.");
         }
