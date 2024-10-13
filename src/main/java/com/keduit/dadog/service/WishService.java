@@ -49,13 +49,10 @@ public class WishService {
             user = userRepository.findByUserEmail(userName);
         }
 
-        // 로그 추가 - 사용자 정보 확인
+        //  사용자 정보 확인
         System.out.println("User found: " + user);
 
         List<Wish> wishList = wishRepository.findByUser(user);
-
-        // 로그 추가 - 찜 목록 크기 확인
-        System.out.println("WishList size: " + wishList.size());
 
         return wishList;
     }

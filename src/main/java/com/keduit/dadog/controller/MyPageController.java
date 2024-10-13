@@ -4,12 +4,14 @@ import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.UserRepository;
 import com.keduit.dadog.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,55 +20,45 @@ import java.util.List;
 @RequestMapping("/dadog")
 public class MyPageController {
 
-    private final UserService userService; // UserService 필드
+    private final UserService userService;
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public MyPageController(UserService userService, UserRepository userRepository) {
-        this.userService = userService; // 생성자 주입
+    @Autowired
+    public MyPageController(UserService userService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userService = userService;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-
     // 마이페이지
-    @GetMapping("/myPage") // 경로 앞에 '/' 추가
+    @GetMapping("/myPage")
     public String myPage(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
         return "myPage/myPage";
     }
 
-
     @GetMapping("/myPage/myWriting")
-    public String myWriting(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
+    public String myWriting(Model model) {
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
-        return "myPage/myWriting"; // Thymeleaf 템플릿 경로
+        model.addAttribute("posts", posts);
+        return "myPage/myWriting";
     }
 
-    // GET 요청 처리: 회원 정보 가져오기
+    // 회원 정보 가져오기
     @GetMapping("/myPage/myMemberForm")
-    public String myMemberForm(HttpServletRequest request, Model model, Principal principal) {
+    public String myMemberForm(Model model, Principal principal) {
         User user = userService.getUser(principal.getName());
-        UserDTO userDTO = new UserDTO();
-        userDTO = userDTO.createUserDTO(user);
-        model.addAttribute("userDTO", userDTO); // 세션에서 가져온 사용자 정보를 모델에 추가
-        System.out.println("--------------userDTO --> " + userDTO);
-        return "myPage/myMemberForm"; // Thymeleaf 템플릿 경로
+        UserDTO userDTO = new UserDTO().createUserDTO(user);
+        model.addAttribute("userDTO", userDTO);
+        return "myPage/myMemberForm";
     }
 
-    // POST 요청 처리: 회원 정보 수정
+    // 회원 정보 수정
     @PostMapping("/myPage/myMemberForm")
     public String updateMember(UserDTO userDTO, Model model) {
-        // 서비스 호출하여 회원 정보 수정
-        userService.updateUser(userDTO); // 사용자 정보를 수정하는 로직
-
+        userService.updateUser(userDTO);
         model.addAttribute("successMessage", "회원 정보가 성공적으로 변경되었습니다.");
-        model.addAttribute("userDTO", userDTO); // 수정된 사용자 정보 모델에 추가
-
+        model.addAttribute("userDTO", userDTO);
         return "myPage/myMemberForm";
     }
 
@@ -80,8 +72,6 @@ public class MyPageController {
     @PostMapping("/myPage/update")
     public String update(UserDTO userDTO) {
         User userEntity = userDTO.toEntity();
-
-        // userId를 Long으로 변환
         Long userId = Long.valueOf(userEntity.getUserId());
         User target = userRepository.findById(userId).orElse(null);
 
@@ -91,40 +81,80 @@ public class MyPageController {
         return "redirect:/dadog/myPage/myMemberForm";
     }
 
-
-
     @GetMapping("/myPage/myLost")
-    public String myLost(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
+    public String myLost(Model model) {
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
-        return "myPage/myLost"; // Thymeleaf 템플릿 경로
+        model.addAttribute("posts", posts);
+        return "myPage/myLost";
     }
 
     @GetMapping("/myPage/myAdopt")
-    public String myAdopt(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
+    public String myAdopt(Model model) {
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
-        return "myPage/myAdopt"; // Thymeleaf 템플릿 경로
+        model.addAttribute("posts", posts);
+        return "myPage/myAdopt";
     }
-
 
     @GetMapping("/myPage/myProtect")
-    public String myProtecting(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
+    public String myProtecting(Model model) {
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
-        return "myPage/myProtect"; // Thymeleaf 템플릿 경로
+        model.addAttribute("posts", posts);
+        return "myPage/myProtect";
     }
 
+
+    // 비밀번호 변경 페이지
+    @GetMapping("/myPage/myPwd")
+    public String showChangePasswordPage(Model model, Principal principal) {
+        User user = userService.getUser(principal.getName());
+        UserDTO userDTO = new UserDTO().createUserDTO(user);
+        userDTO.setPassword(""); // 보안을 위해 비밀번호 필드를 비움
+        model.addAttribute("userDTO", userDTO);
+        return "myPage/myPwd";
+    }
+
+    // 비밀번호 변경 처리
+    @PostMapping("/myPage/myPwd")
+    public String updatePwd(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal, RedirectAttributes redirectAttributes) {
+        User currentUser = userService.getUser(principal.getName());
+
+        if (userDTO.getCurrentPassword() == null || userDTO.getCurrentPassword().isEmpty()) {
+            result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호를 입력해주세요.");
+            return "myPage/myPwd";
+        }
+
+        if (!passwordEncoder.matches(userDTO.getCurrentPassword(), currentUser.getUserPwd())) {
+            result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호가 일치하지 않습니다.");
+            return "myPage/myPwd";
+        }
+
+        if (userDTO.getNewPassword() == null || userDTO.getNewPassword().isEmpty()) {
+            result.rejectValue("newPassword", "error.userDTO", "새 비밀번호를 입력해주세요.");
+            return "myPage/myPwd";
+        }
+
+        if (userDTO.getNewPassword().equals(userDTO.getCurrentPassword())) {
+            result.rejectValue("newPassword", "error.userDTO", "새 비밀번호는 현재 비밀번호와 다르게 설정해주세요.");
+            return "myPage/myPwd";
+        }
+
+        if (!userDTO.getNewPassword().equals(userDTO.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.userDTO", "새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return "myPage/myPwd";
+        }
+
+        if (userDTO.getNewPassword().length() < 8) {
+            result.rejectValue("newPassword", "error.userDTO", "비밀번호는 최소 8자 이상이어야 합니다.");
+            return "myPage/myPwd";
+        }
+
+        try {
+            userService.changePassword(principal.getName(), userDTO.getNewPassword());
+            redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 성공적으로 변경되었습니다.");
+            return "redirect:/dadog/myPage/myPwd";
+        } catch (Exception e) {
+            result.rejectValue("newPassword", "error.userDTO", "비밀번호 변경 중 오류가 발생했습니다.");
+            return "myPage/myPwd";
+        }
+    }
 }

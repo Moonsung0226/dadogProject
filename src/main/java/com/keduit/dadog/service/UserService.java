@@ -22,13 +22,26 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 사용자 저장
     public User saveUser(User user) {
-        validateUser(user);
+        validateUser(user);  // 사용자 유효성 검사
         return userRepository.save(user);
     }
 
+
+
+    // 비밀번호 업데이트
+    public void updatePassword(UserDTO userDTO) {
+        Long userId = Long.parseLong(userDTO.getId());  // String을 Long으로 변환
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+        user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));  // 암호화된 비밀번호 저장
+        userRepository.save(user);
+    }
+
+
+    // 사용자 정보 가져오기 (유저 ID 또는 이메일 기반)
     public User getUser(String userName) {
-        // 카카오 유저를 위해 userEmail로 한번 더 검색
         User user = userRepository.findByUserId(userName);
         if (user == null) {
             user = userRepository.findByUserEmail(userName);
@@ -36,6 +49,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    // 사용자 유효성 검사
     private void validateUser(User user) {
         User findUser = userRepository.findByUserId(user.getUserId());
         if (findUser != null) {
@@ -43,12 +57,10 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    // 비밀번호 유효성 검사
     public boolean isValidUser(UserDTO userDTO) {
         User user = userRepository.findByUserId(userDTO.getId());
-        if (user != null && passwordEncoder.matches(userDTO.getPassword(), user.getUserPwd())) {
-            return true;
-        }
-        return false;
+        return user != null && passwordEncoder.matches(userDTO.getPassword(), user.getUserPwd());
     }
 
     @Override
@@ -65,21 +77,21 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
+    // 회원 등록
     public User registerMember(UserDTO userDTO) {
         User user = User.createUser(userDTO, passwordEncoder);
         validateUser(user);
         return userRepository.save(user);
     }
 
-    // 카카오 로그인 처리(카카오에는 이름 없이 닉네임을 사용하므로 닉네임을 이름으로 사용하게끔.)
+    // 카카오 로그인 처리 (닉네임을 이름으로 사용)
     public User kakaoLogin(UserDTO kakaoDTO) {
         String userId = kakaoDTO.getEmail().split("@")[0];
         User user = userRepository.findByUserId(userId);
-        System.out.println("----------------user Service 유저체크");
         if (user == null) {
             user = User.builder()
                     .userEmail(kakaoDTO.getEmail())
-                    .userName(kakaoDTO.getNickname()) // 이름 대신 닉네임 사용
+                    .userName(kakaoDTO.getNickname()) // 닉네임을 이름으로 사용
                     .userId(userId)
                     .userPwd(passwordEncoder.encode("kakao_password"))
                     .role(Role.USER)
@@ -94,17 +106,8 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    // 사용자 정보 업데이트
     public void updateUser(UserDTO userDTO) {
-        // 사용자 ID 유효성 검사
-        if (userDTO.getId() == null || userDTO.getId().isEmpty()) {
-            throw new IllegalArgumentException("사용자 ID가 비어있습니다.");
-        }
-
-        // 쉼표가 포함된 경우 처리 하려고.
-        if (userDTO.getId().contains(",")) {
-            throw new IllegalArgumentException("사용자 ID에 쉼표를 포함할 수 없습니다.");
-        }
-
         // 사용자 존재 여부 확인
         User user = userRepository.findByUserId(userDTO.getId());
         if (user == null) {
@@ -122,6 +125,16 @@ public class UserService implements UserDetailsService {
             user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
         }
 
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(String username, String newPassword) {
+        User user = userRepository.findByUserId(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        user.setUserPwd(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }

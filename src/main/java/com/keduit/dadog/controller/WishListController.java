@@ -24,11 +24,8 @@ public class WishListController {
         HttpSession session = request.getSession();
         String userName = (String) session.getAttribute("userName");
 
-        // 로그 추가 - 사용자 이름 확인
-        System.out.println("UserName from session: " + userName);
-
         // 찜 목록 가져오기
-        List<Wish> wishList = wishService.getWishList(userName)
+        List<Wish> wishList = wishService.getWishList(userName);
         model.addAttribute("wishList", wishList); // 모델에 찜 목록 추가
 
         return "wishList/wishList";

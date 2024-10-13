@@ -83,7 +83,7 @@
 <div layout:fragment="mainContent">
     <div class="col-md-7 col-lg-12 mt-5 mb-5">
         <div class="form-container">
-            <h1>회원정보변경</h1>
+            <h1>기본 정보 변경</h1>
             <hr class="my-4">
             <form th:action="@{/dadog/myPage/myMemberForm}" method="post" th:object="${userDTO}">
                 <input type="hidden" th:field="*{id}" />
@@ -94,7 +94,7 @@
                     <!-- Name Field -->
                     <div class="col-sm-12">
                         <label for="name" class="form-label">이름</label>
-                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." readonly>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." disabled>
                         <div class="invalid-feedback">유효한 이름을 입력해 주세요.</div>
                         <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
                     </div>
@@ -108,21 +108,21 @@
                     </div>
 
                     <!-- Password Field -->
-                    <div class="col-12">
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="8자 이상 비밀번호를 입력하세요." required>
-                        <div class="invalid-feedback">비밀번호가 필요합니다.</div>
-                        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>
-                    </div>
+<!--                    <div class="col-12">-->
+<!--                        <label for="password" class="form-label">비밀번호</label>-->
+<!--                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="8자 이상 비밀번호를 입력하세요." required>-->
+<!--                        <div class="invalid-feedback">비밀번호가 필요합니다.</div>-->
+<!--                        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>-->
+<!--                    </div>-->
 
-                    <!-- Confirm Password Field -->
-                    <div class="col-12">
-                        <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required>
-                        <div class="invalid-feedback">비밀번호 확인이 필요합니다.</div>
-                        <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="fieldError"></p>
-                        <div id="passwordMatchMessage"></div> <!-- 비밀번호 일치 여부 메시지 -->
-                    </div>
+<!--                    &lt;!&ndash; Confirm Password Field &ndash;&gt;-->
+<!--                    <div class="col-12">-->
+<!--                        <label for="confirmPassword" class="form-label">비밀번호 확인</label>-->
+<!--                        <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required>-->
+<!--                        <div class="invalid-feedback">비밀번호 확인이 필요합니다.</div>-->
+<!--                        <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="fieldError"></p>-->
+<!--                        <div id="passwordMatchMessage"></div> &lt;!&ndash; 비밀번호 일치 여부 메시지 &ndash;&gt;-->
+<!--                    </div>-->
 
                     <!-- Telephone Field -->
                     <div class="col-12">
@@ -135,7 +135,7 @@
                     <!-- Email Field -->
                     <div class="col-sm-12">
                         <label for="email" class="form-label">이메일 주소</label>
-                        <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required>
+                        <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." disabled>
                         <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
                         <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
                         <div id="emailFeedback"></div> <!-- 이메일 중복 확인 메시지 -->
