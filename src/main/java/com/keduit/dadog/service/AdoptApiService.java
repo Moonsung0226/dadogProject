@@ -2,9 +2,9 @@ package com.keduit.dadog.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keduit.dadog.Repository.AdoptRepository;
 import com.keduit.dadog.constant.Current;
 import com.keduit.dadog.entity.Adopt;
+import com.keduit.dadog.repository.AdoptRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -34,7 +36,7 @@ public class AdoptApiService {
     //받아올 타입
     private final String type = "&_type=json";
 
-    LocalDate today = LocalDate.now();
+    LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
 
     // 10일 빼기
     LocalDate dateMinus10Days = today.minusDays(10);
@@ -97,7 +99,8 @@ public class AdoptApiService {
 
                         if(items.isArray()){
                             for(JsonNode item : items){
-                                String kindCd = item.path("kindCd").asText();
+
+                                String kindCd = item.path("kindCd").asText().substring(4);
                                 String age = item.path("age").asText();
                                 String careNm = item.path("careNm").asText();
                                 String careAddr = item.path("careAddr").asText();
@@ -106,13 +109,18 @@ public class AdoptApiService {
                                 String specialMark = item.path("specialMark").asText();
                                 String popfile = item.path("popfile").asText();
                                 String noticeEdt = item.path("noticeEdt").asText();
+                                String formattedNoticeEdt = null;
+                                if (noticeEdt.length() == 8) { // 8자리 숫자인지 확인
+                                    LocalDate date = LocalDate.parse(noticeEdt, DateTimeFormatter.ofPattern("yyyyMMdd"));
+                                    formattedNoticeEdt = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                }
 
                                 Adopt adopt = new Adopt();
                                 adopt.setAdoptKind(kindCd);
                                 adopt.setAdoptAge(age);
                                 adopt.setAdoptCareNm(careNm);
                                 adopt.setAdoptImgUrl(popfile);
-                                adopt.setAdoptEdt(noticeEdt);
+                                adopt.setAdoptEdt(formattedNoticeEdt);
                                 adopt.setAdoptWeight(weight);
                                 adopt.setAdoptSpecial(specialMark);
                                 adopt.setAdoptCareTel(careTel);

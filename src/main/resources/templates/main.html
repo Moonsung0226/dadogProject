@@ -4,7 +4,140 @@
       layout:decorate="~{layouts/layout}">
 
 <div layout:fragment="mainContent">
-  <h1>여기다 쓰면 됨</h1>
+  <div class="p-md-10 mb-4 text-white bg-dark mainBanner">
+    <div class="col-md-6 p-5 ms-5">
+      <h1 class="display-4">다독이다</h1>
+      <p class="lead my-3">다독이다는 유기견을 보호하고
+        사랑하는 사람들을 위한 공간 입니다.</p>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-3 text-center mt-5 mb-5">
+      <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+
+      <h2>Heading</h2>
+      <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
+      <p><a class="btn btn-secondary" href="#">View details »</a></p>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-3 text-center mt-5 mb-5">
+      <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+
+      <h2>Heading</h2>
+      <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
+      <p><a class="btn btn-secondary" href="#">View details »</a></p>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-3 text-center mt-5 mb-5">
+      <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+
+      <h2>Heading</h2>
+      <p>And lastly this, the third column of representative placeholder content.</p>
+      <p><a class="btn btn-secondary" href="#">View details »</a></p>
+    </div><!-- /.col-lg-4 -->
+  </div>
+  <section class="py-5 bg-warning">
+    <div class="text-center w-100 pb-4 lh-1">
+      <h3>입양하기</h3>
+      <p class="lead my-3">현재 입양 가능한 아이들</p>
+    </div>
+    <div class="container">
+      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" >
+        <div class="col" th:each="adopt : ${adoptDTOList}">
+          <div class="card h-100">
+            <!-- Product image-->
+            <img class="card-img-top" th:src="${adopt.getAdopt_imgurl()}" alt="..." style="object-fit: cover" width="200" height="250">
+            <!-- Product details-->
+            <div class="card-body p-4">
+              <div class="text-center">
+                <h5 class="fw-bolder" th:text="'견종 : ' + ${adopt.getAdopt_kind()}"></h5>
+                <p th:text="'종료일 : ' + ${adopt.getAdopt_edt()}"></p>
+                <p th:text="'보호소명 : ' + ${adopt.getAdopt_carenm()}"></p>
+              </div>
+            </div>
+            <!-- Product actions-->
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+              <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="'/dadog/adopt/'+${adopt.getAdopt_no()}">상세보기</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-5 bg-warning">
+    <div class="text-center w-100 pb-4 lh-1">
+      <h3>실종신고</h3>
+      <p class="lead my-3">강아지를 찾습니다</p>
+    </div>
+    <div class="container">
+      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="col" th:each="lost : ${lostDTOList}">
+          <div class="card h-100">
+            <!-- Product image-->
+            <img class="card-img-top" th:src="${lost.getImgUrl()}" alt="..." style="object-fit: cover" width="200" height="250">
+            <!-- Product details-->
+            <div class="card-body p-4">
+              <div class="text-center">
+                <h5 class="fw-bolder" th:text="'견종 : ' + ${lost.getLostKind()}"></h5>
+                <p th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
+                <p th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
+              </div>
+            </div>
+            <!-- Product actions-->
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+              <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="'/dadog/lost/' + ${lost.getLostNo()}">상세보기</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-5 bg-warning">
+    <div class="text-center w-100 pb-4 lh-1">
+      <h3>보호중</h3>
+      <p class="lead my-3">현재 민간 보호중인 유기견</p>
+    </div>
+    <div class="container">
+      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="col" th:each="protect : ${protectDTOList}">
+          <div class="card h-100">
+            <!-- Product image-->
+            <img class="card-img-top" th:src="${protect.getImgUrl()}" alt="..." style="object-fit: cover" width="200" height="250">
+            <!-- Product details-->
+            <div class="card-body p-4">
+              <div class="text-center">
+                <h5 class="fw-bolder" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
+                <p th:text="'분실날짜 : ' + ${protect.getProDate()}"></p>
+              </div>
+            </div>
+            <!-- Product actions-->
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+              <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="'/dadog/protect/' + ${protect.getProNo()}">상세보기</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </div>
+
+
+
+
+
+
+
+
+
+
+<!--<div th:if="${message}" class="alert alert-success" role="alert">-->
+<!--  <span th:text="${message}"></span>-->
+<!--</div>-->
+
+<!--<div th:if="${session.message}" class="alert alert-info">-->
+<!--  <span th:text="${session.message}"></span>-->
+<!--  <th:block th:text="${#session.removeAttribute('message')}"/>-->
+<!--</div>-->
+
+
 
 </html>
