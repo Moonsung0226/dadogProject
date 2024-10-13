@@ -58,14 +58,14 @@
 
 
 <div layout:fragment="mainContent">
-  <div class="row mb-3 text-center justify-content-center">
+  <div class="row mb-3 text-center justify-content-center mt-5">
     <input type="hidden" th:value="${userNo}" id="userNo">
-    <button class="btn btn-primary col-md-2 m-2 themed-grid-col" onclick="getMyList('myLost')">실종신고</button>
-    <button class="btn btn-primary col-md-2 m-2 themed-grid-col" onclick="getMyList('myProtect')">보호중</button>
-    <button class="btn btn-primary col-md-2 m-2 themed-grid-col" onclick="getMyList('myBoard')">자유게시판</button>
+    <button class="btn btn-outline-dark col-md-2 m-2 themed-grid-col" onclick="getMyList('myLost')">실종신고</button>
+    <button class="btn btn-outline-dark col-md-2 m-2 themed-grid-col" onclick="getMyList('myProtect')">보호중</button>
+    <button class="btn btn-outline-dark col-md-2 m-2 themed-grid-col" onclick="getMyList('myBoard')">자유게시판</button>
   </div>
   <div id="listView">
-    <p>아아아아아</p>
+
   </div>
 </div>
 </html>
