@@ -31,10 +31,10 @@ public class QApplication extends EntityPathBase<Application> {
     public final NumberPath<Long> appNo = createNumber("appNo", Long.class);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createTime = _super.createTime;
+    public final DatePath<java.time.LocalDate> createTime = _super.createTime;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
+    public final DatePath<java.time.LocalDate> updateTime = _super.updateTime;
 
     public final QUser user;
 

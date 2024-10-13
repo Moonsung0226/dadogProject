@@ -27,7 +27,7 @@ public class QReply extends EntityPathBase<Reply> {
     public final QBoard board;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createTime = _super.createTime;
+    public final DatePath<java.time.LocalDate> createTime = _super.createTime;
 
     public final StringPath replyContent = createString("replyContent");
 
@@ -36,7 +36,7 @@ public class QReply extends EntityPathBase<Reply> {
     public final StringPath replyWriter = createString("replyWriter");
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
+    public final DatePath<java.time.LocalDate> updateTime = _super.updateTime;
 
     public final QUser user;
 

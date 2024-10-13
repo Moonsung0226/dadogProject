@@ -32,6 +32,9 @@ public class ProtectDTO {
 
     private String proWriter;
 
+    private LocalDate protectCreateDate;
+
+
     public ProtectDTO createProtectDTO(Protect protect) {
         ProtectDTO protectDTO = new ProtectDTO();
         this.proNo = protect.getProNo();
@@ -54,4 +57,25 @@ public class ProtectDTO {
         protectDTO.setImgUrl(protect.getProImgUrl());
         return protectDTO;
     }
+
+    public ProtectDTO myProtect(Protect protect) {
+        ProtectDTO protectDTO = new ProtectDTO();
+        protectDTO.setProNo(protect.getProNo());
+        protectDTO.setProDate(protect.getProDate());
+        protectDTO.setProKind(protect.getProKind());
+        protectDTO.setProTitle(protect.getProTitle());
+        protectDTO.setProPlace(protect.getProPlace());
+        protectDTO.setProtectCreateDate(protect.getCreateTime());
+        return protectDTO;
+    }
+//     public LostDTO myLost(Lost lost) {
+//        LostDTO lostDTO = new LostDTO();
+//        lostDTO.setLostNo(lost.getLostNo());
+//        lostDTO.setLostDate(lost.getLostDate());
+//        lostDTO.setLostKind(lost.getLostKind());
+//        lostDTO.setLostPlace(lost.getLostPlace());
+//        lostDTO.setLostTitle(lost.getLostTitle());
+//        lostDTO.setLostCreateDate(lost.getCreateTime());
+//        return lostDTO;
+//    }
 }

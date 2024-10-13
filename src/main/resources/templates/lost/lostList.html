@@ -32,34 +32,37 @@
       text-decoration-line: none;
     }
     .mainBody {
-      width: 80%;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
-      margin: 0 auto;
-      gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
+      padding-left: 10%;
+      padding-right: 10%;
     }
-    .card{
-      margin: 10px;
+    .card-img{
+      height: 250px;
+      object-fit: cover;
     }
-
   </style>
 </th:block>
 <div layout:fragment="mainContent">
   <form th:action="@{'/dadog/lost' + ${lostList.number}}" role="form" method="get" th:object="${lostList}">
-    <article class="mainBody">
-      <div th:each="lost : ${lostList.getContent()}" class="card">
-        <a th:href="'/dadog/lost/' + ${lost.getLostNo()}" class="text-dark link-underline link-underline-opacity-0">
-          <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${lost.getLostTitle()}"></h5>
-            <p th:text="${lost.getLostKind()}" class="card-text"></p>
-            <p th:text="${lost.getLostPlace()}" class="card-text"></p>
-            <p th:text="${lost.getLostTel()}" class="card-text"></p>
-            <p th:text="${lost.getLostDate()}" class="card-text"></p>
+    <div class="container">
+      <article class="mainBody py-3 px-2 px-md-3 px-lg-5">
+        <div class="row">
+          <div th:each="lost : ${lostList.getContent()}" class="col-6 col-md-4 col-lg-3 mb-4">
+            <a th:href="'/dadog/lost/' + ${lost.getLostNo()}" class="text-dark link-underline link-underline-opacity-0">
+              <div class="card" style="max-width: 250px;">
+                <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img" width="250" />
+                <div class="card-body">
+                  <h5 class="card-title" th:text="${lost.getLostTitle()}"></h5>
+                  <p th:text="${lost.getLostKind()}" class="card-text mb-1"></p>
+                  <p th:text="${lost.getLostPlace()}" class="card-text mb-1"></p>
+                  <p th:text="${lost.getLostTel()}" class="card-text mb-1"></p>
+                  <p th:text="${lost.getLostDate()}" class="card-text"></p>
+                </div>
+              </div>
+            </a>
           </div>
-        </a>
-      </div>
-    </article>
+        </div>
+      </article>
+    </div>
     <div th:with="start=${(lostList.number / maxPage) * maxPage + 1},
             end=${(lostList.totalPages == 0 ? 1 :
             (start + (maxPage - 1) < lostList.totalPages ? start + (maxPage - 1):

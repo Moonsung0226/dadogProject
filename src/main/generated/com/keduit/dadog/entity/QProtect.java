@@ -25,7 +25,7 @@ public class QProtect extends EntityPathBase<Protect> {
     public final QBaseTimeEntity _super = new QBaseTimeEntity(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createTime = _super.createTime;
+    public final DatePath<java.time.LocalDate> createTime = _super.createTime;
 
     public final DatePath<java.time.LocalDate> proDate = createDate("proDate", java.time.LocalDate.class);
 
@@ -50,7 +50,7 @@ public class QProtect extends EntityPathBase<Protect> {
     public final StringPath proWriter = createString("proWriter");
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
+    public final DatePath<java.time.LocalDate> updateTime = _super.updateTime;
 
     public final QUser user;
 

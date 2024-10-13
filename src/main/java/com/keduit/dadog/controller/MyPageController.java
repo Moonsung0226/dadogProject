@@ -1,36 +1,42 @@
 package com.keduit.dadog.controller;
 
+import com.keduit.dadog.dto.LostDTO;
+import com.keduit.dadog.dto.ProtectDTO;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.User;
+import com.keduit.dadog.service.LostService;
+import com.keduit.dadog.service.ProtectService;
 import com.keduit.dadog.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dadog")
+@RequiredArgsConstructor
 public class MyPageController {
 
     private final UserService userService; // UserService 필드
-
-    public MyPageController(UserService userService) {
-        this.userService = userService; // 생성자 주입
-    }
+    private final LostService lostService;
+    private final ProtectService protectService;
 
 
     // 마이페이지
     @GetMapping("/myPage") // 경로 앞에 '/' 추가
-    public String myPage(HttpServletRequest request, Model model) {
+    public String myPage(HttpServletRequest request, Model model, Principal principal) {
         HttpSession session = request.getSession();
-
+        //user 를 가져옴
+        Long userNo = userService.getUser(principal.getName()).getUserNo();
+        model.addAttribute("userNo", userNo);
         return "myPage/myPage";
     }
 
@@ -70,17 +76,6 @@ public class MyPageController {
     }
 
 
-    @GetMapping("/myPage/myLost")
-    public String myLost(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
-        List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
-        return "myPage/myLost"; // Thymeleaf 템플릿 경로
-    }
-
     @GetMapping("/myPage/myAdopt")
     public String myAdopt(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
@@ -92,15 +87,24 @@ public class MyPageController {
         return "myPage/myAdopt"; // Thymeleaf 템플릿 경로
     }
 
+    //유저의 실종 신고글 조회
+    @PostMapping("/myPage/myLost")
+    public String myLost(Model model, @RequestBody Map<String, Object> userNo) {
+        System.out.println("---------------- userDTO" + userNo);
+        String userNoStr = (String) userNo.get("userNo");
+        Long userNum = Long.valueOf(userNoStr);
+        List<LostDTO> lostList = lostService.getUserLost(userNum);
+        model.addAttribute("lostList", lostList);
+        return "myPage/myLost"; // Thymeleaf 템플릿 경로
+    }
 
-    @GetMapping("/myPage/myProtect")
-    public String myProtecting(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
-        List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
+    @PostMapping("/myPage/myProtect")
+    public String myProtecting(Model model, @RequestBody Map<String, Object> userNo) {
+        System.out.println("---------------- userDTO" + userNo);
+        String userNoStr = (String) userNo.get("userNo");
+        Long userNum = Long.valueOf(userNoStr);
+        List<ProtectDTO> protectDTOList = protectService.getUserProtect(userNum);
+        model.addAttribute("protectList", protectDTOList);
         return "myPage/myProtect"; // Thymeleaf 템플릿 경로
     }
 

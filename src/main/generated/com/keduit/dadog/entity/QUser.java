@@ -25,7 +25,7 @@ public class QUser extends EntityPathBase<User> {
     public final ListPath<Board, QBoard> boardList = this.<Board, QBoard>createList("boardList", Board.class, QBoard.class, PathInits.DIRECT2);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createTime = _super.createTime;
+    public final DatePath<java.time.LocalDate> createTime = _super.createTime;
 
     public final ListPath<Lost, QLost> lostList = this.<Lost, QLost>createList("lostList", Lost.class, QLost.class, PathInits.DIRECT2);
 
@@ -34,7 +34,7 @@ public class QUser extends EntityPathBase<User> {
     public final EnumPath<com.keduit.dadog.constant.Role> role = createEnum("role", com.keduit.dadog.constant.Role.class);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
+    public final DatePath<java.time.LocalDate> updateTime = _super.updateTime;
 
     public final StringPath userAddr = createString("userAddr");
 

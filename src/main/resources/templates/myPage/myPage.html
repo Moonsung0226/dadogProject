@@ -2,10 +2,70 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/myPageLayout}">
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+
+    function getMyList(listName){
+      const header = $("meta[name='_csrf_header']").attr('content');
+      const token = $("meta[name='_csrf']").attr('content');
+
+      if (!token || !header) {
+        console.error("CSRF token or header is undefined.");
+        alert("CSRF 토큰 또는 헤더가 정의되지 않았습니다.");
+        return; // 처리 중지
+      }
+
+      let url = "/dadog/myPage/" + listName;
+      const paramData = {
+        userNo: $('#userNo').val()
+      };
+      const param = JSON.stringify(paramData);
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        contentType : "application/json",
+        data : param,
+        dataType: "text",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(header, token); // CSRF 토큰을 헤더에 추가
+        }
+      })
+              .done(function (result){
+                console.log(result);
+                $('#listView').replaceWith(result);
+              })
+              .fail(function (jqXHR){
+                console.log(jqXHR);
+              })
+              .always(function (){
+                console.log("항상 실행되는 함수");
+              })
+    }
+
+    function getLost(){
+      const lostNo = $("#lostNo").html();
+      location.href = '/dadog/lost/' + lostNo;
+    }
+    function getProtect(){
+      const protectNo = $('#protectNo').html();
+      location.href = '/dadog/protect/' + protectNo;
+    }
+
+
+  </script>
+</th:block>
+
 
 <div layout:fragment="mainContent">
-  성공했을까요?
+  <div class="row mb-3 text-center justify-content-center">
+    <input type="hidden" th:value="${userNo}" id="userNo">
+    <button class="btn btn-primary col-md-2 m-2 themed-grid-col" onclick="getMyList('myLost')">실종신고</button>
+    <button class="btn btn-primary col-md-2 m-2 themed-grid-col" onclick="getMyList('myProtect')">보호중</button>
+    <button class="btn btn-primary col-md-2 m-2 themed-grid-col" onclick="getMyList('myBoard')">자유게시판</button>
+  </div>
+  <div id="listView">
+    <p>아아아아아</p>
+  </div>
 </div>
-
-
 </html>
