@@ -48,7 +48,9 @@
                     <div class="col-sm-12">
                         <label for="email" class="form-label">이메일 주소</label>
                         <input type="email" class="form-control" id="email" th:field="*{email}"
-                               placeholder="이메일을 입력하세요." th:disabled="${isKakaoUser}">
+                               placeholder="이메일을 입력하세요."
+                               th:readonly="${isKakaoUser}"
+                               th:disabled="${isKakaoUser}">
                         <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
                     </div>
 
@@ -77,8 +79,14 @@
     <script th:inline="javascript">
         $(document).ready(function() {
             const successMessage = /*[[${successMessage}]]*/ null;
+            const isKakaoUser = /*[[${isKakaoUser}]]*/ false;
+
             if (successMessage) {
                 alert(successMessage);
+            }
+
+            if (isKakaoUser) {
+                $('#email').prop('readonly', true).prop('disabled', true);
             }
         });
     </script>

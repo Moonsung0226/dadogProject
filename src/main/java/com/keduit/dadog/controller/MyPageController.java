@@ -45,14 +45,14 @@ public class MyPageController {
         return "myPage/myWriting";
     }
 
-    // 회원 정보 가져오기
+    // 회원 정보 가져오기(카카오일 경우 이메일은 막기)
     @GetMapping("/myPage/myMemberForm")
-    public String myMemberForm(HttpServletRequest request, Model model, Principal principal) {
+    public String myMemberForm(Model model, Principal principal) {
         User user = userService.getUser(principal.getName());
-        UserDTO userDTO = new UserDTO();
-        userDTO = userDTO.createUserDTO(user);
-        model.addAttribute("userDTO", userDTO); // 세션에서 가져온 사용자 정보를 모델에 추가
-        return "myPage/myMemberForm"; // Thymeleaf 템플릿 경로
+        UserDTO userDTO = new UserDTO().createUserDTO(user);
+        model.addAttribute("userDTO", userDTO);
+        model.addAttribute("isKakaoUser", user.getRole() == Role.KAKAO);
+        return "myPage/myMemberForm";
     }
 
     @PostMapping("/myPage/myMemberForm")
