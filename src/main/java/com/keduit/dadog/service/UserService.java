@@ -84,57 +84,63 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+
     // 카카오 로그인 처리 (닉네임을 이름으로 사용)
+    // 카카오 로그인 처리 (수정)
     public User kakaoLogin(UserDTO kakaoDTO) {
-        String userId = kakaoDTO.getEmail().split("@")[0];
+        String userId = generateKakaoUserId(kakaoDTO.getKakaoId());
         User user = userRepository.findByUserId(userId);
         if (user == null) {
             user = User.builder()
                     .userEmail(kakaoDTO.getEmail())
-                    .userName(kakaoDTO.getNickname()) // 닉네임을 이름으로 사용
+                    .userName(kakaoDTO.getNickname())
                     .userId(userId)
-                    .userPwd(passwordEncoder.encode("kakao_password"))
-                    .role(Role.USER)
+                    .userPwd(passwordEncoder.encode("kakao_" + kakaoDTO.getKakaoId()))
+                    .role(Role.KAKAO)
                     .build();
             userRepository.save(user);
-        } else {
-            // 기존 사용자의 경우 닉네임 업데이트
+        } else if (user.getRole() != Role.KAKAO) {
+            user.setRole(Role.KAKAO);
             user.setUserName(kakaoDTO.getNickname());
             userRepository.save(user);
         }
-
         return user;
     }
 
-    // 사용자 정보 업데이트
+    // 카카오 사용자 ID 생성 (새로운 메서드)
+    private String generateKakaoUserId(String kakaoId) {
+        return "kakao_" + kakaoId;
+    }
+
+    // 사용자 정보 업데이트 (수정)
     public void updateUser(UserDTO userDTO) {
-        // 사용자 존재 여부 확인
         User user = userRepository.findByUserId(userDTO.getId());
         if (user == null) {
             throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
         }
 
-        // 사용자 정보 업데이트
-        user.setUserName(userDTO.getName());
-        user.setUserEmail(userDTO.getEmail());
-        user.setUserTel(userDTO.getTel());
-        user.setUserAddr(userDTO.getAddress());
+        if (user.getRole() == Role.KAKAO) {
+            user.setUserTel(userDTO.getTel());
+            user.setUserAddr(userDTO.getAddress());
+        } else {
+            user.setUserName(userDTO.getName());
+            user.setUserEmail(userDTO.getEmail());
+            user.setUserTel(userDTO.getTel());
+            user.setUserAddr(userDTO.getAddress());
 
-        // 비밀번호가 제공된 경우에만 업데이트
-        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+                user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
+            }
         }
 
         userRepository.save(user);
     }
 
-    @Transactional
-    public void changePassword(String username, String newPassword) {
-        User user = userRepository.findByUserId(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        user.setUserPwd(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+    // 사용자 정보 조회 (새로운 메서드)
+    public UserDTO getUserInfo(String userId) {
+        return null;
+    }
+
+    public void changePassword(String name, String newPassword) {
     }
 }

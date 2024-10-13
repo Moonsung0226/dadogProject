@@ -1,5 +1,6 @@
 package com.keduit.dadog.controller;
 
+import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.UserRepository;
@@ -46,19 +47,55 @@ public class MyPageController {
 
     // 회원 정보 가져오기
     @GetMapping("/myPage/myMemberForm")
-    public String myMemberForm(Model model, Principal principal) {
+    public String myMemberForm(HttpServletRequest request, Model model, Principal principal) {
         User user = userService.getUser(principal.getName());
-        UserDTO userDTO = new UserDTO().createUserDTO(user);
-        model.addAttribute("userDTO", userDTO);
-        return "myPage/myMemberForm";
+        UserDTO userDTO = new UserDTO();
+        userDTO = userDTO.createUserDTO(user);
+        model.addAttribute("userDTO", userDTO); // 세션에서 가져온 사용자 정보를 모델에 추가
+        return "myPage/myMemberForm"; // Thymeleaf 템플릿 경로
     }
 
-    // 회원 정보 수정
     @PostMapping("/myPage/myMemberForm")
-    public String updateMember(UserDTO userDTO, Model model) {
-        userService.updateUser(userDTO);
+    public String updateMember(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal) {
+        User currentUser = userService.getUser(principal.getName());
+        boolean isKakaoUser = currentUser.getRole() == Role.KAKAO;
+
+        // 로그 추가: userDTO에서 받아온 데이터 확인
+        System.out.println("Received userDTO: " + userDTO);
+
+        // 로그 추가: 업데이트 전 currentUser 상태
+        System.out.println("Before update - currentUser: " + currentUser);
+
+        // 이름 업데이트 (모든 사용자)
+        if (userDTO.getName() != null && !userDTO.getName().isEmpty()) {
+            currentUser.setUserName(userDTO.getName());
+        }
+
+        // 주소와 전화번호 업데이트 (모든 사용자)
+        currentUser.setUserAddr(userDTO.getAddress());
+        currentUser.setUserTel(userDTO.getTel());
+
+        if (!isKakaoUser) {
+            // KAKAO 사용자가 아닌 경우에만 이메일 업데이트
+            if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()) {
+                currentUser.setUserEmail(userDTO.getEmail());
+            }
+        } else {
+            // KAKAO 사용자의 경우 이메일 변경 방지
+            userDTO.setEmail(currentUser.getUserEmail());
+        }
+
+        // 로그 추가: 업데이트 후 currentUser 상태
+        System.out.println("After update - currentUser: " + currentUser);
+
+        userRepository.save(currentUser);
+
+        // 로그 추가: 저장 후 currentUser 상태
+        System.out.println("After save - currentUser: " + currentUser);
+
         model.addAttribute("successMessage", "회원 정보가 성공적으로 변경되었습니다.");
-        model.addAttribute("userDTO", userDTO);
+        model.addAttribute("userDTO", new UserDTO().createUserDTO(currentUser));
+        model.addAttribute("isKakaoUser", isKakaoUser);
         return "myPage/myMemberForm";
     }
 
@@ -110,13 +147,18 @@ public class MyPageController {
         UserDTO userDTO = new UserDTO().createUserDTO(user);
         userDTO.setPassword(""); // 보안을 위해 비밀번호 필드를 비움
         model.addAttribute("userDTO", userDTO);
+        model.addAttribute("userRole", user.getRole().toString());
         return "myPage/myPwd";
     }
 
-    // 비밀번호 변경 처리
     @PostMapping("/myPage/myPwd")
     public String updatePwd(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal, RedirectAttributes redirectAttributes) {
         User currentUser = userService.getUser(principal.getName());
+
+        if (currentUser.getRole() == Role.KAKAO) {
+            redirectAttributes.addFlashAttribute("errorMessage", "카카오 로그인 사용자는 비밀번호를 변경할 수 없습니다.");
+            return "redirect:/dadog/myPage/myPwd";
+        }
 
         if (userDTO.getCurrentPassword() == null || userDTO.getCurrentPassword().isEmpty()) {
             result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호를 입력해주세요.");

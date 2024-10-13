@@ -22,7 +22,7 @@ public class UserDTO {
     private String gender; // 성별
     private String howDidYouHear; // 어떻게 알았냐
     private String otherSource; // 기타 이유
-    private long kakaoId; // 카카오 사용자 ID
+    private String kakaoId; // 카카오 사용자 ID
 
     @NotEmpty(message = "이메일은 필수 입력입니다")
     @Email(message = "이메일 형식으로 입력해주세요")
@@ -41,7 +41,7 @@ public class UserDTO {
     public UserDTO() {}
 
     // 모든 필드를 포함한 생성자 추가
-    public UserDTO(String name, String id, String newPassword, String confirmPassword, String currentPassword, String tel, String dob, String gender, String howDidYouHear, String otherSource, long kakaoId, String email, String password, String address, String nickname) {
+    public UserDTO(String name, String id, String newPassword, String confirmPassword, String currentPassword, String tel, String dob, String gender, String howDidYouHear, String otherSource, String kakaoId, String email, String password, String address, String nickname) {
         this.name = name;
         this.id = id;
         this.newPassword = newPassword;
