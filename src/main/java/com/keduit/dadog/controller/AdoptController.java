@@ -36,7 +36,7 @@ public class AdoptController {
     public String adoptList(AdoptSearchDTO adoptSearchDTO,
                             @PathVariable("page") Optional<Integer> page,
                             Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 50);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 30);
         Page<Adopt> adoptList =adoptService.getAdoptList(adoptSearchDTO, pageable);
         System.out.println("-----------------------------------------------");
         System.out.println(adoptSearchDTO.getSearchBy());

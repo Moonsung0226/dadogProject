@@ -29,25 +29,54 @@
         ul{
             text-decoration-line: none;
         }
-        .mainBody {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            margin: 0 auto;
-            gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
-        }
-        .card{
-            margin: 10px;
+        .card-img{
+            height: 250px;
+            object-fit: cover;
         }
 
     </style>
 </th:block>
 <div layout:fragment="mainContent">
     <form th:action="@{'/dadog/adopt' + ${adoptList.number}}" role="form" method="get" th:object="${adoptList}">
+        <div class="p-2 rounded">
+            <div class="col-sm-8 pt-5 pb-2 mx-auto">
+                <h1 class="display-5 fw-normal mb-5">입양하기</h1>
+                <hr>
+                <p class="fs-5 mt-5">※ 다독이다에는 항시 수십마리의 아이들이 보호되고 있으며 게시된 사진은 그 중 일부입니다. </p>
+                <p class="fs-5 mb-5">※ 방문하여 아이들과 직접 교감하며 입양하시길 권장드리며, 입양시 무료 또는 약간의 책임비가 있을 수 있습니다.</p>
+            </div>
+                <div class="form-inline justify-content-center col-lg-8 mx-auto mb-5">
+                    <div class="row justify-content-center border rounded border-dark-subtle">
+                        <div class="col-auto mb-4 mt-4">
+                            <select class="form-control border-dark" id="searchDescOrAsc" name="searchDescOrAsc">
+                                <option value="asc" th:selected="${adoptSearchDTO.searchDescOrAsc == 'asc'}">오름차순</option>
+                                <option value="desc" th:selected="${adoptSearchDTO.searchDescOrAsc == 'desc'}">내림차순</option>
+                            </select>
+                        </div>
+                        <div class="col-auto mb-4 mt-4">
+                            <select class="form-control border-dark" id="searchBy" style="width: auto;" name="searchBy" th:value="${adoptSearchDTO.searchBy}">
+                                <option value="kind" th:selected="${adoptSearchDTO.searchBy == 'kind'}">견종</option>
+                                <option value="careName" th:selected="${adoptSearchDTO.searchBy == 'careName'}">보호소</option>
+                                <option value="careAddr" th:selected="${adoptSearchDTO.searchBy == 'careAddr'}">주소</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mb-4 mt-4">
+                            <input class="form-control border-dark" id="searchQuery" placeholder="검색어" name="searchQuery"  th:value="${adoptSearchDTO.searchQuery}">
+                        </div>
+                        <div class="col-auto mb-4 mt-4">
+                            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="container">
         <article class="mainBody">
-            <div th:each="adopt : ${adoptList.getContent()}" class="card">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
+            <div th:each="adopt : ${adoptList.getContent()}" class="mb-4">
+                <div class="card">
                 <a th:href="'/dadog/adopt/' + ${adopt.getAdoptNo()}" class="text-dark link-underline link-underline-opacity-0">
-                <img th:src="${adopt.getAdoptImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
-                    <div class="card-body">
+                <img th:src="${adopt.getAdoptImgUrl()}" th:alt="사진" class="card-img" width="270"/>
+                    <div class="card-body" style="height: 280px">
                         <h5 class="card-title" th:text="${adopt.getAdoptKind()}"></h5>
                         <p th:text="${adopt.getAdoptWeight()}" class="card-text"></p>
                         <p th:text="${adopt.getAdoptCareNm()}" class="card-text"></p>
@@ -56,7 +85,10 @@
                     </div>
                 </a>
             </div>
+            </div>
+            </div>
         </article>
+        </div>
         <div th:with="start=${(adoptList.number / maxPage) * maxPage + 1},
             end=${(adoptList.totalPages == 0 ? 1 :
             (start + (maxPage - 1) < adoptList.totalPages ? start + (maxPage - 1):
@@ -78,19 +110,6 @@
                     </a>
                 </li>
             </ul>
-        </div>
-        <div class="form-inline justify-content-center" th:object="${adoptSearchDTO}">
-            <select th:field="*{searchDescOrAsc}" class="form-control" id="searchDescOrAsc" style="width: auto;">
-                <option value="asc">오름차순</option>
-                <option value="desc">내림차순</option>
-            </select>
-            <select th:field="*{searchBy}" class="form-control" id="searchBy" style="width: auto;">
-                <option value="kind">견종</option>
-                <option value="careName">보호소</option>
-                <option value="careAddr">주소</option>
-            </select>
-            <input th:field="*{searchQuery}" class="form-control" id="searchQuery" placeholder="검색어">
-            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
         </div>
     </form>
 </div>
