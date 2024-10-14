@@ -6,6 +6,7 @@ import com.keduit.dadog.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -54,4 +55,11 @@ public class BoardService {
     }
 
 
+    public List<Board> findTop6ByOrderByCreateTimeDesc() {
+        return boardRepository.findTop6ByOrderByCreateTimeDesc();
+    }
+
+    public Board findByBoardNo(Long boardNo) {
+        return boardRepository.findById(boardNo).orElseThrow(() -> new EntityNotFoundException("Board not found with boardNo : " + boardNo));
+    }
 }

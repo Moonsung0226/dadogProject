@@ -1,5 +1,6 @@
 package com.keduit.dadog.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
 import lombok.*;

@@ -12,4 +12,5 @@ public interface AdoptRepository extends JpaRepository<Adopt, Long> , AdoptRepos
 
     @Query("select o from Adopt o where o.adoptCareNm = :careNm and o.adoptImgUrl = :popfile")
     Optional<Adopt> findByCareNmAndImgUrl(String careNm, String popfile);
+    List<Adopt> findTop6ByOrderByAdoptEdtDesc();
 }

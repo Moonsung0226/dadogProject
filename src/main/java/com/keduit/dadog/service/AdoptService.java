@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 
 @Service
@@ -28,4 +29,20 @@ public class AdoptService {
         return adoptRepository.findById(adoptNo).orElseThrow(EntityNotFoundException::new);
     }
 
+    public List<Adopt> findAllAdopt() {
+        return adoptRepository.findAll(); // 모든 Adopt 엔티티를 반환
+    }
+
+    // adopt_edt를 기준으로 최근 6개의 Adopt 데이터를 가져오는 메서드
+    public List<Adopt> findTop6ByOrderByAdoptEdtDesc() {
+        return adoptRepository.findTop6ByOrderByAdoptEdtDesc();
+    }
+
+    public Adopt findByAdoptNo(Long adoptNo) {
+        return adoptRepository.findById(adoptNo).orElseThrow(() -> new EntityNotFoundException("Adopt not found with adoptNo : " + adoptNo));
+    }
+
+    public void deleteAdopt(Long adoptNo) {
+        adoptRepository.deleteById(adoptNo);
+    }
 }
