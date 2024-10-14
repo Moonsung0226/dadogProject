@@ -43,13 +43,11 @@
               })
     }
 
-    function getLost(){
-      const lostNo = $("#lostNo").html();
-      location.href = '/dadog/lost/' + lostNo;
+    function getLost(no){
+      location.href = '/dadog/lost/' + no;
     }
-    function getProtect(){
-      const protectNo = $('#protectNo').html();
-      location.href = '/dadog/protect/' + protectNo;
+    function getProtect(no){
+      location.href = '/dadog/protect/' + no;
     }
 
 

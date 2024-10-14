@@ -12,7 +12,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="protect : ${protectList}" onclick="getProtect()">
+    <tr th:each="protect : ${protectList}" th:onclick="'getLost(' + ${protect.proNo} + ')'">
       <th scope="row" th:text="${protect.proNo}" id="protectNo"></th>
       <td th:text="${protect.proTitle}">Mark</td>
       <td th:text="${protect.proKind}">Otto</td>

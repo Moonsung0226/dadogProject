@@ -12,13 +12,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="lost : ${lostList}" onclick="getLost()">
+        <tr th:each="lost : ${lostList}" th:onclick="'getLost(' + ${lost.lostNo} + ')'">
             <th scope="row" th:text="${lost.lostNo}" id="lostNo"></th>
-            <td th:text="${lost.lostTitle}">Mark</td>
-            <td th:text="${lost.lostKind}">Otto</td>
-            <td th:text="${lost.lostPlace}">@mdo</td>
-            <td th:text="${lost.lostDate}">@mdo</td>
-            <td th:text="${lost.lostCreateDate}">@mdo</td>
+            <td th:text="${lost.lostTitle}"></td>
+            <td th:text="${lost.lostKind}"></td>
+            <td th:text="${lost.lostPlace}"></td>
+            <td th:text="${lost.lostDate}"></td>
+            <td th:text="${lost.lostCreateDate}"></td>
         </tr>
         </tbody>
     </table>
