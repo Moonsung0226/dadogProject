@@ -6,30 +6,30 @@
 <div layout:fragment="mainContent">
   <div class="p-md-10 mb-4 text-white bg-dark mainBanner">
     <div class="col-md-6 p-5 ms-5">
-      <h1 class="display-4">다독이다</h1>
-      <p class="lead my-3">다독이다는 유기견을 보호하고
+      <h1 class="display-4 fw-medium">다독이다</h1>
+      <p class="lead my-3 fw-light">다독이다는 유기견을 보호하고
         사랑하는 사람들을 위한 공간 입니다.</p>
     </div>
   </div>
   <div class="row justify-content-center mt-5">
 
     <div class="col-lg-3 text-center mt-2 mb-5">
-      <img src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=276&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
+      <img class="rounded-circle" src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=276&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
       <h3 class="mt-3">유기견 산책 및 관리</h3>
       <p>유기견들의 스트레스 해소와<br>사회성 향상을 위한 산책 봉사</p>
-      <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>View details »</a></p>
+      <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>Go Serve »</a></p>
     </div><!-- /.col-lg-4 -->
     <div class="col-lg-3 text-center mt-2 mb-5">
-      <img src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=277&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
+      <img class="rounded-circle" src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=277&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
       <h3 class="mt-3">유기견 미용</h3>
       <p>동물 미용의 경험이 있고 미용 장비를<br>가지고 계신 분들의 케어 미용 봉사</p>
-      <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>View details »</a></p>
+      <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>Go Serve »</a></p>
     </div><!-- /.col-lg-4 -->
     <div class="col-lg-3 text-center mt-2 mb-5">
-      <img src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=278&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
+      <img class="rounded-circle" src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=278&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
       <h3 class="mt-3">유기동물 촬영</h3>
       <p>유기견들의 스트레스 해소와<br>사회성 향상을 위한 산책 봉사</p>
-      <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>View details »</a></p>
+      <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>Go Serve »</a></p>
     </div><!-- /.col-lg-4 -->
   </div>
   <section class="py-5 bg-warning">
@@ -47,8 +47,8 @@
             <div class="card-body p-4">
               <div class="text-center">
                 <h5 class="fw-bolder" th:text="'견종 : ' + ${adopt.getAdopt_kind()}"></h5>
-                <p th:text="'종료일 : ' + ${adopt.getAdopt_edt()}"></p>
-                <p th:text="'보호소명 : ' + ${adopt.getAdopt_carenm()}"></p>
+                <p class="fw-normal" th:text="'종료일 : ' + ${adopt.getAdopt_edt()}"></p>
+                <p class="fw-normal" th:text="'보호소명 : ' + ${adopt.getAdopt_carenm()}"></p>
               </div>
             </div>
             <!-- Product actions-->
@@ -75,8 +75,8 @@
             <div class="card-body p-4">
               <div class="text-center">
                 <h5 class="fw-bolder" th:text="'견종 : ' + ${lost.getLostKind()}"></h5>
-                <p th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
-                <p th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
+                <p class="fw-normal" th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
+                <p class="fw-normal" th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
               </div>
             </div>
             <!-- Product actions-->
@@ -103,7 +103,7 @@
             <div class="card-body p-4">
               <div class="text-center">
                 <h5 class="fw-bolder" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
-                <p th:text="'발견날짜 : ' + ${protect.getProDate()}"></p>
+                <p class="fw-normal" th:text="'발견날짜 : ' + ${protect.getProDate()}"></p>
               </div>
             </div>
             <!-- Product actions-->

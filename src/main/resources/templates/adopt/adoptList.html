@@ -33,7 +33,11 @@
             height: 250px;
             object-fit: cover;
         }
-
+        .truncate {
+            white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+            overflow: hidden; /* 넘치는 부분 숨기기 */
+            text-overflow: ellipsis; /* 넘치는 부분을 "..."으로 표시 */
+        }
     </style>
 </th:block>
 <div layout:fragment="mainContent">
@@ -76,12 +80,12 @@
                 <div class="card">
                 <a th:href="'/dadog/adopt/' + ${adopt.getAdoptNo()}" class="text-dark link-underline link-underline-opacity-0">
                 <img th:src="${adopt.getAdoptImgUrl()}" th:alt="사진" class="card-img" width="270"/>
-                    <div class="card-body" style="height: 280px">
-                        <h5 class="card-title" th:text="${adopt.getAdoptKind()}"></h5>
-                        <p th:text="${adopt.getAdoptWeight()}" class="card-text"></p>
-                        <p th:text="${adopt.getAdoptCareNm()}" class="card-text"></p>
-                        <p th:text="${adopt.getAdoptCareAddr()}" class="card-text"></p>
-                        <p th:text="${adopt.getAdoptEdt()}" class="card-text"></p>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bolder mb-4" th:text="${adopt.getAdoptKind()}"></h5>
+                        <p th:text="'체중 : '+${adopt.getAdoptWeight()}" class="card-text mb-1"></p>
+                        <p th:text="'보호소 : '+ ${adopt.getAdoptCareNm()}" class="card-text mb-1"></p>
+                        <p th:text="'주소 : '+ ${adopt.getAdoptCareAddr()}" class="card-text truncate mb-1"></p>
+                        <p th:text="'공고일 : ' +${adopt.getAdoptEdt()}" class="card-text"></p>
                     </div>
                 </a>
             </div>

@@ -39,6 +39,11 @@
       height: 250px;
       object-fit: cover;
     }
+    .truncate {
+      white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+      overflow: hidden; /* 넘치는 부분 숨기기 */
+      text-overflow: ellipsis; /* 넘치는 부분을 "..."으로 표시 */
+    }
   </style>
 </th:block>
 <div layout:fragment="mainContent">
@@ -80,7 +85,7 @@
               <div class="card" style="max-width: 250px;">
                 <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img" width="250" />
                 <div class="card-body">
-                  <h5 class="card-title" th:text="${lost.getLostTitle()}"></h5>
+                  <h5 class="card-title truncate fw-bolder mb-4" th:text="${lost.getLostTitle()}"></h5>
                   <p th:text="${lost.getLostKind()}" class="card-text mb-1"></p>
                   <p th:text="${lost.getLostPlace()}" class="card-text mb-1"></p>
                   <p th:text="${lost.getLostTel()}" class="card-text mb-1"></p>
