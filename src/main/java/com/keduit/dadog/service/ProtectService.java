@@ -17,6 +17,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -103,6 +104,19 @@ public class ProtectService {
         Protect protect = protectRepository.findByProNo(protectDTO.getProNo());
         protect.updateProtect(protectDTO);
         protectRepository.save(protect);
+    }
+
+      //유저의 보호중 글 조회
+    public List<ProtectDTO> getUserProtect(Long userNo){
+        User user = userRepository.findByUserNo(userNo);
+        List<Protect> protectList = protectRepository.findByUser(user);
+        List<ProtectDTO> protectDTOList = new ArrayList<>();
+        for(Protect protect : protectList){
+            ProtectDTO protectDTO = new ProtectDTO();
+            protectDTO = protectDTO.myProtect(protect);
+            protectDTOList.add(protectDTO);
+        }
+        return protectDTOList;
     }
 
 

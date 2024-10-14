@@ -18,6 +18,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +39,7 @@ public class LostService {
         return lostRepository.getAdoptListPage(searchDTO, pageable);
     }
 
+    //실종신고 상세보기
     public Lost getLost(Long lostNo){
         return lostRepository.findById(lostNo).orElseThrow(EntityNotFoundException::new);
     }
@@ -69,6 +71,7 @@ public class LostService {
         return lost.getLostNo();
     }
 
+    //실종신고 글 삭제
     public void deleteLost(Long lostNo){
         Lost lost = lostRepository.findByLostNo(lostNo);
         try {
@@ -80,6 +83,7 @@ public class LostService {
         lostRepository.delete(lost);
     }
 
+    //실종신고 글 업데이트 (이미지 변경 시)
     public void updateLostWithImg(LostDTO lostDTO, MultipartFile lostImg) throws Exception{
        Lost lost = lostRepository.findByLostNo(lostDTO.getLostNo());
        lost.updateLost(lostDTO);
@@ -100,13 +104,28 @@ public class LostService {
        lostRepository.save(lost);
     }
 
+    //실종신고 글 업데이트(이미지 변경이 없을 시)
     public void updateLostWithOutImg(LostDTO lostDTO){
         Lost lost = lostRepository.findByLostNo(lostDTO.getLostNo());
         lost.updateLost(lostDTO);
         lostRepository.save(lost);
     }
 
+    //유저의 실종신고글 조회
+    public List<LostDTO> getUserLost(Long userNo){
+        User user = userRepository.findByUserNo(userNo);
+        List<Lost> lostList = lostRepository.findByUser(user);
+        List<LostDTO> lostDTOList = new ArrayList<>();
+        for(Lost lost : lostList){
+            LostDTO lostDTO = new LostDTO();
+            lostDTO = lostDTO.myLost(lost);
+            lostDTOList.add(lostDTO);
+        }
+        return lostDTOList;
+    }
 
+
+    //유저 확인
     public boolean lostValidation(String userName, Long lostNo){
         User user = userRepository.findByUserId(userName);
         if(user == null) {

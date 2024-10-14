@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,6 @@ public class WishService {
     private final AdoptRepository adoptRepository;
 
     public Long addWish(WishDTO wishDTO, String userName) {
-        //TODO: 중복체크 필요
         Adopt adopt = adoptRepository.findById(wishDTO.getAdoptNo()).orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUserId(userName);
 
@@ -39,5 +39,20 @@ public class WishService {
         } else {
             return 0L;
         }
+    }
+
+    // 찜목록 메서드
+    public List<Wish> getWishList(String userName) {
+        User user = userRepository.findByUserId(userName);
+        if (user == null) {
+            user = userRepository.findByUserEmail(userName);
+        }
+
+        //  사용자 정보 확인
+        System.out.println("User found: " + user);
+
+        List<Wish> wishList = wishRepository.findByUser(user);
+
+        return wishList;
     }
 }

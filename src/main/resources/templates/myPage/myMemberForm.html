@@ -1,114 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/myPageLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>기본 정보 변경</title>
     <!-- 사용자 CSS 추가 -->
     <th:block layout:fragment="css">
         <style>
-            .fieldError {
-                color: #bd2130;
-            }
-            .form-container {
-                margin: 0 auto;
-                max-width: 800px; /* 최대 너비 설정 */
-                padding: 20px; /* 내부 여백 */
-                background-color: #f9f9f9; /* 배경색 */
-                border-radius: 5px; /* 모서리 둥글게 */
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 */
-            }
-            h1 {
-                text-align: center; /* 제목 중앙 정렬 */
-            }
-            .btn-primary {
-                width: 100%; /* 버튼 너비 100% */
-            }
-            #successMessage {
-                color: green; /* 성공 메시지 색상 */
-                text-align: center;
-            }
+            /* 기존 스타일 유지 */
         </style>
     </th:block>
-
-    <th:block layout:fragment="script">
-    <!-- 사용자 JS 추가 -->
-        <script th:inline="javascript">
-            $(document).ready(() => {
-                const successMessage = [[${successMessage}]];
-                if (successMessage) {
-                    alert(successMessage);
-                }
-
-                // 비밀번호 확인 유효성 검사
-                $('form').on('submit', function (e) {
-                    const password = $('#password').val();
-                    const confirmPassword = $('#confirmPassword').val();
-                    const successMessageDiv = $('#successMessage');
-
-                    // 이전 성공 메시지 지우기
-                    successMessageDiv.text('');
-
-                    // 필수 체크박스 유효성 검사
-                    const termsRequired = $('#termsRequired').is(':checked');
-                    const privacyRequired = $('#privacyRequired').is(':checked');
-
-                    if (!termsRequired || !privacyRequired) {
-                        e.preventDefault(); // 폼 제출 방지
-                        alert('[필수] 이용약관 및 개인정보 수집 및 이용 동의에 체크해야 합니다.');
-                        return; // 더 이상 진행하지 않음
-                    }
-
-                    if (password !== confirmPassword) {
-                        e.preventDefault(); // 폼 제출 방지
-                        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-                    } else if (password.length < 8) { // 비밀번호 길이 체크
-                        e.preventDefault(); // 폼 제출 방지
-                        alert('비밀번호는 최소 8자 이상이어야 합니다.');
-                    } else {
-                        successMessageDiv.text('비밀번호가 일치합니다.');
-                    }
-                });
-            });
-        </script>
-    </th:block>
-
+</head>
+<body>
 <div layout:fragment="mainContent">
     <div class="col-md-7 col-lg-12 mt-5 mb-5">
         <div class="form-container">
-            <h1>회원정보변경</h1>
+            <h1>기본 정보 변경</h1>
             <hr class="my-4">
-            <form action="/dadog/myMemberForm" method="post" th:object="${userDTO}" class="needs-validation" novalidate>
-                <div class="row g-3">
+            <form th:action="@{/dadog/myPage/myMemberForm}" method="post" th:object="${userDTO}">
+                <input type="hidden" th:field="*{id}" />
 
+                <div class="row g-3">
                     <!-- Name Field -->
                     <div class="col-sm-12">
                         <label for="name" class="form-label">이름</label>
-                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." required>
-                        <div class="invalid-feedback">유효한 이름을 입력해 주세요.</div>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." disabled th:readonly="${isKakaoUser}">
                         <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
                     </div>
 
                     <!-- ID Field -->
                     <div class="col-sm-12">
                         <label for="id" class="form-label">아이디</label>
-                        <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력하세요." required>
-                        <div class="invalid-feedback">유효한 아이디를 입력해 주세요.</div>
+                        <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력하세요." disabled >
                         <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="fieldError"></p>
-                    </div>
-
-                    <!-- Password Field -->
-                    <div class="col-12">
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="8자 이상 비밀번호를 입력하세요." required>
-                        <div class="invalid-feedback">비밀번호가 필요합니다.</div>
-                        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>
-                    </div>
-
-                    <!-- Confirm Password Field -->
-                    <div class="col-12">
-                        <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required>
-                        <div class="invalid-feedback">비밀번호 확인이 필요합니다.</div>
-                        <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="fieldError"></p>
                     </div>
 
                     <!-- Telephone Field -->
@@ -122,8 +47,10 @@
                     <!-- Email Field -->
                     <div class="col-sm-12">
                         <label for="email" class="form-label">이메일 주소</label>
-                        <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required>
-                        <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
+                        <input type="email" class="form-control" id="email" th:field="*{email}"
+                               placeholder="이메일을 입력하세요."
+                               th:readonly="${isKakaoUser}"
+                               th:disabled="${isKakaoUser}">
                         <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
                     </div>
 
@@ -135,15 +62,6 @@
                         <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError"></p>
                     </div>
 
-                    <!-- Terms and Privacy Agreement -->
-                    <div class="col-12 form-check">
-                        <input type="checkbox" class="form-check-input" id="termsRequired" required>
-                        <label class="form-check-label" for="termsRequired">이용약관에 동의합니다.</label>
-                        <input type="checkbox" class="form-check-input" id="privacyRequired" required>
-                        <label class="form-check-label" for="privacyRequired">개인정보 수집 및 이용에 동의합니다.</label>
-                        <div class="invalid-feedback">이용약관 및 개인정보 수집 동의가 필요합니다.</div>
-                    </div>
-
                     <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
                     <div class="col-12">
@@ -152,8 +70,26 @@
                 </div>
             </form>
 
-            <div id="successMessage"></div> <!-- 성공 메시지 출력 -->
+            <div id="successMessage" th:if="${successMessage}" th:text="${successMessage}"></div>
         </div>
     </div>
 </div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            const successMessage = /*[[${successMessage}]]*/ null;
+            const isKakaoUser = /*[[${isKakaoUser}]]*/ false;
+
+            if (successMessage) {
+                alert(successMessage);
+            }
+
+            if (isKakaoUser) {
+                $('#email').prop('readonly', true).prop('disabled', true);
+            }
+        });
+    </script>
+</th:block>
+</body>
 </html>

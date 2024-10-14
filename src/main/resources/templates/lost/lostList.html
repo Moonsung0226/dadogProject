@@ -32,34 +32,71 @@
       text-decoration-line: none;
     }
     .mainBody {
-      width: 80%;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
-      margin: 0 auto;
-      gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
+      padding-left: 10%;
+      padding-right: 10%;
     }
-    .card{
-      margin: 10px;
+    .card-img{
+      height: 250px;
+      object-fit: cover;
     }
-
+    .truncate {
+      white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+      overflow: hidden; /* 넘치는 부분 숨기기 */
+      text-overflow: ellipsis; /* 넘치는 부분을 "..."으로 표시 */
+    }
   </style>
 </th:block>
 <div layout:fragment="mainContent">
   <form th:action="@{'/dadog/lost' + ${lostList.number}}" role="form" method="get" th:object="${lostList}">
-    <article class="mainBody">
-      <div th:each="lost : ${lostList.getContent()}" class="card">
-        <a th:href="'/dadog/lost/' + ${lost.getLostNo()}" class="text-dark link-underline link-underline-opacity-0">
-          <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${lost.getLostTitle()}"></h5>
-            <p th:text="${lost.getLostKind()}" class="card-text"></p>
-            <p th:text="${lost.getLostPlace()}" class="card-text"></p>
-            <p th:text="${lost.getLostTel()}" class="card-text"></p>
-            <p th:text="${lost.getLostDate()}" class="card-text"></p>
-          </div>
-        </a>
+    <div class="col-sm-8 pt-5 pb-5 mx-auto">
+      <h1 class="display-5 fw-normal mb-5">실종신고 게시판</h1>
+      <hr class="mb-5">
+      <p class="fs-5">※ 실종신고는 <a href="/dadog/login" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">로그인</a> 후 이용 가능합니다.</p>
+      <p class="fs-5">※ 이 메뉴는 동물을 빨리 찾을 수 있도록 실종 관련 정보를 공유하는 공간입니다</p>
+    </div>
+    <div class="form-inline justify-content-center align-middle col-lg-8 mx-auto mb-5 border rounded border-dark-subtle" th:object="${lostSearchDTO}">
+      <div class="row justify-content-center">
+        <div class="col-auto mb-4 mt-4">
+      <select th:field="*{searchBy}" class="form-control border-dark" id="searchBy" style="width: auto;">
+        <option value="kind">견종</option>
+        <option value="title">제목</option>
+        <option value="detail">글 내용</option>
+        <option value="place">실종장소</option>
+      </select>
+        </div>
+        <div class="col-auto mb-4 mt-4">
+      <input th:field="*{searchQuery}" class="form-control border-dark" id="searchQuery" placeholder="검색어">
+        </div>
+        <div class="col-auto mb-4 mt-4">
+      <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+        </div>
+        <div class="col-auto mb-4 mt-4 border-dark">
+      <button class="btn btn-outline-dark" type="button" onclick="addLost()">
+        글쓰기
+      </button>
+        </div>
       </div>
-    </article>
+    </div>
+    <div class="container">
+      <article class="mainBody py-3 px-2 px-md-3 px-lg-5">
+        <div class="row">
+          <div th:each="lost : ${lostList.getContent()}" class="col-6 col-md-4 col-lg-3 mb-4">
+            <a th:href="'/dadog/lost/' + ${lost.getLostNo()}" class="text-dark link-underline link-underline-opacity-0">
+              <div class="card" style="max-width: 250px;">
+                <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img" width="250" />
+                <div class="card-body">
+                  <h5 class="card-title truncate fw-bolder mb-4" th:text="${lost.getLostTitle()}"></h5>
+                  <p th:text="${lost.getLostKind()}" class="card-text mb-1"></p>
+                  <p th:text="${lost.getLostPlace()}" class="card-text mb-1"></p>
+                  <p th:text="${lost.getLostTel()}" class="card-text mb-1"></p>
+                  <p th:text="${lost.getLostDate()}" class="card-text"></p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
     <div th:with="start=${(lostList.number / maxPage) * maxPage + 1},
             end=${(lostList.totalPages == 0 ? 1 :
             (start + (maxPage - 1) < lostList.totalPages ? start + (maxPage - 1):
@@ -81,19 +118,6 @@
           </a>
         </li>
       </ul>
-    </div>
-    <div class="form-inline justify-content-center" th:object="${lostSearchDTO}">
-      <select th:field="*{searchBy}" class="form-control" id="searchBy" style="width: auto;">
-        <option value="kind">견종</option>
-        <option value="title">제목</option>
-        <option value="detail">글 내용</option>
-        <option value="place">실종장소</option>
-      </select>
-      <input th:field="*{searchQuery}" class="form-control" id="searchQuery" placeholder="검색어">
-      <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
-      <button class="btn btn-outline-dark" type="button" onclick="addLost()">
-        글쓰기
-      </button>
     </div>
   </form>
 </div>

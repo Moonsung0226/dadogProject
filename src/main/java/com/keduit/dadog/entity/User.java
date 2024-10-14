@@ -40,6 +40,9 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_tel")
     private String userTel;
 
+//    @Column(name = "user_nickname")
+//    private String userNickname;
+
     @Column(name = "user_email", unique = true)
     private String userEmail;
 
@@ -64,12 +67,25 @@ public class User extends BaseTimeEntity{
         User user = new User();
         user.setUserId(userDTO.getId());
         user.setUserName(userDTO.getName());
+//        user.setUserNickname(userDTO.getNickname());
         user.setUserEmail(userDTO.getEmail());
         user.setUserAddr(userDTO.getAddress());
         user.setUserTel(userDTO.getTel());
         String password = passwordEncoder.encode(userDTO.getPassword());
         user.setUserPwd(password);
         user.setRole(Role.USER);
+        return user;
+    }
+
+    // 카카오 사용자를 위한 정적 메서드
+    public static User createKakaoUser(String id, String name, String email) {
+        User user = new User();
+        user.setUserId(id);
+        user.setUserName(name);
+        user.setUserEmail(email);
+        // 카카오 사용자는 비밀번호가 없으므로 임의의 값을 설정하거나 null로.
+        user.setUserPwd(null);
+        user.setRole(Role.KAKAO);
         return user;
     }
 }

@@ -12,6 +12,8 @@ public interface LostRepository extends JpaRepository<Lost, Long>, LostRepositor
     @Query("select o from Lost o where o.user = :user")
     Lost findByUserNo(User user);
 
+    List<Lost> findByUser(User user);
+
     Lost findByLostNo(Long lostNo);
 
     List<Lost> findTop6ByOrderByLostDateDesc();

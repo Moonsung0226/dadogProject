@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/myPageLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 변경</title>
+    <th:block layout:fragment="css">
+        <style>
+            .fieldError { color: #bd2130; }
+            .form-container {
+                margin: 0 auto;
+                max-width: 800px;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            .form-container form { text-align: left; }
+            h1 { text-align: center; }
+            .btn-primary { width: 100%; }
+            #successMessage { color: green; text-align: center; }
+            input[readonly] { background-color: #e9ecef; opacity: 1; }
+            .form-label { text-align: left; display: block; }
+            .invalid-feedback { display: block; }
+        </style>
+    </th:block>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div layout:fragment="mainContent">
+    <div class="col-md-7 col-lg-12 mt-5 mb-5">
+        <div class="form-container">
+            <h1>비밀번호 변경</h1>
+            <hr class="my-4">
+            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <p th:text="${errorMessage}"></p>
+            </div>
+            <div th:if="${userRole == 'KAKAO'}" class="alert alert-info">
+                카카오 로그인 사용자는 비밀번호를 변경할 수 없습니다.
+            </div>
+
+            <form th:action="@{/dadog/myPage/myPwd}" method="post" th:object="${userDTO}" id="passwordChangeForm">
+                <input type="hidden" th:field="*{id}" />
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label for="currentPassword" class="form-label">기존 비밀번호</label>
+                        <input type="password" class="form-control" id="currentPassword" th:field="*{currentPassword}" placeholder="기존 비밀번호를 입력하세요." required th:disabled="${userRole == 'KAKAO'}">
+                        <div id="currentPasswordFeedback" class="invalid-feedback"></div>
+<!--                            <span th:text="${errorMessage}"></span>-->
+
+                    </div>
+                    <div class="col-12">
+                        <label for="newPassword" class="form-label">새 비밀번호</label>
+                        <input type="password" class="form-control" id="newPassword" th:field="*{newPassword}" placeholder="8자 이상 비밀번호를 입력하세요." required th:disabled="${userRole == 'KAKAO'}">
+                        <div id="newPasswordFeedback" class="invalid-feedback"></div>
+<!--                            <span th:text="${errorMessage}"></span>-->
+
+                    </div>
+                    <div class="col-12">
+                        <label for="confirmNewPassword" class="form-label">새 비밀번호 확인</label>
+                        <input type="password" class="form-control" id="confirmNewPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required th:disabled="${userRole == 'KAKAO'}">
+                        <div id="confirmPasswordFeedback" class="invalid-feedback"></div>
+<!--                            <span th:text="${errorMessage}"></span>-->
+
+
+                    </div>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary" th:disabled="${userRole == 'KAKAO'}">비밀번호 수정</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        const userRole = /*[[${userRole}]]*/ null;
+
+        if (userRole === 'KAKAO') {
+            $('#passwordChangeForm').find('input, button').prop('disabled', true);
+        }
+
+        function validatePasswords() {
+            const currentPassword = $('#currentPassword').val().trim();
+            const newPassword = $('#newPassword').val().trim();
+            const confirmNewPassword = $('#confirmNewPassword').val().trim();
+            let isValid = true;
+
+            // 현재 비밀번호 체크
+            if (currentPassword === '') {
+                $('#currentPasswordFeedback').text('현재 비밀번호를 입력해주세요.').show();
+                isValid = false;
+            } else {
+                $('#currentPasswordFeedback').hide();
+            }
+
+            // 새 비밀번호 체크
+            if (newPassword === '') {
+                $('#newPasswordFeedback').text('새 비밀번호를 입력해주세요.').show();
+                isValid = false;
+            } else if (newPassword.length < 8) {
+                $('#newPasswordFeedback').text('비밀번호는 최소 8자 이상이어야 합니다.').show();
+                isValid = false;
+            } else if (newPassword === currentPassword) {
+                $('#newPasswordFeedback').text('새 비밀번호는 현재 비밀번호와 달라야 합니다.').show();
+                isValid = false;
+            } else {
+                $('#newPasswordFeedback').hide();
+            }
+
+            // 새 비밀번호 확인 체크
+            if (confirmNewPassword === '') {
+                $('#confirmPasswordFeedback').text('비밀번호 확인을 입력해주세요.').show();
+                isValid = false;
+            } else if (newPassword !== confirmNewPassword) {
+                $('#confirmPasswordFeedback').text('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.').show();
+                isValid = false;
+            } else {
+                $('#confirmPasswordFeedback').hide();
+            }
+
+            return isValid;
+        }
+
+        $('#currentPassword, #newPassword, #confirmNewPassword').on('input', validatePasswords);
+
+        $('#passwordChangeForm').on('submit', function (e) {
+            if (!validatePasswords()) {
+                e.preventDefault(); // 유효성 검사 실패 시 제출 방지
+            }
+        });
+    });
+</script>
+</body>
+</html>
