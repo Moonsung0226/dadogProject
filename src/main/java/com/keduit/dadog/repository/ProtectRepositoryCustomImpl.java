@@ -25,7 +25,7 @@ public class ProtectRepositoryCustomImpl implements ProtectRepositoryCustom {
         if(StringUtils.equals("kind",searchBy)){
             return QProtect.protect.proKind.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("place",searchBy)){
-            return QProtect.protect.proKind.like("%" + searchQuery + "%");
+            return QProtect.protect.proPlace.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("detail",searchBy)){
             return QProtect.protect.proDetail.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("title",searchBy)){
