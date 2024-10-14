@@ -2,47 +2,59 @@ package com.keduit.dadog.controller;
 
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.User;
+import com.keduit.dadog.service.LostService;
+import com.keduit.dadog.service.ProtectService;
 import com.keduit.dadog.repository.UserRepository;
 import com.keduit.dadog.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dadog")
+@RequiredArgsConstructor
 public class MyPageController {
 
-    private final UserService userService;
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserService userService; // UserService 필드
+    private final LostService lostService;
+    private final ProtectService protectService;
 
-    @Autowired
-    public MyPageController(UserService userService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     // 마이페이지
-    @GetMapping("/myPage")
-    public String myPage(HttpServletRequest request, Model model) {
+    @GetMapping("/myPage") // 경로 앞에 '/' 추가
+    public String myPage(HttpServletRequest request, Model model, Principal principal) {
+        HttpSession session = request.getSession();
+        //user 를 가져옴
+        Long userNo = userService.getUser(principal.getName()).getUserNo();
+        model.addAttribute("userNo", userNo);
         return "myPage/myPage";
     }
 
+
     @GetMapping("/myPage/myWriting")
-    public String myWriting(Model model) {
+    public String myWriting(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        // 게시글 리스트를 빈 리스트로 초기화
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts);
-        return "myPage/myWriting";
+        model.addAttribute("posts", posts); // 빈 리스트 추가
+
+        return "myPage/myWriting"; // Thymeleaf 템플릿 경로
     }
 
     // 회원 정보 가져오기(카카오일 경우 이메일은 막기)
@@ -55,6 +67,7 @@ public class MyPageController {
         return "myPage/myMemberForm";
     }
 
+    // POST 요청 처리: 회원 정보 수정
     @PostMapping("/myPage/myMemberForm")
     public String updateMember(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal) {
         User currentUser = userService.getUser(principal.getName());
@@ -119,26 +132,47 @@ public class MyPageController {
     }
 
     @GetMapping("/myPage/myLost")
-    public String myLost(Model model) {
+    public String myLost(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        // 게시글 리스트를 빈 리스트로 초기화
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts);
-        return "myPage/myLost";
+        model.addAttribute("posts", posts); // 빈 리스트 추가
+
+        return "myPage/myLost"; // Thymeleaf 템플릿 경로
     }
 
     @GetMapping("/myPage/myAdopt")
-    public String myAdopt(Model model) {
+    public String myAdopt(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        // 게시글 리스트를 빈 리스트로 초기화
         List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts);
-        return "myPage/myAdopt";
+        model.addAttribute("posts", posts); // 빈 리스트 추가
+
+        return "myPage/myAdopt"; // Thymeleaf 템플릿 경로
     }
 
-    @GetMapping("/myPage/myProtect")
-    public String myProtecting(Model model) {
-        List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts);
-        return "myPage/myProtect";
+    //유저의 실종 신고글 조회
+    @PostMapping("/myPage/myLost")
+    public String myLost(Model model, @RequestBody Map<String, Object> userNo) {
+        System.out.println("---------------- userDTO" + userNo);
+        String userNoStr = (String) userNo.get("userNo");
+        Long userNum = Long.valueOf(userNoStr);
+        List<LostDTO> lostList = lostService.getUserLost(userNum);
+        model.addAttribute("lostList", lostList);
+        return "myPage/myLost"; // Thymeleaf 템플릿 경로
     }
 
+    @PostMapping("/myPage/myProtect")
+    public String myProtecting(Model model, @RequestBody Map<String, Object> userNo) {
+        System.out.println("---------------- userDTO" + userNo);
+        String userNoStr = (String) userNo.get("userNo");
+        Long userNum = Long.valueOf(userNoStr);
+        List<ProtectDTO> protectDTOList = protectService.getUserProtect(userNum);
+        model.addAttribute("protectList", protectDTOList);
+        return "myPage/myProtect"; // Thymeleaf 템플릿 경로
+    }
 
     // 비밀번호 변경 페이지
     @GetMapping("/myPage/myPwd")
@@ -163,9 +197,7 @@ public class MyPageController {
         if (userDTO.getCurrentPassword() == null || userDTO.getCurrentPassword().isEmpty()) {
             result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호를 입력해주세요.");
             return "myPage/myPwd";
-        }
-
-        if (!passwordEncoder.matches(userDTO.getCurrentPassword(), currentUser.getUserPwd())) {
+        } if (!passwordEncoder.matches(userDTO.getCurrentPassword(), currentUser.getUserPwd())) {
             result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호가 일치하지 않습니다.");
             return "myPage/myPwd";
         }
@@ -199,4 +231,5 @@ public class MyPageController {
             return "myPage/myPwd";
         }
     }
-}
+
+    }

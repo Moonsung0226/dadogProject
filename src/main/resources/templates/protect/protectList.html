@@ -31,34 +31,37 @@
       text-decoration-line: none;
     }
     .mainBody {
-      width: 80%;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
-      margin: 0 auto;
-      gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
+      padding-left: 10%;
+      padding-right: 10%;
     }
-    .card{
-      margin: 10px;
+    .card-img{
+      height: 250px;
+      object-fit: cover;
     }
-
   </style>
 </th:block>
 <div layout:fragment="mainContent">
   <form th:action="@{'/dadog/protect' + ${protectList.number}}" role="form" method="get" th:object="${protectList}">
-    <article class="mainBody">
-      <div th:each="protect : ${protectList.getContent()}" class="card">
+    <div class="container">
+    <article class="mainBody py-3 px-2 px-md-3 px-lg-5">
+      <div class="row">
+      <div th:each="protect : ${protectList.getContent()}" class="col-6 col-md-4 col-lg-3 mb-4">
         <a th:href="'/dadog/protect/' + ${protect.getProNo()}" class="text-dark link-underline link-underline-opacity-0">
-          <img th:src="${protect.getProImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
+          <div class="card" style="max-width: 250px;">
+          <img th:src="${protect.getProImgUrl()}" th:alt="사진" class="card-img" width="250"/>
           <div class="card-body">
             <h5 class="card-title" th:text="${protect.getProTitle()}"></h5>
-            <p th:text="${protect.getProKind()}" class="card-text"></p>
-            <p th:text="${protect.getProPlace()}" class="card-text"></p>
-            <p th:text="${protect.getProTel()}" class="card-text"></p>
+            <p th:text="${protect.getProKind()}" class="card-text mb-1"></p>
+            <p th:text="${protect.getProPlace()}" class="card-text mb-1"></p>
+            <p th:text="${protect.getProTel()}" class="card-text mb-1"></p>
             <p th:text="${protect.getProDate()}" class="card-text"></p>
+          </div>
           </div>
         </a>
       </div>
+      </div>
     </article>
+    </div>
     <div th:with="start=${(protectList.number / maxPage) * maxPage + 1},
             end=${(protectList.totalPages == 0 ? 1 :
             (start + (maxPage - 1) < protectList.totalPages ? start + (maxPage - 1):

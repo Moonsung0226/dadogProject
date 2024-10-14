@@ -28,11 +28,9 @@ import java.util.Optional;
 @RequestMapping("/dadog/adopt")
 public class AdoptController {
 
-    @Autowired
-    private AdoptService adoptService;
 
-    @Autowired
-    private WishService wishService;
+    private final AdoptService adoptService;
+    private final WishService wishService;
 
     @GetMapping({"/list/{page}","/list"})
     public String adoptList(AdoptSearchDTO adoptSearchDTO,

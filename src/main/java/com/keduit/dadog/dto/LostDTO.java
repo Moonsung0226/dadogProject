@@ -35,6 +35,8 @@ public class LostDTO {
 
     private String lostWriter;
 
+    private LocalDate lostCreateDate;
+
     public LostDTO createLostDTO(Lost lost) {
         LostDTO lostDTO = new LostDTO();
         this.lostNo = lost.getLostNo();
@@ -56,6 +58,17 @@ public class LostDTO {
         lostDTO.setLostKind(lost.getLostKind());
         lostDTO.setLostPlace(lost.getLostPlace());
         lostDTO.setImgUrl(lost.getLostImgUrl());
+        return lostDTO;
+    }
+
+    public LostDTO myLost(Lost lost) {
+        LostDTO lostDTO = new LostDTO();
+        lostDTO.setLostNo(lost.getLostNo());
+        lostDTO.setLostDate(lost.getLostDate());
+        lostDTO.setLostKind(lost.getLostKind());
+        lostDTO.setLostPlace(lost.getLostPlace());
+        lostDTO.setLostTitle(lost.getLostTitle());
+        lostDTO.setLostCreateDate(lost.getCreateTime());
         return lostDTO;
     }
 }

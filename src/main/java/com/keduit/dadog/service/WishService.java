@@ -22,7 +22,6 @@ public class WishService {
     private final AdoptRepository adoptRepository;
 
     public Long addWish(WishDTO wishDTO, String userName) {
-        //TODO: 중복체크 필요
         Adopt adopt = adoptRepository.findById(wishDTO.getAdoptNo()).orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUserId(userName);
 

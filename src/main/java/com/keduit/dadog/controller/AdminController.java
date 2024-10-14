@@ -11,12 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class AdminController {
 
-    @Autowired
-    private AdoptApiService adoptApiService;
+    private final AdoptApiService adoptApiService;
 
     @GetMapping("/dadog/admin/adopt/api")
     public String adoptApi() {
         adoptApiService.fetchAndSaveAdoptData();
-        return "/main";
+        return "redirect:/dadog/main";
+    }
+
+    @GetMapping("/dadog/admin/adopt/updateApi")
+    public String updateApi() {
+        adoptApiService.fetchAndUpdateAdoptData();
+        return "redirect:/dadog/main";
     }
 }
