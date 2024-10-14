@@ -24,6 +24,7 @@ public class UserDTO {
     private String otherSource; // 기타 이유
     private String kakaoId; // 카카오 사용자 ID
 
+
     @NotEmpty(message = "이메일은 필수 입력입니다")
     @Email(message = "이메일 형식으로 입력해주세요")
     private String email; // 이메일

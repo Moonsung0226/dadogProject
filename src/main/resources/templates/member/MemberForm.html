@@ -5,7 +5,7 @@
 
 <head>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <title>회원가입 및 결제</title>
+  <title>회원가입</title>
 
   <!-- 사용자 CSS 추가 -->
   <th:block layout:fragment="css">
@@ -146,49 +146,49 @@
           </div>
 
           <input type="hidden" name="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-          <hr class="my-4">
+<!--          <hr class="my-4">-->
 
-          <h1>추가정보(선택사항)</h1>
+<!--          <h1>추가정보(선택사항)</h1>-->
 
-          <!-- Date of Birth Field -->
-          <div class="col-12">
-            <label for="dob" class="form-label">생년월일</label>
-            <input type="date" class="form-control" id="dob" th:field="*{dob}" required>
-            <div class="invalid-feedback">생년월일이 필요합니다.</div>
-          </div>
+<!--          &lt;!&ndash; Date of Birth Field &ndash;&gt;-->
+<!--          <div class="col-12">-->
+<!--            <label for="dob" class="form-label">생년월일</label>-->
+<!--            <input type="date" class="form-control" id="dob" th:field="*{dob}" required>-->
+<!--            <div class="invalid-feedback">생년월일이 필요합니다.</div>-->
+<!--          </div>-->
 
-          <!-- Gender Field -->
-          <div class="col-12">
-            <label>성별</label><br>
-            <div class="form-check">
-              <input type="radio" class="form-check-input" id="genderMale" th:field="*{gender}" value="male" required>
-              <label class="form-check-label" for="genderMale">남성</label>
-            </div>
-            <div class="form-check">
-              <input type="radio" class="form-check-input" id="genderFemale" th:field="*{gender}" value="female" required>
-              <label class="form-check-label" for="genderFemale">여성</label>
-            </div>
-            <div class="invalid-feedback">성별을 선택해야 합니다.</div>
-          </div>
+<!--          &lt;!&ndash; Gender Field &ndash;&gt;-->
+<!--          <div class="col-12">-->
+<!--            <label>성별</label><br>-->
+<!--            <div class="form-check">-->
+<!--              <input type="radio" class="form-check-input" id="genderMale" th:field="*{gender}" value="male" required>-->
+<!--              <label class="form-check-label" for="genderMale">남성</label>-->
+<!--            </div>-->
+<!--            <div class="form-check">-->
+<!--              <input type="radio" class="form-check-input" id="genderFemale" th:field="*{gender}" value="female" required>-->
+<!--              <label class="form-check-label" for="genderFemale">여성</label>-->
+<!--            </div>-->
+<!--            <div class="invalid-feedback">성별을 선택해야 합니다.</div>-->
+<!--          </div>-->
 
-          <!-- How Did You Hear Field -->
-          <div class="col-12">
-            <label for="howDidYouHear" class="form-label">다독이다를 어떻게 알게 되셨나요?</label>
-            <select class="form-select" id="howDidYouHear" th:field="*{howDidYouHear}" required>
-              <option value="" disabled selected>선택해 주세요</option>
-              <option value="offline">오프라인 광고</option>
-              <option value="online">온라인 광고</option>
-              <option value="referral">주변 지인 추천</option>
-              <option value="other">기타</option>
-            </select>
-            <div class="invalid-feedback">출처를 선택해야 합니다.</div>
-          </div>
+<!--          &lt;!&ndash; How Did You Hear Field &ndash;&gt;-->
+<!--          <div class="col-12">-->
+<!--            <label for="howDidYouHear" class="form-label">다독이다를 어떻게 알게 되셨나요?</label>-->
+<!--            <select class="form-select" id="howDidYouHear" th:field="*{howDidYouHear}" required>-->
+<!--              <option value="" disabled selected>선택해 주세요</option>-->
+<!--              <option value="offline">오프라인 광고</option>-->
+<!--              <option value="online">온라인 광고</option>-->
+<!--              <option value="referral">주변 지인 추천</option>-->
+<!--              <option value="other">기타</option>-->
+<!--            </select>-->
+<!--            <div class="invalid-feedback">출처를 선택해야 합니다.</div>-->
+<!--          </div>-->
 
-          <!-- Other Source Field -->
-          <div class="col-12" id="otherSource" style="display:none;">
-            <label for="otherSourceInput" class="form-label">어떻게 알게되셨어여?</label>
-            <input type="text" class="form-control" id="otherSourceInput" placeholder="입력해주세요." th:field="*{otherSource}">
-          </div>
+<!--          &lt;!&ndash; Other Source Field &ndash;&gt;-->
+<!--          <div class="col-12" id="otherSource" style="display:none;">-->
+<!--            <label for="otherSourceInput" class="form-label">어떻게 알게되셨어여?</label>-->
+<!--            <input type="text" class="form-control" id="otherSourceInput" placeholder="입력해주세요." th:field="*{otherSource}">-->
+<!--          </div>-->
 
           <script>
             document.getElementById("howDidYouHear").addEventListener("change", function() {
@@ -210,7 +210,7 @@
             <p>선택항목에 동의하지 않은 경우도 회원가입 및 일반적인 서비스를 이용할 수 있습니다.</p>
           </div>
 
-          <!-- Required Consent Items -->
+
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="termsRequired" required>
             <label class="form-check-label" for="termsRequired" >[필수] 이용약관 동의</label>
@@ -220,7 +220,7 @@
             <label class="form-check-label" for="privacyRequired" >[필수] 개인정보 수집 및 이용 동의</label>
           </div>
 
-          <!-- Optional Consent Item -->
+
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="snsOptional">
             <label class="form-check-label" for="snsOptional">[선택] SNS(문자, 카카오톡 등)으로 혜택과 유용한 정보를 보내드려도 될까요?</label>
@@ -230,7 +230,7 @@
           <hr class="my-4">
           <p>
             본인은 만14세 이상이며,
-            <a href="이용약관링크" style="text-decoration: underline;">이용약관</a>,
+            <a href="http://localhost:8082/dadog/members/UseAgree" style="text-decoration: underline;">이용약관</a>,
             <a href="개인정보수집링크" style="text-decoration: underline;">개인정보 수집 및 이용 내용</a>을 확인하였으며,
             동의합니다.
           </p>
@@ -252,7 +252,6 @@
               });
             }
           </script>
-
       </form>
     </div>
   </div>
