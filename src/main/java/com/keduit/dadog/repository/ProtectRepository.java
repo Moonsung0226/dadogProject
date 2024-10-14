@@ -11,4 +11,6 @@ public interface ProtectRepository extends JpaRepository<Protect, Long>, Protect
     List<Protect> findByUser(User user);
 
     Protect findByProNo(Long proNo);
+
+    List<Protect> findTop6ByOrderByCreateTimeDesc();
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/adminLayout}">
+
+<!-- 사용자 js -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    </script>
+</th:block>
+
+<div layout:fragment="mainContent" style="margin-top: 50px; display: flex; flex-direction: column; align-items: center;">
+    <!-- top section -->
+    <section class="top-section d-flex" style="width: 100%; display: flex; gap: 30px; justify-content: center;">
+        <article class="top-left" style="width: 40%;">
+            <div class="card" style="flex: 1;">
+                <div class="d-flex justify-content-between align-items-center card-header">
+                    <h5>Lost Information</h5>
+                    <a href="/dadog/admin/lost/list" class="btn btn-primary">더보기</a>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="card card-lost/list" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="lost : ${lostList}">
+                            <img th:src="${lost.lostImgUrl}" class="card-img-top" alt="Lost Image for [[${lost.lostTitle}]]" style="width: 100%; height: 200px; object-fit: cover;">
+                            <div class="card-body" style="text-align: center;">
+                                <h5 class="card-title" th:text="${lost.lostTitle}"></h5>
+                                <p class="card-text">
+                                    실종 날짜: <span th:text="${lost.lostDate}"></span><br>
+                                    장소: <span th:text="${lost.lostPlace}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <article class="top-right" style="width: 40%;">
+            <div class="card" style="flex: 1;">
+                <div class="d-flex justify-content-between align-items-center card-header">
+                    <h5>Adopt Information</h5>
+                    <a href="/dadog/admin/adopt/list" class="btn btn-primary">더보기</a>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="card card-adopt" style="width: 30%; margin-bottom: 20px;" th:each="adopt : ${adoptList}" data-adopt-no="${adopt.adoptNo}">
+                            <img th:src="${adopt.adoptImgUrl}" class="card-img-top" alt="[[${adopt.adoptCareNm}]]" style="width: 100%; height: 200px; object-fit: cover;">
+                            <div class="card-body" style="text-align: center;">
+                                <h5 class="card-title" th:text="${adopt.adoptCareNm}"></h5>
+                                <p class="card-text">
+                                    나이: <span th:text="${adopt.adoptAge}"></span><br>
+                                    공고 종료일: <span th:text="${adopt.adoptEdt}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- middle section -->
+    <section class="middle-section d-flex" style="width: 100%; display: flex; gap: 30px; margin-top: 20px; justify-content: center;">
+        <article class="middle-left" style="width: 40%;">
+            <div class="card" style="flex: 1;">
+                <div class="d-flex justify-content-between align-items-center card-header">
+                    <h5>Board Information</h5>
+                    <a href="/dadog/admin/board/list" class="btn btn-primary">더보기</a>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="card card-board" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="board : ${boardList}">
+                            <div class="card-body" style="text-align: center;">
+                                <h5 class="card-title" th:text="${board.boardTitle}"></h5>
+                                <p class="card-text">
+                                    작성자: <span th:text="${board.boardWriter}"></span><br>
+                                    조회수: <span th:text="${board.boardViews}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <article class="middle-right" style="width: 40%;">
+            <div class="card" style="flex: 1;">
+                <div class="d-flex justify-content-between align-items-center card-header">
+                    <h5>Protect Information</h5>
+                    <a href="/dadog/admin/protect/list" class="btn btn-primary">더보기</a>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="card card-protect" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="protect : ${protectList}">
+                            <img th:src="${protect.proImgUrl}" class="card-img-top" alt="Protect Image for [[${protect.proTitle}]]" style="width: 100%; height: 200px; object-fit: cover;">
+                            <div class="card-body" style="text-align: center;">
+                                <h5 class="card-title" th:text="${protect.proTitle}"></h5>
+                                <p class="card-text">
+                                    발견 날짜: <span th:text="${protect.proDate}"></span><br>
+                                    장소: <span th:text="${protect.proPlace}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- bottom section -->
+    <section class="bottom-section" style="margin-top: 20px; width: 80%">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">User ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telephone</th>
+                <th scope="col">Role</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider" th:each="user : ${userList}">
+            <tr>
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.userEmail}"></td>
+                <td th:text="${user.userTel}"></td>
+                <td th:text="${user.role}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</html>
