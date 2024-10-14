@@ -120,4 +120,12 @@ public class LostService {
     public List<Lost> findAllLost() {
         return lostRepository.findAll(); // 모든 Lost 엔티티를 반환
     }
+
+    public List<Lost> findTop6ByOrderByLostDateDesc() {
+        return lostRepository.findTop6ByOrderByLostDateDesc();
+    }
+
+    public Lost findByLostNo(Long lostNo) {
+        return lostRepository.findById(lostNo).orElseThrow(() -> new EntityNotFoundException("Lost not found with lostNo : " + lostNo));
+    }
 }

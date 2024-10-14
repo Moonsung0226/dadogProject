@@ -112,4 +112,15 @@ public class UserService implements UserDetailsService {
     public List<User> findAllUsers() {
         return userRepository.findAll(); // 모든 User 엔티티를 반환
     }
+
+    public List<User> findTop6ByOrderByCreateTimeDesc() {
+        return userRepository.findTop6ByOrderByCreateTimeDesc();
+    }
+
+    public void updateUserRole(Long userId, Role newRole) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+        user.setRole(newRole);
+        userRepository.save(user);
+    }
 }

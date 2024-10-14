@@ -119,4 +119,12 @@ public class ProtectService {
     public List<Protect> findAllProtects() {
         return protectRepository.findAll(); // 모든 Protect 엔티티를 반환
     }
+
+    public List<Protect> findTop6ByOrderByCreateTimeDesc() {
+        return protectRepository.findTop6ByOrderByCreateTimeDesc();
+    }
+
+    public Protect findByProtectNo(Long protectNo) {
+        return protectRepository.findById(protectNo).orElseThrow(() -> new EntityNotFoundException("Protect not found with protectNo : " + protectNo));
+    }
 }

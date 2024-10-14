@@ -3,7 +3,160 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/adminLayout}">
 
-<div layout:fragment="mainContent">
-  성공했을까요?
+<!-- 사용자 css -->
+<th:block layout:fragment="css">
+  <style>
+    .modal-dialog {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100% - 1rem);
+    }
+  </style>
+</th:block>
+
+<!-- 사용자 js -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    function showLostDetail(lostNo) {
+      console.log(`Requesting details for lostNo: ${lostNo}`); // 요청 확인 로그
+      const url = "/dadog/admin/lost/" + lostNo;
+
+      $.ajax({
+        url: url,
+        type: "GET",
+        contentType: "application/json",
+        dataType: "json",
+        cache: false,
+        success: function (result) {
+          console.log(result); // 결과 확인
+          // 모달에 데이터 설정
+          $('#modalLostNo').text(result.lostNo);
+          $('#modalLostWriter').text(result.lostWriter);
+          $('#modalLostTel').text(result.lostTel);
+          $('#modalLostTitle').text(result.lostTitle);
+          $('#modalLostKind').text(result.lostKind);
+          $('#modalLostDate').text(result.lostDate);
+          $('#modalLostPlace').text(result.lostPlace);
+          $('#modalLostDetail').text(result.lostDetail);
+          $('#modalLostImg').attr('src', result.lostImgUrl);
+
+          // 모달 표시
+          $('#lostDetailModal').modal('show');
+        },
+        error: function (xhr) {
+          if (xhr.status == '401') {
+            alert("로그인 후 이용하세요");
+            location.href = "/dadog/login";
+          } else {
+            alert(xhr.responseText);
+          }
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const deleteButton = document.getElementById('deleteLostButton');
+      if (deleteButton) {
+        deleteButton.addEventListener('click', function () {
+          const lostNo = document.getElementById('modalLostNo').textContent;
+
+          const token = document.querySelector('meta[name="_csrf"]').content;
+          const header = document.querySelector('meta[name="_csrf_header"]').content;
+
+          $.ajax({
+            url: '/dadog/admin/lost/delete/' + lostNo,
+            type: 'DELETE',
+            headers: {
+              [header]: token
+            },
+            success: function (result) {
+              alert("삭제되었습니다.");
+              $('#lostDetailModal').modal('hide');
+              location.reload();
+            },
+            error: function (xhr) {
+              alert("삭제 실패: " + xhr.responseText);
+            }
+          });
+        });
+      }
+    });
+
+    function page(pageNumber) {
+      const url = '/dadog/admin/lost/list/' + pageNumber;
+      location.href = url;
+    }
+  </script>
+</th:block>
+
+<div layout:fragment="mainContent" style="margin-top: 50px">
+  <h1>Lost List</h1>
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between">
+      <div class="card card-lost" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="lost : ${lostList.content}"
+           th:onclick="'showLostDetail(' + ${lost.lostNo} + ')'">
+        <img th:src="${lost.lostImgUrl}" class="card-img-top" alt="[[${lost.lostNo}]]" style="width: 100%; height: 200px; object-fit: cover">
+        <div class="card-body" style="text-align: center">
+          <h5 class="card-title" th:text="${lost.lostTitle}"></h5>
+          <p class="card-text">
+            견종: <span th:text="${lost.lostKind}"></span><br>
+            실종 날짜: <span th:text="${lost.lostDate}"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 페이지네이션 -->
+  <div th:with="start=${(lostList.number / maxPage) * maxPage + 1},
+                end=${(lostList.totalPages == 0 ?
+                    1 : (start + (maxPage - 1) < lostList.totalPages ?
+                        start + (maxPage - 1) : lostList.totalPages))}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${lostList.first} ? 'disabled'">
+        <a th:onclick="'javascript: page(' + ${lostList.number - 1} + ')'" aria-label="Previous" class="page-link">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+          th:classappend="${lostList.number eq page - 1} ? 'active' : ''">
+        <a th:onclick="'javascript: page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+      </li>
+      <li class="page-item" th:classappend="${lostList.last} ? 'disabled'">
+        <a th:onclick="'javascript: page(' + ${lostList.number + 1} + ')'" aria-label="Next" class="page-link">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 모달 창 -->
+  <div class="modal fade" id="lostDetailModal" tabindex="-1" aria-labelledby="lostDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 60%; height: auto;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="lostDetailModalLabel">상세 설명</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-flex" style="height: auto;">
+          <img id="modalLostImg" src="" alt="Lost Image" style="width: 40%; height: auto; object-fit: cover; margin-right: 20px;">
+          <div style="width: 60%;">
+            <p>공고 번호: <span id="modalLostNo"></span></p>
+            <p>작성자: <span id="modalLostWriter"></span></p>
+            <p>연락처: <span id="modalLostTel"></span></p>
+            <p>견종: <span id="modalLostKind"></span></p>
+            <p>실종날짜: <span id="modalLostDate"></span></p>
+            <p>실종장소: <span id="modalLostPlace"></span></p>
+            <p>상세 설명: <span id="modalLostDetail"></span></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="deleteLostButton">삭제</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </html>
