@@ -50,17 +50,23 @@
                         <label for="currentPassword" class="form-label">기존 비밀번호</label>
                         <input type="password" class="form-control" id="currentPassword" th:field="*{currentPassword}" placeholder="기존 비밀번호를 입력하세요." required th:disabled="${userRole == 'KAKAO'}">
                         <div id="currentPasswordFeedback" class="invalid-feedback"></div>
-                        <p th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></p>
+<!--                            <span th:text="${errorMessage}"></span>-->
+
                     </div>
                     <div class="col-12">
                         <label for="newPassword" class="form-label">새 비밀번호</label>
                         <input type="password" class="form-control" id="newPassword" th:field="*{newPassword}" placeholder="8자 이상 비밀번호를 입력하세요." required th:disabled="${userRole == 'KAKAO'}">
                         <div id="newPasswordFeedback" class="invalid-feedback"></div>
+<!--                            <span th:text="${errorMessage}"></span>-->
+
                     </div>
                     <div class="col-12">
                         <label for="confirmNewPassword" class="form-label">새 비밀번호 확인</label>
                         <input type="password" class="form-control" id="confirmNewPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required th:disabled="${userRole == 'KAKAO'}">
                         <div id="confirmPasswordFeedback" class="invalid-feedback"></div>
+<!--                            <span th:text="${errorMessage}"></span>-->
+
+
                     </div>
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <div class="col-12">

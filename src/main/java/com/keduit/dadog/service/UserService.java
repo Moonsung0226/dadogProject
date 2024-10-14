@@ -135,12 +135,26 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
     }
-
-    // 사용자 정보 조회 (새로운 메서드)
+    // 변경된 비밀번호로 로그인하기위해(1) ->  이 메서드에서 사용자의 비밀번호를 변경.
     public UserDTO getUserInfo(String userId) {
-        return null;
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+        return new UserDTO().createUserDTO(user); // UserDTO로 변환하여 반환
     }
 
-    public void changePassword(String name, String newPassword) {
+    // 변경된 비밀번호로 로그인하기위해(2) -> getUserInfo 메서드로 사용자 정보를 조회하는 메서드를 구현. 비밀번호 변경 전 사용자의 정보를 확인.
+    public void changePassword(String userId, String newPassword) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+        user.setUserPwd(passwordEncoder.encode(newPassword)); // 새 비밀번호로 업데이트
+        userRepository.save(user); // 변경 사항 저장
     }
+
+
+
+
 }

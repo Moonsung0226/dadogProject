@@ -1,22 +1,23 @@
 package com.keduit.dadog.controller;
 
+
 import com.keduit.dadog.constant.Role;
+import com.keduit.dadog.dto.LostDTO;
+import com.keduit.dadog.dto.ProtectDTO;
 import com.keduit.dadog.dto.UserDTO;
-import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.service.LostService;
 import com.keduit.dadog.service.ProtectService;
 import com.keduit.dadog.repository.UserRepository;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,6 +34,8 @@ public class MyPageController {
     private final UserService userService; // UserService 필드
     private final LostService lostService;
     private final ProtectService protectService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     // 마이페이지
@@ -195,41 +198,41 @@ public class MyPageController {
         }
 
         if (userDTO.getCurrentPassword() == null || userDTO.getCurrentPassword().isEmpty()) {
-            result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호를 입력해주세요.");
-            return "myPage/myPwd";
-        } if (!passwordEncoder.matches(userDTO.getCurrentPassword(), currentUser.getUserPwd())) {
-            result.rejectValue("currentPassword", "error.userDTO", "현재 비밀번호가 일치하지 않습니다.");
-            return "myPage/myPwd";
+            return redirectWithError(redirectAttributes, "기존 비밀번호를 입력해주세요.");
+        }
+
+        if (!passwordEncoder.matches(userDTO.getCurrentPassword(), currentUser.getUserPwd())) {
+            return redirectWithError(redirectAttributes, "기존 비밀번호가 일치하지 않습니다.");
         }
 
         if (userDTO.getNewPassword() == null || userDTO.getNewPassword().isEmpty()) {
-            result.rejectValue("newPassword", "error.userDTO", "새 비밀번호를 입력해주세요.");
-            return "myPage/myPwd";
+            return redirectWithError(redirectAttributes, "새 비밀번호를 입력해주세요.");
         }
 
         if (userDTO.getNewPassword().equals(userDTO.getCurrentPassword())) {
-            result.rejectValue("newPassword", "error.userDTO", "새 비밀번호는 현재 비밀번호와 다르게 설정해주세요.");
-            return "myPage/myPwd";
+            return redirectWithError(redirectAttributes, "새 비밀번호는 기존 비밀번호와 다르게 설정해주세요.");
         }
 
         if (!userDTO.getNewPassword().equals(userDTO.getConfirmPassword())) {
-            result.rejectValue("confirmPassword", "error.userDTO", "새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            return "myPage/myPwd";
+            return redirectWithError(redirectAttributes, "새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
 
         if (userDTO.getNewPassword().length() < 8) {
-            result.rejectValue("newPassword", "error.userDTO", "비밀번호는 최소 8자 이상이어야 합니다.");
-            return "myPage/myPwd";
+            return redirectWithError(redirectAttributes, "비밀번호는 최소 8자 이상이어야 합니다.");
         }
 
         try {
             userService.changePassword(principal.getName(), userDTO.getNewPassword());
             redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 성공적으로 변경되었습니다.");
-            return "redirect:/dadog/myPage/myPwd";
         } catch (Exception e) {
-            result.rejectValue("newPassword", "error.userDTO", "비밀번호 변경 중 오류가 발생했습니다.");
-            return "myPage/myPwd";
+            redirectAttributes.addFlashAttribute("errorMessage", "비밀번호 변경에 실패하였습니다.");
         }
+
+        return "redirect:/dadog/myPage/myPwd";
     }
 
+    private String redirectWithError(RedirectAttributes redirectAttributes, String message) {
+        redirectAttributes.addFlashAttribute("errorMessage", message);
+        return "redirect:/dadog/myPage/myPwd";
     }
+}
