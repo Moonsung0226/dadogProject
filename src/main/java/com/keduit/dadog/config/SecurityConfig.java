@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/dadog/main",true) // 로그인 성공 시 이동할 경로
                 .usernameParameter("userId") // 로그인에 사용할 파라미터 이름
                 .passwordParameter("password") // 비밀번호 파라미터 이름
-                .failureUrl("/dadog/members/login?error=true") // 로그인 실패 시 이동할 경로
+                .failureUrl("/dadog/members/login/error") // 로그인 실패 시 이동할 경로
                 .permitAll(); // 로그인 페이지는 인증 없이 접근 가능
 
         // 로그아웃 설정
