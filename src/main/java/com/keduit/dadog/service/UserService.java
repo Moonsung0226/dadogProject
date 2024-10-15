@@ -177,17 +177,6 @@ public class UserService implements UserDetailsService {
         userRepository.save(user); // 변경 사항 저장
     }
 
-
-    public User authenticate(String username, String password) {
-        User user = userRepository.findByUserName(username); // 사용자 이름으로 사용자 검색
-
-        if (user != null && passwordEncoder.matches(password, user.getUserPwd())) {
-            return user; // 인증 성공, 사용자 반환
-        }
-
-        return null; // 인증 실패
-    }
-
     public User getUserByUsername(String userName) {
         User user = userRepository.findByUserId(userName);
         if (user == null) {
