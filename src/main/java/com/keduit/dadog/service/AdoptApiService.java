@@ -183,7 +183,7 @@ public class AdoptApiService {
 
                 for(int pageNo = 1; pageNo <= 30; pageNo++){
                     String pagedUrl = "https://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?serviceKey=" +
-                            serviceKey + bgnde + upKind + "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&_type=json";
+                            serviceKey + bgnde + upKind + "&state=notice"+ "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&_type=json";
 
                     ResponseEntity<String> pagedResponse = restTemplate.getForEntity(pagedUrl, String.class);
                     logger.info("페이지 {} API 호출: {}", pageNo, pagedUrl);//각 페이지 호출 로그
