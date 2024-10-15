@@ -122,17 +122,4 @@ public class ShelterService {
             logger.error("API 호출 실패: {} - 응답 코드: {}", response.getStatusCode(), response.getBody());
         }
     }
-
-    // 특정 검색어로 보호소를 검색하는 메서드
-    public Page<Shelter> searchShelters(String filter, String searchTerm, Pageable pageable) {
-        // 필터에 따라 검색어로 보호소 검색
-        if ("name".equals(filter)) {
-            return shelterRepository.findByShelNmContaining(searchTerm.trim(), pageable);
-        } else if ("city".equals(filter)) {
-            return shelterRepository.findByShelCityContaining(searchTerm.trim(), pageable);
-        } else if ("all".equals(filter)) {
-            return shelterRepository.findByShelNmContainingOrShelCityContaining(searchTerm.trim(), searchTerm.trim(), pageable);
-        }
-        return shelterRepository.findAll(pageable); // 기본적으로 모든 보호소 반환
-    }
 }
