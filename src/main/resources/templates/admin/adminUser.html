@@ -75,7 +75,7 @@
       <td th:text="${user.userTel}" style="vertical-align: middle;"></td>
       <td>
         <select class="form-select" th:id="'roleSelect-' + ${user.userNo}">
-          <option value="USER" th:selected="${user.role.name() == 'USER'}">User</option>
+          <option value="USER" th:selected="${user.role.name() == 'USER' || user.role.name() == 'KAKAO'}">User</option>
           <option value="ADMIN" th:selected="${user.role.name() == 'ADMIN'}">Admin</option>
         </select>
       </td>
