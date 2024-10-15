@@ -54,7 +54,7 @@
 <div layout:fragment="mainContent">
   <main class="form-signin">
     <form action="/dadog/members/login" method="post">
-      <h1 class="h3 mb-3 fw-normal text-center">로그인</h1>
+      <h1 class="h3 mb-3 medium text-center">로그인</h1>
       <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
       <div class="form-floating">
         <input type="text" class="form-control" id="floatingInput" name="userId" placeholder="" required>
@@ -65,7 +65,7 @@
         <label for="floatingPassword">비밀번호</label>
       </div>
       <div class="text-center">
-        <button class="btn w-50 py-2" type="submit" style="background-color: cornflowerblue; color: black;">로그인</button>
+        <button class="btn w-50 py-2 medium" type="submit" style="background-color: cornflowerblue; color: black;">로그인</button>
       </div>
       <p></p>
       <div class="text-center">
