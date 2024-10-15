@@ -87,10 +87,10 @@
                 <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img" width="250" />
                 <div class="card-body">
                   <h5 class="card-title truncate fw-bolder mb-4" th:text="${lost.getLostTitle()}"></h5>
-                  <p th:text="${lost.getLostKind()}" class="card-text mb-1"></p>
-                  <p th:text="${lost.getLostPlace()}" class="card-text mb-1"></p>
-                  <p th:text="${lost.getLostTel()}" class="card-text mb-1"></p>
-                  <p th:text="${lost.getLostDate()}" class="card-text"></p>
+                  <p th:text="'견종 : '+ ${lost.getLostKind()}" class="card-text mb-1"></p>
+                  <p th:text="'Tel : ' + ${lost.getLostTel()}" class="card-text mb-1"></p>
+                  <p th:text="'실종장소 : ' +${lost.getLostPlace()}" class="card-text mb-1"></p>
+                  <p th:text="'실종날짜 : ' + ${lost.getLostDate()}" class="card-text"></p>
                 </div>
               </div>
             </a>
