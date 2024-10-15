@@ -6,10 +6,11 @@ import com.keduit.dadog.service.WishService;
 import com.keduit.dadog.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -48,5 +49,16 @@ public class WishListController {
         }
 
         return "wishList/wishList";
+    }
+
+
+     // 삭제
+    @DeleteMapping("/wish/{wishNo}")
+    public @ResponseBody ResponseEntity deleteWish(@PathVariable("wishNo") Long wishNo, Principal principal) {
+        if (!wishService.wishValidation(principal.getName(), wishNo)) {
+            return new ResponseEntity<String>("게시글 삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        wishService.deleteWish(wishNo);
+        return new ResponseEntity(wishNo, HttpStatus.OK);
     }
 }
