@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.entity.Wish;
+import com.keduit.dadog.service.KakaoService;
 import com.keduit.dadog.service.UserService;
 import com.keduit.dadog.service.WishService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final KakaoService kakaoService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -64,6 +66,7 @@ public class MemberController {
     // 로그인 페이지
     @GetMapping("/login")
     public String showLoginPage(Model model) {
+        model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
         return "member/sign-in"; // 로그인 페이지로 이동
     }
 
@@ -87,5 +90,6 @@ public class MemberController {
         model.addAttribute("userDTO", new UserDTO());
         return "member/UseAgree"; // 회원가입 폼
     }
+
 
 }

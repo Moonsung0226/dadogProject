@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserName(String userName); // userName으로 사용자 조회
     User findByUserId(String userId); // 사용자 ID로 사용자 찾기
 
+
     @Query("select o from User o where o.userEmail = :userEmail")
     User findByUserEmail(String userEmail); //카카오 로그인 시는 userEmail 로 찾아야함
 
