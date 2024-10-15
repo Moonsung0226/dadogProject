@@ -30,6 +30,8 @@ public class AdminController {
     private final AdoptService adoptService;
     private final BoardService boardService;
     private final ProtectService protectService;
+    private final ApplicationService applicationService;
+
 
     @GetMapping("/dadog/admin/adopt/api")
     public String adoptApi() {
@@ -56,11 +58,15 @@ public class AdminController {
         List<User> recentUserList = userService
                 .findTop6ByOrderByCreateTimeDesc(); // User 6개
 
+        // PENDING 상태의 입양 신청 갯수 추가
+        long pendingCount = applicationService.countPendingApplications();
+
         model.addAttribute("lostList", recentLostList);
         model.addAttribute("adoptList", recentAdoptList);
         model.addAttribute("boardList", recentBoardList);
         model.addAttribute("protectList", recentProtectList);
         model.addAttribute("userList", recentUserList);
+        model.addAttribute("pendingCount", pendingCount); // PENDING 상태 갯수 전달
 
         return "admin/adminMain";
     }
@@ -69,7 +75,7 @@ public class AdminController {
     public String adoptList(AdoptSearchDTO adoptSearchDTO,
                             @PathVariable("page") Optional<Integer> page,
                             Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 30);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 12);
         Page<Adopt> adoptList =adoptService.getAdoptList(adoptSearchDTO, pageable);
         model.addAttribute("maxPage", 10);
         model.addAttribute("adoptList",adoptList);
@@ -134,7 +140,7 @@ public class AdminController {
     public String protectList(SearchDTO searchDTO,
                               @PathVariable("page") Optional<Integer> page,
                               Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 30);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
         Page<Protect> protectList = protectService.getProtectList(searchDTO, pageable);
         model.addAttribute("maxPage", 10);
         model.addAttribute("protectList", protectList);
@@ -165,7 +171,7 @@ public class AdminController {
     // Board 관련 API
     @GetMapping({"/dadog/admin/board/list/{page}","/dadog/admin/board/list"})
     public String boardList(@PathVariable("page") Optional<Integer> page, Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 30);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
 //        Page<Board> boardList = boardService.getBoardList(pageable);
 //        model.addAttribute("maxPage", 10);
 //        model.addAttribute("boardList", boardList);

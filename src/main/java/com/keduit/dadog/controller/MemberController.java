@@ -48,7 +48,7 @@ public class MemberController {
         try {
             userService.registerMember(userDTO);
             redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
-            return "redirect:/dadog/members/login"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
+            return "redirect:/dadog/main"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/MemberForm"; // 오류 발생 시 폼으로 돌아가기
