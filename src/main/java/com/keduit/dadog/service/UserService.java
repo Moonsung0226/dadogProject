@@ -175,7 +175,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user); // 변경 사항 저장
     }
 
-
+    // 중복로직
     public User authenticate(String username, String password) {
         User user = userRepository.findByUserName(username); // 사용자 이름으로 사용자 검색
 
