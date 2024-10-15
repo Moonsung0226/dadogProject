@@ -48,7 +48,7 @@ public class MemberController {
         try {
             userService.registerMember(userDTO);
             redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
-            return "redirect:/dadog/members/login"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
+            return "redirect:/dadog/main"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/MemberForm"; // 오류 발생 시 폼으로 돌아가기
@@ -58,7 +58,6 @@ public class MemberController {
     // 로그인 페이지
     @GetMapping("/login")
     public String showLoginPage(Model model) {
-        model.addAttribute("errorMessage", "아이디 또는 비밀번호가 잘못되었습니다."); // 초기 에러 메시지 설정
         return "member/sign-in"; // 로그인 페이지로 이동
     }
 
@@ -72,8 +71,8 @@ public class MemberController {
 
     @GetMapping("/login/error")
     public String loginError(Model model) {
-        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해 주세요.");
-        return "redirect:/dadog/members/login";
+        model.addAttribute("errorMessage", "아이디 또는 비밀번호를 확인해 주세요.");
+        return "member/sign-in";
     }
 
     // 이용약관동의
