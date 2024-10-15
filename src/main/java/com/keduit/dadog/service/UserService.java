@@ -26,27 +26,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // 사용자 저장
-    public User saveUser(User user) {
-        validateUser(user);  // 사용자 유효성 검사
-        return userRepository.save(user);
-    }
-
-    public User getUserByUserNo(Long userNo) {
-        return userRepository.findById(userNo).orElse(null); // ID로 사용자 조회
-    }
-
-
-    // 비밀번호 업데이트
-    public void updatePassword(UserDTO userDTO) {
-        Long userId = Long.parseLong(userDTO.getId());  // String을 Long으로 변환
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-        user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));  // 암호화된 비밀번호 저장
-        userRepository.save(user);
-    }
-
-
     // 사용자 정보 가져오기 (유저 ID 또는 이메일 기반)
     public User getUser(String userName) {
         User user = userRepository.findByUserId(userName);
@@ -175,17 +154,6 @@ public class UserService implements UserDetailsService {
         }
         user.setUserPwd(passwordEncoder.encode(newPassword)); // 새 비밀번호로 업데이트
         userRepository.save(user); // 변경 사항 저장
-    }
-
-
-    public User authenticate(String username, String password) {
-        User user = userRepository.findByUserName(username); // 사용자 이름으로 사용자 검색
-
-        if (user != null && passwordEncoder.matches(password, user.getUserPwd())) {
-            return user; // 인증 성공, 사용자 반환
-        }
-
-        return null; // 인증 실패
     }
 
     public User getUserByUsername(String userName) {

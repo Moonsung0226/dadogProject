@@ -46,7 +46,7 @@ public class KakaoController {
             // 메인 페이지로 리다이렉트
             response.sendRedirect("http://localhost:8082/dadog/main");
         } else {
-            response.sendRedirect("http://localhost:8082/dadog/login?error=true");
+            response.sendRedirect("http://localhost:8082/dadog/login/error");
         }
     }
 
