@@ -52,7 +52,7 @@ public class ShelterService {
                     int totalCount = body.path("totalCount").asInt(); // totalCount 가져오기
                     logger.info("totalCount: {}", totalCount); // totalCount 출력
 
-                    int numOfRows = 10; // 한 번에 가져올 행 수
+                    int numOfRows = 100; // 한 번에 가져올 행 수
                     int totalPages = (int) Math.ceil((double) totalCount / numOfRows); // 전체 페이지 수 계산
                     logger.info("전체 페이지 수: {}", totalPages);
 

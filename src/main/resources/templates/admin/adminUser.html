@@ -46,10 +46,14 @@
       });
     }
 
+    function page(pageNumber) {
+      const url = '/dadog/admin/user/list/' + pageNumber;
+      location.href = url; // 새로운 페이지로 이동
+    }
   </script>
 </th:block>
 
-<div layout:fragment="mainContent" style="margin-top: 50px;">
+<div layout:fragment="mainContent" style="margin-top: 50px; padding-left: 20px; width: 80%;">
   <!-- CSRF 토큰 입력 필드 추가 -->
   <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
   <input type="hidden" name="_csrf_header" th:value="${_csrf.headerName}"/>
@@ -66,9 +70,9 @@
     </thead>
     <tbody class="table-group-divider" th:each="user : ${userList}">
     <tr>
-      <td th:text="${user.userId}"></td>
-      <td th:text="${user.userEmail}"></td>
-      <td th:text="${user.userTel}"></td>
+      <td th:text="${user.userId}" style="vertical-align: middle;"></td>
+      <td th:text="${user.userEmail}" style="vertical-align: middle;"></td>
+      <td th:text="${user.userTel}" style="vertical-align: middle;"></td>
       <td>
         <select class="form-select" th:id="'roleSelect-' + ${user.userNo}">
           <option value="USER" th:selected="${user.role.name() == 'USER'}">User</option>
@@ -81,5 +85,31 @@
     </tr>
     </tbody>
   </table>
+
+  <!-- 페이지네이션 -->
+  <div th:with="start=${(userList.number / maxPage) * maxPage + 1},
+              end=${(userList.totalPages == 0 ? 1 :
+              (start + (maxPage - 1) < userList.totalPages ? start + (maxPage - 1) :
+              userList.totalPages))}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${userList.first} ? 'disabled'">
+        <a th:onclick="'javascript: page(' + ${userList.number - 1} + ')'" aria-label="Previous"
+           class="page-link">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+          th:classappend="${userList.number eq page - 1} ? 'active' : ''">
+        <a th:onclick="'javascript: page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]
+        </a>
+      </li>
+      <li class="page-item" th:classappend="${userList.last} ? 'disabled'">
+        <a th:onclick="'javascript: page(' + ${userList.number + 1} + ')'" aria-label="Next"
+           class="page-link">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
 </html>

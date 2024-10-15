@@ -5,6 +5,8 @@ import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -172,7 +174,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user); // 변경 사항 저장
     }
 
-
-
-
+    public Page<User> getUserList(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 }
