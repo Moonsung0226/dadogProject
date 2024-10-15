@@ -134,17 +134,6 @@ public class MyPageController {
         return "redirect:/dadog/myPage/myMemberForm";
     }
 
-    @GetMapping("/myPage/myLost")
-    public String myLost(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        // 게시글 리스트를 빈 리스트로 초기화
-        List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
-
-        return "myPage/myLost"; // Thymeleaf 템플릿 경로
-    }
-
     @GetMapping("/myPage/myAdopt")
     public String myAdopt(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
