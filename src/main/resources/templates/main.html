@@ -3,32 +3,44 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
 
+<th:block layout:fragment="css">
+  <style>
+    h1{
+      font-size: 80px;
+    }
+    h4{
+      font-size: 25px;
+      font-weight: 200; /* Medium */
+    }
+  </style>
+</th:block>
+
 <div layout:fragment="mainContent">
-  <div class="position-relative text-white">
-    <img src="/img/front-view-beautiful-dog-with-copy-space.jpg" alt="다독이다" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;">
-    <div class="position-absolute top-50 start-50 translate-middle text-center">
-      <h1 class="display-4 fw-medium text-dark">다독이다</h1>
-      <p class="lead my-3 fw-light text-dark">다독이다는 유기견을 보호하고 사랑하는 사람들을 위한 공간 입니다.</p>
+  <div class="position-relative">
+    <img src="/img/mainimg.png" alt="다독이다" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;">
+    <div class="position-absolute translate-middle text-center" style="top: 50%; left: 30%; width: 40%">
+      <h1 class="text-white d-flex bold">다독이다</h1>
+      <h4 class="my-4 text-white d-flex">유기견을 보호하고 사랑하는 사람들을 위한 공간</h4>
     </div>
   </div>
   <div class="row justify-content-center mt-5">
 
     <div class="col-lg-3 text-center mt-2 mb-5">
       <img class="rounded-circle" src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=276&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
-      <h3 class="mt-3">유기견 산책 및 관리</h3>
-      <p>유기견들의 스트레스 해소와<br>사회성 향상을 위한 산책 봉사</p>
+      <h3 class="mt-3 medium">유기견 산책 및 관리</h3>
+      <p class="regular">유기견들의 스트레스 해소와<br>사회성 향상을 위한 산책 봉사</p>
       <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>Go Serve »</a></p>
     </div><!-- /.col-lg-4 -->
     <div class="col-lg-3 text-center mt-2 mb-5">
       <img class="rounded-circle" src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=277&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
-      <h3 class="mt-3">유기견 미용</h3>
-      <p>동물 미용의 경험이 있고 미용 장비를<br>가지고 계신 분들의 케어 미용 봉사</p>
+      <h3 class="mt-3 medium">유기견 미용</h3>
+      <p class="regular">동물 미용의 경험이 있고 미용 장비를<br>가지고 계신 분들의 케어 미용 봉사</p>
       <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>Go Serve »</a></p>
     </div><!-- /.col-lg-4 -->
     <div class="col-lg-3 text-center mt-2 mb-5">
       <img class="rounded-circle" src="https://animal.seoul.go.kr/comm/getImage?srvcId=MEDIA&amp;upperNo=278&amp;fileTy=MEDIA&amp;fileNo=1" alt="">
-      <h3 class="mt-3">유기동물 촬영</h3>
-      <p>유기견들의 스트레스 해소와<br>사회성 향상을 위한 산책 봉사</p>
+      <h3 class="mt-3 medium">유기동물 촬영</h3>
+      <p class="regular">유기견들의 스트레스 해소와<br>사회성 향상을 위한 산책 봉사</p>
       <p><a class="btn btn-secondary" href="https://animal.seoul.go.kr/volunt" target='_blank'>Go Serve »</a></p>
     </div><!-- /.col-lg-4 -->
   </div>
@@ -39,16 +51,16 @@
     </div>
     <div class="container">
       <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" >
-        <div class="col" th:each="adopt : ${adoptDTOList}">
-          <div class="card h-100">
+        <div class="col mb-2" th:each="adopt : ${adoptDTOList}">
+          <div class="card">
             <!-- Product image-->
             <img class="card-img-top" th:src="${adopt.getAdopt_imgurl()}" alt="..." style="object-fit: cover" width="200" height="250">
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="fw-bolder" th:text="'견종 : ' + ${adopt.getAdopt_kind()}"></h5>
-                <p class="fw-normal" th:text="'종료일 : ' + ${adopt.getAdopt_edt()}"></p>
-                <p class="fw-normal" th:text="'보호소명 : ' + ${adopt.getAdopt_carenm()}"></p>
+                <h5 class="medium" th:text="'견종 : ' + ${adopt.getAdopt_kind()}"></h5>
+                <p class="regular" th:text="'종료일 : ' + ${adopt.getAdopt_edt()}"></p>
+                <p class="regular" th:text="'보호소 : ' + ${adopt.getAdopt_carenm()}"></p>
               </div>
             </div>
             <!-- Product actions-->
@@ -67,16 +79,16 @@
     </div>
     <div class="container">
       <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <div class="col" th:each="lost : ${lostDTOList}">
+        <div class="col mb-2" th:each="lost : ${lostDTOList}">
           <div class="card h-100">
             <!-- Product image-->
             <img class="card-img-top" th:src="${lost.getImgUrl()}" alt="..." style="object-fit: cover" width="200" height="250">
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="fw-bolder" th:text="'견종 : ' + ${lost.getLostKind()}"></h5>
-                <p class="fw-normal" th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
-                <p class="fw-normal" th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
+                <h5 class="medium" th:text="'견종 : ' + ${lost.getLostKind()}"></h5>
+                <p class="regular" th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
+                <p class="regular" th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
               </div>
             </div>
             <!-- Product actions-->
@@ -95,15 +107,15 @@
     </div>
     <div class="container">
       <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <div class="col" th:each="protect : ${protectDTOList}">
+        <div class="col mb-2" th:each="protect : ${protectDTOList}">
           <div class="card h-100">
             <!-- Product image-->
             <img class="card-img-top" th:src="${protect.getImgUrl()}" alt="..." style="object-fit: cover" width="200" height="250">
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="fw-bolder" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
-                <p class="fw-normal" th:text="'발견날짜 : ' + ${protect.getProDate()}"></p>
+                <h5 class="medium" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
+                <p class="regular" th:text="'발견날짜 : ' + ${protect.getProDate()}"></p>
               </div>
             </div>
             <!-- Product actions-->

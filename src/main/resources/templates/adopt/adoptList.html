@@ -44,10 +44,11 @@
     <form th:action="@{'/dadog/adopt' + ${adoptList.number}}" role="form" method="get" th:object="${adoptList}">
         <div class="p-2 rounded">
             <div class="col-sm-8 pt-5 pb-2 mx-auto">
-                <h1 class="display-5 fw-normal mb-5">입양하기</h1>
+                <h1 class="display-5 medium mb-3 d-flex">입양하기</h1>
                 <hr>
                 <p class="fs-5 mt-5">※ 다독이다에는 항시 수십마리의 아이들이 보호되고 있으며 게시된 사진은 그 중 일부입니다. </p>
                 <p class="fs-5 mb-5">※ 방문하여 아이들과 직접 교감하며 입양하시길 권장드리며, 입양시 무료 또는 약간의 책임비가 있을 수 있습니다.</p>
+                <hr>
             </div>
                 <div class="form-inline justify-content-center col-lg-8 mx-auto mb-5">
                     <div class="row justify-content-center border rounded border-dark-subtle">
@@ -98,7 +99,7 @@
             (start + (maxPage - 1) < adoptList.totalPages ? start + (maxPage - 1):
             adoptList.totalPages))}">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${adoptList.first} ? 'disabled'">
+                <li class="page-item" th:classappend="${adoptList.first} ? 'disabled d-none'">
                     <a th:onclick="'javascript: page(' + ${adoptList.number -1} + ')'" aria-label="Previous" class="page-link">
                         <span aria-hidden="true">Previous</span>
                     </a>
@@ -108,7 +109,7 @@
                     <a th:onclick="'javascript: page(' +${page -1} + ')'" th:inline="text" class="page-link">[[${page}]]
                     </a>
                 </li>
-                <li class="page-item" th:classappend="${adoptList.last} ? 'disabled'">
+                <li class="page-item" th:classappend="${adoptList.last} ? 'disabled d-none'">
                     <a th:onclick="'javascript: page(' + ${adoptList.number +1} + ')'" aria-label="Next" class="page-link">
                         <span aria-hidden="true">Next</span>
                     </a>

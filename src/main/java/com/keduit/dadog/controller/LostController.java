@@ -30,7 +30,7 @@ public class LostController {
     public String LostList(SearchDTO searchDTO,
                            @PathVariable("page") Optional<Integer> page,
                            Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 20);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 16);
         Page<Lost> lostList = lostService.getLostList(searchDTO, pageable);
         System.out.println("---------------------------------");
         System.out.println(searchDTO.getSearchBy());

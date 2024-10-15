@@ -30,7 +30,7 @@ public class ProtectController {
     public String ProtectList(SearchDTO searchDTO,
                            @PathVariable("page") Optional<Integer> page,
                            Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 20);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 16);
         Page<Protect> protectList = protectService.getProtectList(searchDTO, pageable);
         System.out.println("---------------------------------");
         System.out.println(searchDTO.getSearchBy());
