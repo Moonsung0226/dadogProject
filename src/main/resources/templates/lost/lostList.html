@@ -79,12 +79,12 @@
       </div>
     </div>
     <div class="container">
-      <article class="mainBody py-3 px-2 px-md-3 px-lg-5">
+      <article class="mainBody py-3 px-2 px-md-3 px-lg-5 bg-body-tertiary rounded-3 mb-4">
         <div class="row">
-          <div th:each="lost : ${lostList.getContent()}" class="col-6 col-md-4 col-lg-3 mb-4">
+          <div th:each="lost : ${lostList.getContent()}" class="col-6 col-md-4 col-lg-3 my-3">
             <a th:href="'/dadog/lost/get/' + ${lost.getLostNo()}" class="text-dark link-underline link-underline-opacity-0">
-              <div class="card" style="max-width: 250px;">
-                <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img" width="250" />
+              <div class="card" style="max-width: 100%;">
+                <img th:src="${lost.getLostImgUrl()}" th:alt="사진" class="card-img" width="100%" />
                 <div class="card-body">
                   <h5 class="card-title truncate fw-bolder mb-4" th:text="${lost.getLostTitle()}"></h5>
                   <p th:text="'견종 : '+ ${lost.getLostKind()}" class="card-text mb-1"></p>
