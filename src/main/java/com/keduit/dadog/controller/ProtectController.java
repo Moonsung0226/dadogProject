@@ -74,7 +74,7 @@ public class ProtectController {
         return "redirect:/dadog/main";
     }
 
-    @GetMapping("/{proNo}")
+    @GetMapping("/get/{proNo}")
     public String getProtect(Principal principal, @PathVariable("proNo") Long proNo, Model model) {
         Protect protect =  protectService.getProtect(proNo);
         model.addAttribute("protect", protect);

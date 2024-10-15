@@ -3,6 +3,7 @@ package com.keduit.dadog.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -46,8 +47,15 @@ public class SecurityConfig {
 
         // 요청 권한 설정
         http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "**/add").authenticated() // GET 요청 시 인증 필요
+                .antMatchers(HttpMethod.GET, "**/delete/**").authenticated() // GET 요청 시 인증 필요
+                .antMatchers(HttpMethod.GET, "**/update/**").authenticated() // GET 요청 시 인증 필요
                 .antMatchers("/", "/kakao/callback", "/css/**", "/js/**", "/favicon.ico", "/kakao_login_medium_narrow.png").permitAll() // 정적 리소스와 특정 경로 허용
-                .antMatchers("/dadog/**").permitAll() // `/dadog/` 경로는 모두 허용
+                .antMatchers("**/add", "**/delete/**", "**/update/").authenticated()
+                .antMatchers("/img/**" ,"/dadog/lost/list","/dadog/lost/list/**","/dadog/lost/get/**",
+                        "/dadog/adopt/list","/dadog/adopt/list/**","/dadog/adopt/**",
+                        "/dadog/protect/list","/dadog/protect/list/","/dadog/protect/get/**",
+                        "/dadog/shelter","/dadog/shelter/**","/dadog/members/**").permitAll()
                 .antMatchers("/dadog/admin/**").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
                 .anyRequest().authenticated(); // 그 외의 모든 요청은 인증 필요
 
