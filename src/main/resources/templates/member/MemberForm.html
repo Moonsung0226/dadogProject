@@ -43,8 +43,28 @@
         alert(errorMessage);
       }
 
-      // 비밀번호 확인 유효성 검사
+      // 비밀번호 확인 및 빈칸 유효성 검사
       $('form').on('submit', function (e) {
+        const fields = [
+          '#name',
+          '#id',
+          '#password',
+          '#confirmPassword',
+          '#tel',
+          '#email',
+          '#address'
+        ];
+        let hasError = false;
+
+        // 필드가 비어있는지 확인
+        fields.forEach(field => {
+          if ($(field).val() === '') {
+            alert($(field).attr('placeholder'));
+            hasError = true;
+          }
+        });
+
+        // 비밀번호 확인
         const password = $('#password').val();
         const confirmPassword = $('#confirmPassword').val();
         const successMessageDiv = $('#successMessage');
@@ -62,6 +82,11 @@
           return; // 더 이상 진행하지 않음
         }
 
+        if (hasError) {
+          e.preventDefault(); // 빈칸이 있을 경우 폼 제출 방지
+          return;
+        }
+
         if (password !== confirmPassword) {
           e.preventDefault(); // 폼 제출 방지
           alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
@@ -73,6 +98,7 @@
         }
       });
     });
+
   </script>
 
   </th:block>
@@ -89,7 +115,7 @@
 
           <!-- Name Field -->
           <div class="col-sm-12">
-            <label for="name" class="form-label">이름</label>
+            <label for="name" class="form-label">이름*</label>
             <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="이름을 입력해 주세요." required>
             <div class="invalid-feedback">유효한 이름을 입력해 주세요.</div>
             <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
@@ -97,8 +123,8 @@
 
           <!-- id Field -->
           <div class="col-sm-12">
-            <label for="id" class="form-label">아이디</label>
-            <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력하세요." required>
+            <label for="id" class="form-label">아이디*</label>
+            <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력해주세요." required>
             <div class="invalid-feedback">유효한 아이디를 입력해 주세요.</div>
             <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="fieldError"></p>
           </div>
@@ -106,16 +132,16 @@
 
           <!-- Password Field -->
           <div class="col-12">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="8자 이상 비밀번호를 입력하세요." required>
+            <label for="password" class="form-label">비밀번호*</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="8자 이상 비밀번호를 입력해주세요." required>
             <div class="invalid-feedback">비밀번호가 필요합니다.</div>
             <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>
           </div>
 
           <!-- Confirm Password Field -->
           <div class="col-12">
-            <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-            <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="위와 같은 비밀번호를 입력하세요." required>
+            <label for="confirmPassword" class="form-label">비밀번호 확인*</label>
+            <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="비밀번호 확인을 입력해주세요." required>
             <div class="invalid-feedback">비밀번호 확인이 필요합니다.</div>
             <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="fieldError"></p>
           </div>
@@ -123,23 +149,23 @@
 
           <!-- Telephone Field -->
           <div class="col-12">
-            <label for="tel" class="form-label">휴대폰 번호</label>
-            <input type="tel" class="form-control" id="tel" th:field="*{tel}" placeholder="010-0000-0000" pattern="^010-\d{4}-\d{4}$" required>
+            <label for="tel" class="form-label">휴대폰 번호*</label>
+            <input type="tel" class="form-control" id="tel" th:field="*{tel}" placeholder="휴대폰 번호를 입력해주세요.(EX.010-0000-0000)" pattern="^010-\d{4}-\d{4}$" required>
             <div class="invalid-feedback">유효한 휴대폰 번호를 입력해 주세요. (예: 010-4444-4444)</div>
             <p th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" class="fieldError"></p>
           </div>
 
           <!-- Email Field -->
           <div class="col-sm-12">
-            <label for="email" class="form-label">이메일 주소</label>
-            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required>
+            <label for="email" class="form-label">이메일 주소*</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력해주세요." required>
             <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
           </div>
 
           <!-- Address Field -->
           <div class="col-12">
-            <label for="address" class="form-label">주소</label>
+            <label for="address" class="form-label">주소*</label>
             <input type="text" class="form-control" id="address" th:field="*{address}" placeholder="주소를 입력하세요." required>
             <div class="invalid-feedback">유효한 주소를 입력해 주세요.</div>
             <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError"></p>

@@ -60,7 +60,6 @@ public class MemberController {
     // 로그인 페이지
     @GetMapping("/login")
     public String showLoginPage(Model model) {
-        model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
         return "member/sign-in"; // 로그인 페이지로 이동
     }
 

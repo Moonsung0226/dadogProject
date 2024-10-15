@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Controller
 public class KakaoHomeController {   // final로 설정하여 파이널로 선언된 필드를 이용하여 생성자를 자동으로 생성하기 위해서 어노테이션 붙여줌. 여기서는 kakaoservice를 주입.
-//
+
 //    private final KakaoService kakaoService;
 //
 //    @GetMapping("/dadog/login")

@@ -2,31 +2,86 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
+<th:block layout:fragment="css">
 
-<head>
-    <title>찜 목록</title>
-</head>
+</th:block>
+<th:block layout:fragment="script">
+<!--    <title>찜 목록</title>-->
+    <script>
+        // 삭제 함수
+        function deleteWish(wishNo) {
+            const header = $("meta[name='_csrf_header']").attr('content');
+            const token = $("meta[name='_csrf']").attr('content');
 
+            if (!token || !header) {
+                console.error("CSRF token or header is undefined.");
+                alert("CSRF 토큰 또는 헤더가 정의되지 않았습니다.");
+                return; // 처리 중지
+            }
+
+            const url = "/dadog/wish/" + wishNo;
+
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                contentType: "application/json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType: "json",
+                cache: false,
+                success: function (result, status) {
+                    alert("찜 목록에서 삭제되었습니다.");
+                    location.reload(); // 페이지 새로고침
+                },
+                error: function (xhr, status, error) {
+                    console.log("error ===> " + status);
+                    console.log("error ===>" + error);
+                    if (xhr.status == '401') {
+                        alert("로그인 후 이용해주세요");
+                        location.href = "/dadog/login";
+                    } else {
+                        alert("에러가 발생하였습니다. \n 메인으로 돌아갑니다.");
+                        location.href = "/dadog/main";
+                    }
+                }
+            });
+        }
+    </script>
+</th:block>
 <div layout:fragment="mainContent">
-    <h1>찜 목록</h1>
+<!--    <h1>찜 목록</h1>-->
+    <div th:if="${message}" th:text="${message}" style="color: red;"></div>
     <div>
-        <table>
-
+        <table class="table">
+            <thead>
+            <tr>
+                <th>사진</th>
+                <th>견종</th>
+                <th>나이</th>
+                <th>체중</th>
+                <th>보호소 이름</th>
+                <th>공고 종료일</th>
+            </tr>
+            </thead>
             <tbody>
             <tr th:if="${#lists.isEmpty(wishList)}">
-                <td colspan="5">찜 목록이 없습니다.</td>
+                <td colspan="7">찜 목록이 없습니다.</td>
             </tr>
             <tr th:each="wish : ${wishList}">
-                <td><img th:src="${wish.adopt.adoptImgUrl}" alt="Adopt Image" style="width: 100px; height: auto;"></td>
+                <td><img th:src="${wish.adopt.adoptImgUrl}" alt="입양 동물 이미지" style="width: 100px; height: auto;"></td>
                 <td th:text="${wish.adopt.adoptKind}"></td>
                 <td th:text="${wish.adopt.adoptAge}"></td>
-                <td th:text="${wish.adopt.adoptCareNm}"></td>
+                <td th:text="${wish.adopt.getAdoptWeight()}"></td>
+                <td th:text="${wish.adopt.getAdoptCareNm()}"></td>
+                <td th:text="${wish.adopt.getAdoptEdt()}"></td>
                 <td>
-                    <a th:href="@{/dadog/adopt/{adoptNo}(adoptNo=${wish.adopt.adoptNo})}">상세보기</a>
+                    <a th:href="@{/dadog/adopt/{adoptNo}(adoptNo=${wish.adopt.adoptNo})}" class="btn btn-primary">상세보기</a>
+                    <a th:href="@{/dadog/adopt/{adoptNo}(adoptNo=${wish.adopt.adoptNo})}" class="btn btn-success">입양하기</a>
+                    <button class="btn btn-outline-dark" type="button" th:onclick="deleteWish([[${wish.wishNo}]])">삭제</button>
                 </td>
             </tr>
             </tbody>
-
         </table>
     </div>
 </div>
