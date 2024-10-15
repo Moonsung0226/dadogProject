@@ -1,7 +1,11 @@
 package com.keduit.dadog.controller;
 
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.entity.Wish;
 import com.keduit.dadog.service.WishService;
+import com.keduit.dadog.service.UserService;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,18 +20,15 @@ import java.util.List;
 @RequestMapping("/dadog")
 public class WishListController {
 
+
     @Autowired
-    private WishService wishService; // WishService 주입
+    private WishService wishService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/wishList")
-    public String myPage(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        String userName = (String) session.getAttribute("userName");
+    public String getWishList(HttpServletRequest request, Model model) {
 
-        // 찜 목록 가져오기
-        List<Wish> wishList = wishService.getWishList(userName);
-        model.addAttribute("wishList", wishList); // 모델에 찜 목록 추가
-
-        return "wishList/wishList";
     }
 }

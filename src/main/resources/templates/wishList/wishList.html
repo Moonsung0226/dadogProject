@@ -9,24 +9,23 @@
 
 <div layout:fragment="mainContent">
     <h1>찜 목록</h1>
+    <div th:if="${message}" th:text="${message}" style="color: red;"></div>
     <div>
         <table>
-
             <tbody>
             <tr th:if="${#lists.isEmpty(wishList)}">
                 <td colspan="5">찜 목록이 없습니다.</td>
             </tr>
             <tr th:each="wish : ${wishList}">
-                <td><img th:src="${wish.adopt.adoptImgUrl}" alt="Adopt Image" style="width: 100px; height: auto;"></td>
+                <td><img th:src="${wish.adopt.adoptImgUrl}" alt="입양 동물 이미지" style="width: 100px; height: auto;"></td>
                 <td th:text="${wish.adopt.adoptKind}"></td>
                 <td th:text="${wish.adopt.adoptAge}"></td>
                 <td th:text="${wish.adopt.adoptCareNm}"></td>
                 <td>
-                    <a th:href="@{/dadog/adopt/{adoptNo}(adoptNo=${wish.adopt.adoptNo})}">상세보기</a>
+                    <a th:href="@{/dadog/adopt/{adoptNo}(adoptNo=${wish.adopt.adoptNo})}" class="btn btn-primary">상세보기</a>
                 </td>
             </tr>
             </tbody>
-
         </table>
     </div>
 </div>

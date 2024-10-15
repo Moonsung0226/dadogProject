@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -29,9 +30,7 @@ public class WishService {
             user = userRepository.findByUserEmail(userName);
         }
         Wish wishData = wishRepository.findByUserAndAdopt(user, adopt);
-        //같은 종을 담으려고 하면
         if (wishData == null) {
-            //처음 찜목록 추가시
             Wish wish = new Wish();
             wish = wish.createWish(user, adopt);
             wishRepository.save(wish);
@@ -41,18 +40,10 @@ public class WishService {
         }
     }
 
-    // 찜목록 메서드
-    public List<Wish> getWishList(String userName) {
-        User user = userRepository.findByUserId(userName);
+    public List<Wish> getWishListByUser(User user) {
         if (user == null) {
-            user = userRepository.findByUserEmail(userName);
+            return List.of();
         }
-
-        //  사용자 정보 확인
-        System.out.println("User found: " + user);
-
-        List<Wish> wishList = wishRepository.findByUser(user);
-
-        return wishList;
+        return wishRepository.findByUser(user);
     }
 }
