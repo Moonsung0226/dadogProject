@@ -1,6 +1,7 @@
 package com.keduit.dadog.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.keduit.dadog.dto.LostDTO;
 import com.keduit.dadog.dto.ProtectDTO;
 import lombok.Getter;
@@ -64,6 +65,7 @@ public class Protect extends BaseTimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
+    @JsonIgnore // 순환 참조 방지
     private User user;
 
     public static Protect createProtect(ProtectDTO protectDTO, String userName, User user) {

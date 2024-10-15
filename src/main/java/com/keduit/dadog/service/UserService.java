@@ -5,6 +5,8 @@ import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -195,5 +197,8 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + userName);
         }
         return user;
+    }
+    public Page<User> getUserList(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }
