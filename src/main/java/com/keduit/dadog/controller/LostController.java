@@ -74,7 +74,7 @@ public class LostController {
         return "redirect:/dadog/main";
     }
 
-    @GetMapping("/{lostNo}")
+    @GetMapping("/get/{lostNo}")
     public String getLost(Principal principal, @PathVariable("lostNo") Long lostNo, Model model) {
        Lost lost =  lostService.getLost(lostNo);
        model.addAttribute("lost", lost);

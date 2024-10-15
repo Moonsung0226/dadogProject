@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -107,6 +109,7 @@ public class UserService implements UserDetailsService {
             user.setUserName(kakaoDTO.getNickname());
             userRepository.save(user);
         }
+
         return user;
     }
 
@@ -136,6 +139,21 @@ public class UserService implements UserDetailsService {
             }
         }
 
+        userRepository.save(user);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll(); // 모든 User 엔티티를 반환
+    }
+
+    public List<User> findTop6ByOrderByCreateTimeDesc() {
+        return userRepository.findTop6ByOrderByCreateTimeDesc();
+    }
+
+    public void updateUserRole(Long userId, Role newRole) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+        user.setRole(newRole);
         userRepository.save(user);
     }
     // 변경된 비밀번호로 로그인하기위해(1) ->  이 메서드에서 사용자의 비밀번호를 변경.

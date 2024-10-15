@@ -47,7 +47,7 @@ public class MemberController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "member/MemberForm"; // 에러가 있을 경우 원래 폼으로 돌아가기
+            return "redirect:/dadog/main"; // 에러가 있을 경우 원래 폼으로 돌아가기
         }
 
         // 사용자 등록 로직
@@ -67,26 +67,6 @@ public class MemberController {
         model.addAttribute("errorMessage", "아이디 또는 비밀번호가 잘못되었습니다."); // 초기 에러 메시지 설정
         return "member/sign-in"; // 로그인 페이지로 이동
     }
-
-//    // 로그인 처리
-//    @PostMapping("/login")
-//    public String login(@RequestParam String userId, @RequestParam String password, HttpServletRequest request, Model model) {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setId(userId);
-//        userDTO.setPassword(password);
-//
-//        // 사용자 유효성 검사
-//        if (!userService.isValidUser(userDTO)) {
-//            model.addAttribute("errorMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
-//            return "member/sign-in"; // 로그인 페이지로 돌아가기
-//        }
-//
-//        // 로그인 성공 로직 추가
-//        HttpSession session = request.getSession();
-//        session.setAttribute("userId", userId);
-//
-//        return "redirect:/dadog/main"; // 로그인 성공 시 메인 페이지로 리다이렉트
-//    }
 
     // 로그아웃
     @PostMapping("/logout")
