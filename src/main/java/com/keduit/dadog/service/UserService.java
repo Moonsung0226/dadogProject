@@ -5,6 +5,8 @@ import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +32,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User getUserByUserNo(Long userNo) {
+        return userRepository.findById(userNo).orElse(null); // ID로 사용자 조회
+    }
 
 
     // 비밀번호 업데이트
@@ -173,6 +178,27 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public User authenticate(String username, String password) {
+        User user = userRepository.findByUserName(username); // 사용자 이름으로 사용자 검색
 
+        if (user != null && passwordEncoder.matches(password, user.getUserPwd())) {
+            return user; // 인증 성공, 사용자 반환
+        }
 
+        return null; // 인증 실패
+    }
+
+    public User getUserByUsername(String userName) {
+        User user = userRepository.findByUserId(userName);
+        if (user == null) {
+            user = userRepository.findByUserEmail(userName);
+        }
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + userName);
+        }
+        return user;
+    }
+    public Page<User> getUserList(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 }

@@ -2,6 +2,7 @@ package com.keduit.dadog.service;
 
 import com.keduit.dadog.dto.WishDTO;
 import com.keduit.dadog.entity.Adopt;
+import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.entity.Wish;
 import com.keduit.dadog.repository.AdoptRepository;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +32,7 @@ public class WishService {
             user = userRepository.findByUserEmail(userName);
         }
         Wish wishData = wishRepository.findByUserAndAdopt(user, adopt);
-        //같은 종을 담으려고 하면
         if (wishData == null) {
-            //처음 찜목록 추가시
             Wish wish = new Wish();
             wish = wish.createWish(user, adopt);
             wishRepository.save(wish);
@@ -41,18 +42,37 @@ public class WishService {
         }
     }
 
-    // 찜목록 메서드
-    public List<Wish> getWishList(String userName) {
+    public List<Wish> getWishListByUser(User user) {
+        if (user == null) {
+            return List.of();
+        }
+        return wishRepository.findByUser(user);
+    }
+
+
+
+    // 유저 확인
+    public boolean wishValidation(String userName, Long wishNo) {
         User user = userRepository.findByUserId(userName);
         if (user == null) {
             user = userRepository.findByUserEmail(userName);
         }
 
-        //  사용자 정보 확인
-        System.out.println("User found: " + user);
+        // 사용자와 연결된 wish 찾기
+        Wish wish = wishRepository.findById(wishNo)
+                .orElseThrow(() -> new EntityNotFoundException("Wish not found with wishNo : " + wishNo));
 
-        List<Wish> wishList = wishRepository.findByUser(user);
-
-        return wishList;
+        return Objects.equals(wish.getUser().getUserNo(), user.getUserNo());
     }
+
+
+
+
+    // 위시리스트 삭제
+    public void deleteWish(Long wishNo) {
+        Wish wish = wishRepository.findById(wishNo)
+                .orElseThrow(() -> new EntityNotFoundException("Wish not found with wishNo : " + wishNo));
+        wishRepository.delete(wish);
+    }
+
 }

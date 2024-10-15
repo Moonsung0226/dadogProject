@@ -1,7 +1,9 @@
 package com.keduit.dadog.controller;
 
+import com.keduit.dadog.constant.AdoptWait;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.AdoptSearchDTO;
+import com.keduit.dadog.dto.ApplicationDTO;
 import com.keduit.dadog.dto.SearchDTO;
 import com.keduit.dadog.entity.*;
 import com.keduit.dadog.service.*;
@@ -15,10 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,6 +29,9 @@ public class AdminController {
     private final AdoptService adoptService;
     private final BoardService boardService;
     private final ProtectService protectService;
+    private final ApplicationService applicationService;
+    private final ShelterService shelterService;
+
 
     @GetMapping("/dadog/admin/adopt/api")
     public String adoptApi() {
@@ -56,11 +58,15 @@ public class AdminController {
         List<User> recentUserList = userService
                 .findTop6ByOrderByCreateTimeDesc(); // User 6개
 
+        // PENDING 상태의 입양 신청 갯수 추가
+        long pendingCount = applicationService.countPendingApplications();
+
         model.addAttribute("lostList", recentLostList);
         model.addAttribute("adoptList", recentAdoptList);
         model.addAttribute("boardList", recentBoardList);
         model.addAttribute("protectList", recentProtectList);
         model.addAttribute("userList", recentUserList);
+        model.addAttribute("pendingCount", pendingCount); // PENDING 상태 갯수 전달
 
         return "admin/adminMain";
     }
@@ -69,7 +75,7 @@ public class AdminController {
     public String adoptList(AdoptSearchDTO adoptSearchDTO,
                             @PathVariable("page") Optional<Integer> page,
                             Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 30);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 12);
         Page<Adopt> adoptList =adoptService.getAdoptList(adoptSearchDTO, pageable);
         model.addAttribute("maxPage", 10);
         model.addAttribute("adoptList",adoptList);
@@ -134,7 +140,7 @@ public class AdminController {
     public String protectList(SearchDTO searchDTO,
                               @PathVariable("page") Optional<Integer> page,
                               Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 30);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
         Page<Protect> protectList = protectService.getProtectList(searchDTO, pageable);
         model.addAttribute("maxPage", 10);
         model.addAttribute("protectList", protectList);
@@ -165,7 +171,7 @@ public class AdminController {
     // Board 관련 API
     @GetMapping({"/dadog/admin/board/list/{page}","/dadog/admin/board/list"})
     public String boardList(@PathVariable("page") Optional<Integer> page, Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 30);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
 //        Page<Board> boardList = boardService.getBoardList(pageable);
 //        model.addAttribute("maxPage", 10);
 //        model.addAttribute("boardList", boardList);
@@ -193,9 +199,50 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/dadog/admin/user")
-    public String userPage(Model model) {
-        List<User> userList = userService.findAllUsers();
+    @GetMapping("/dadog/admin/application/list")
+    public String applicationList(@RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "status", required = false) String status,
+                                  Model model) {
+        Pageable pageable = PageRequest.of(page, 18);
+        Page<ApplicationDTO> applicationList;
+
+        if (status != null) {
+            AdoptWait adoptWaitStatus = AdoptWait.valueOf(status.toUpperCase()); // status를 AdoptWait enum으로 변환
+            applicationList = applicationService.getApplicationListByStatus(adoptWaitStatus, pageable);
+        } else {
+            applicationList = applicationService.getApplicationList(pageable);
+        }
+
+        model.addAttribute("maxPage", 10);
+        model.addAttribute("applicationList", applicationList);
+        return "admin/adminApplication";
+    }
+
+
+    @GetMapping("/dadog/admin/application/{appNo}")
+    public ResponseEntity<ApplicationDTO> getApplicationDetail(@PathVariable Long appNo) {
+        ApplicationDTO applicationDTO = applicationService.findApplicationDTOByAppNo(appNo); // DTO 반환
+        if (applicationDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(applicationDTO);
+    }
+
+    @PostMapping("/dadog/admin/application/update/{appNo}")
+    public ResponseEntity<Void> updateAdoptWaitStatus(@PathVariable Long appNo, @RequestBody Map<String, String> request) {
+        String status = request.get("status");
+
+        // 상태 업데이트 로직
+        applicationService.updateAdoptWaitStatus(appNo, status);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping({"/dadog/admin/user/list/{page}","/dadog/admin/user/list"})
+    public String userList(@PathVariable("page") Optional<Integer> page, Model model) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
+        Page<User> userList = userService.getUserList(pageable);
+        model.addAttribute("maxPage", 10);
         model.addAttribute("userList", userList);
         return "admin/adminUser";
     }
@@ -211,6 +258,34 @@ public class AdminController {
 
         // 성공 메시지 반환
         return ResponseEntity.ok("사용자 역할이 성공적으로 업데이트되었습니다.");
+    }
+
+    @GetMapping("/dadog/admin/api")
+    public String apiPage(Model model) {
+        return "admin/adminApi";
+    }
+
+
+    @GetMapping("/dadog/admin/api/fetchShelters")
+    @ResponseBody
+    public Map<String, String> fetchShelters() {
+        shelterService.fetchAndSaveShelterData();
+
+        // 리다이렉트할 URL을 응답으로 보내기
+        Map<String, String> response = new HashMap<>();
+        response.put("redirectUrl", "/dadog/admin/main");
+        return response;
+    }
+
+    @GetMapping("/dadog/admin/api/fetchAdopts")
+    @ResponseBody
+    public Map<String, String> fetchAdopts() {
+        adoptApiService.fetchAndUpdateAdoptData();
+
+        // 리다이렉트할 URL을 응답으로 보내기
+        Map<String, String> response = new HashMap<>();
+        response.put("redirectUrl", "/dadog/admin/main");
+        return response;
     }
 
 }

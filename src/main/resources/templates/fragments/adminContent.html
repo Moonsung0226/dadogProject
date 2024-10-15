@@ -7,7 +7,7 @@
     </a>
     <ul class="list-unstyled ps-0">
         <li class="mb-1">
-            <button class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+            <button class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
                 게시글
             </button>
             <div class="collapse" id="home-collapse" style="">
@@ -20,8 +20,24 @@
             </div>
         </li>
         <li class="mb-1">
-            <a href="/dadog/admin/user" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
+            <a href="/dadog/admin/user/list" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
                 회원 관리
+            </a>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+            <a href="/dadog/admin/application/list" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
+                입양 관리
+                <!-- Pending 상태 갯수 배지 -->
+                <span th:if="${pendingCount > 0}" class="ms-2 badge rounded-pill bg-danger">
+                    <span th:text="${pendingCount}"></span>
+                </span>
+            </a>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+            <a href="/dadog/admin/api" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
+                API 다운
             </a>
         </li>
     </ul>
