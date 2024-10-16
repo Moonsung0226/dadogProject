@@ -177,6 +177,7 @@ public class MyPageController {
         return "myPage/myPwd";
     }
 
+    // 비밀번호 변경창의 카카오 유저와 일반 유저의 차별화.  카카오는 비밀번호 변경 불가.
     @PostMapping("/myPage/myPwd")
     public String updatePwd(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal, RedirectAttributes redirectAttributes) {
         User currentUser = userService.getUser(principal.getName());
@@ -185,38 +186,30 @@ public class MyPageController {
             redirectAttributes.addFlashAttribute("errorMessage", "카카오 로그인 사용자는 비밀번호를 변경할 수 없습니다.");
             return "redirect:/dadog/myPage/myPwd";
         }
-
         if (userDTO.getCurrentPassword() == null || userDTO.getCurrentPassword().isEmpty()) {
             return redirectWithError(redirectAttributes, "기존 비밀번호를 입력해주세요.");
         }
-
         if (!passwordEncoder.matches(userDTO.getCurrentPassword(), currentUser.getUserPwd())) {
             return redirectWithError(redirectAttributes, "기존 비밀번호가 일치하지 않습니다.");
         }
-
         if (userDTO.getNewPassword() == null || userDTO.getNewPassword().isEmpty()) {
             return redirectWithError(redirectAttributes, "새 비밀번호를 입력해주세요.");
         }
-
         if (userDTO.getNewPassword().equals(userDTO.getCurrentPassword())) {
             return redirectWithError(redirectAttributes, "새 비밀번호는 기존 비밀번호와 다르게 설정해주세요.");
         }
-
         if (!userDTO.getNewPassword().equals(userDTO.getConfirmPassword())) {
             return redirectWithError(redirectAttributes, "새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
-
         if (userDTO.getNewPassword().length() < 8) {
             return redirectWithError(redirectAttributes, "비밀번호는 최소 8자 이상이어야 합니다.");
         }
-
         try {
             userService.changePassword(principal.getName(), userDTO.getNewPassword());
             redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 성공적으로 변경되었습니다.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "비밀번호 변경에 실패하였습니다.");
         }
-
         return "redirect:/dadog/myPage/myPwd";
     }
 
