@@ -1,11 +1,15 @@
 package com.keduit.dadog.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.keduit.dadog.dto.LostDTO;
+import com.keduit.dadog.dto.ProtectDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,9 +35,17 @@ public class Protect extends BaseTimeEntity{
     @Column(name = "pro_kind")
     private String proKind;
 
+    //제목
+    @Column(name = "pro_title")
+    private String proTitle;
+
+    //특이사항
+    @Column(name = "pro_detail")
+    private String proDetail;
+
     //발견날짜
     @Column(name = "pro_date")
-    private LocalDateTime proDate;
+    private LocalDate proDate;
 
     //특징
     @Column(name = "pro_place")
@@ -53,5 +65,33 @@ public class Protect extends BaseTimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
+    @JsonIgnore // 순환 참조 방지
     private User user;
+
+    public static Protect createProtect(ProtectDTO protectDTO, String userName, User user) {
+        Protect protect = new Protect();
+        protect.setProDate(protectDTO.getProDate());
+        protect.setProWriter(userName);
+        protect.setProTitle(protectDTO.getProTitle());
+        protect.setProTel(protectDTO.getProTel());
+        protect.setProKind(protectDTO.getProKind());
+        protect.setProPlace(protectDTO.getProPlace());
+        protect.setProDetail(protectDTO.getProDetail());
+        protect.setUser(user);
+        return protect;
+    }
+    public void updateProtect(ProtectDTO protectDTO){
+        this.proTitle = protectDTO.getProTitle();
+        this.proTel = protectDTO.getProTel();
+        this.proDate = protectDTO.getProDate();
+        this.proPlace = protectDTO.getProPlace();
+        this.proDetail = protectDTO.getProDetail();
+        this.proKind = protectDTO.getProKind();
+    }
+
+    public void updateImg(String lostOriName, String lostImgUrl, String lostFileName) {
+        this.proImgUrl = lostImgUrl;
+        this.proFileName = lostFileName;
+        this.proOriName = lostOriName;
+    }
 }

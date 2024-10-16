@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="body" class="flex-shrink-0 p-3" style="width: 280px;">
+    <a href="/dadog/admin/main" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+        <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+        <span class="fs-2 fw-semibold">관리자 페이지</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+        <li class="mb-1">
+            <button class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                게시글
+            </button>
+            <div class="collapse" id="home-collapse" style="">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li class="ms-5 fs-6"><a href="/dadog/admin/lost/list" class="link-body-emphasis d-inline-flex text-decoration-none rounded">실종신고</a></li>
+                    <li class="ms-5 fs-6"><a href="/dadog/admin/adopt/list" class="link-body-emphasis d-inline-flex text-decoration-none rounded">입양하기</a></li>
+                    <li class="ms-5 fs-6"><a href="/dadog/admin/protct/list" class="link-body-emphasis d-inline-flex text-decoration-none rounded">보호중</a></li>
+                    <li class="ms-5 fs-6"><a href="/dadog/admin/board/list" class="link-body-emphasis d-inline-flex text-decoration-none rounded">자유게시판</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <a href="/dadog/admin/user/list" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
+                회원 관리
+            </a>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+            <a href="/dadog/admin/application/list" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
+                입양 관리
+                <!-- Pending 상태 갯수 배지 -->
+                <span th:if="${pendingCount > 0}" class="ms-2 badge rounded-pill bg-danger">
+                    <span th:text="${pendingCount}"></span>
+                </span>
+            </a>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+            <a href="/dadog/admin/api" class="fs-4 ms-3 btn btn-toggle d-inline-flex align-items-center rounded border-0">
+                API 다운
+            </a>
+        </li>
+    </ul>
+</div>
