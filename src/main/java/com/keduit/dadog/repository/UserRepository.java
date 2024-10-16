@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findTop6ByOrderByCreateTimeDesc();
 
+    boolean existsByUserEmail(String userEmail);
+    boolean existsByUserId(String userId);
 }

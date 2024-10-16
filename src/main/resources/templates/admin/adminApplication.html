@@ -89,7 +89,7 @@
                     [csrfHeader]: csrfToken, // CSRF 토큰 추가
                 },
                 contentType: "application/json",
-                data: JSON.stringify({status: status}),
+                data: JSON.stringify({ status: status }), // 상태 데이터 전송
                 success: function (result) {
                     alert("상태가 업데이트되었습니다.");
                     $('#applicationDetailModal').modal('hide');
@@ -108,7 +108,7 @@
 
         function filterApplications(status) {
             const url = '/dadog/admin/application/list?status=' + status.toUpperCase();
-            location.href = url;
+            location.href = url; // 새로운 페이지로 이동
         }
     </script>
 </th:block>
@@ -132,11 +132,8 @@
                         th:text="${app.adoptWaitStatus.name() == 'PENDING' ? '대기' :
                               app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '거절'}"></h5>
                 </div>
-                <div class="card-body">
-
-                    <!-- 보호소 이름 표시 -->
+                <div class="card-body" style="text-align: center;">
                     <h5 class="card-title" th:text="${app.adoptCareNm}"></h5>
-
                     <p class="card-text">
                         공고 종료일: <span th:text="${app.adoptEdt}"></span><br>
                         신청자 전화번호: <span th:text="${app.userTel}"></span><br>
@@ -146,59 +143,57 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- 페이지네이션 -->
-<div th:with="start=${(applicationList.number / maxPage) * maxPage + 1},
+    <!-- 페이지네이션 -->
+    <div th:with="start=${(applicationList.number / maxPage) * maxPage + 1},
               end=${(applicationList.totalPages == 0 ? 1 :
               (start + (maxPage - 1) < applicationList.totalPages ? start + (maxPage - 1) :
               applicationList.totalPages))}">
-    <ul class="pagination justify-content-center">
-        <li class="page-item" th:classappend="${applicationList.first} ? 'disabled'">
-            <a th:onclick="'javascript: page(' + ${applicationList.number - 1} + ')'" aria-label="Previous"
-               class="page-link">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
-            th:classappend="${applicationList.number eq page - 1} ? 'active' : ''">
-            <a th:onclick="'javascript: page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]
-            </a>
-        </li>
-        <li class="page-item" th:classappend="${applicationList.last} ? 'disabled'">
-            <a th:onclick="'javascript: page(' + ${applicationList.number + 1} + ')'" aria-label="Next"
-               class="page-link">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</div>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${applicationList.first} ? 'disabled'">
+                <a th:onclick="'javascript: page(' + ${applicationList.number - 1} + ')'" aria-label="Previous"
+                   class="page-link">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                th:classappend="${applicationList.number eq page - 1} ? 'active' : ''">
+                <a th:onclick="'javascript: page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${applicationList.last} ? 'disabled'">
+                <a th:onclick="'javascript: page(' + ${applicationList.number + 1} + ')'" aria-label="Next"
+                   class="page-link">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-<!-- 모달 창 -->
-<div class="modal fade" id="applicationDetailModal" tabindex="-1" aria-labelledby="applicationDetailModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg" style="max-width: 60%; height: auto;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applicationDetailModalLabel">상세 설명</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="height: auto;">
-                <p>신청 번호: <span id="modalAppNo"></span></p>
-                <p>공고 종료일: <span id="modalAdoptEdt"></span></p>
-                <p>보호소: <span id="modalAdoptCareNm"></span></p>
-                <p>신청자 전화번호: <span id="modalUserTel"></span></p>
-                <p>신청자 이메일: <span id="modalUserEmail"></span></p>
-                <p>보호소 전화번호: <span id="modalAdoptCareTel"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success"
-                        onclick="updateAdoptWaitStatus($('#modalAppNo').text(), 'approved')">승인
-                </button>
-                <button type="button" class="btn btn-danger"
-                        onclick="updateAdoptWaitStatus($('#modalAppNo').text(), 'rejected')">거절
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+    <!-- 모달 창 -->
+    <div class="modal fade" id="applicationDetailModal" tabindex="-1" aria-labelledby="applicationDetailModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width: 60%; height: auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applicationDetailModalLabel">상세 설명</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: auto;">
+                    <p>신청 번호: <span id="modalAppNo"></span></p>
+                    <p>공고 종료일: <span id="modalAdoptEdt"></span></p>
+                    <p>보호소: <span id="modalAdoptCareNm"></span></p>
+                    <p>신청자 전화번호: <span id="modalUserTel"></span></p>
+                    <p>신청자 이메일: <span id="modalUserEmail"></span></p>
+                    <p>보호소 전화번호: <span id="modalAdoptCareTel"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success"
+                            onclick="updateAdoptWaitStatus($('#modalAppNo').text(), 'APPROVED')">승인</button>
+                    <button type="button" class="btn btn-danger"
+                            onclick="updateAdoptWaitStatus($('#modalAppNo').text(), 'REJECTED')">거절</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
             </div>
         </div>
     </div>

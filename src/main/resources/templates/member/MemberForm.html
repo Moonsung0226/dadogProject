@@ -43,6 +43,52 @@
         alert(errorMessage);
       }
 
+      // 아이디 중복 체크 버튼 클릭 시
+      $('#idCheckBtn').on('click', function () {
+        const userId = $('#id').val();
+        if (!userId) {
+          alert('아이디를 입력해 주세요.');
+          return;
+        }
+        $.ajax({
+          url: '/dadog/members/check-id',
+          type: 'GET',
+          data: { id: userId },
+          success: function (response) {
+            if (response.exists) {
+              alert('이미 사용 중인 아이디입니다.');
+              document.getElementById('id').value = ''; // 입력된 아이디 값을 비움
+              document.getElementById('id').focus(); // 경고 후 포커스 이동
+            } else {
+              alert('사용 가능한 아이디입니다.');
+            }
+          }
+        });
+      });
+
+      // 이메일 중복 체크 버튼 클릭 시
+      $('#emailCheckBtn').on('click', function () {
+        const email = $('#email').val();
+        if (!email) {
+          alert('이메일을 입력해 주세요.');
+          return;
+        }
+        $.ajax({
+          url: '/dadog/members/check-email',
+          type: 'GET',
+          data: { email: email },
+          success: function (response) {
+            if (response.exists) {
+              alert('이미 사용 중인 이메일입니다.');
+              document.getElementById('email').value = ''; // 입력된 이메일 값을 비움
+              document.getElementById('email').focus(); // 경고 후 포커스 이동
+            } else {
+              alert('사용 가능한 이메일입니다.');
+            }
+          }
+        });
+      });
+
       // 비밀번호 확인 및 빈칸 유효성 검사
       $('form').on('submit', function (e) {
         const fields = [
@@ -122,13 +168,15 @@
           </div>
 
           <!-- id Field -->
-          <div class="col-sm-12">
-            <label for="id" class="form-label">아이디*</label>
-            <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력해주세요." required>
-            <div class="invalid-feedback">유효한 아이디를 입력해 주세요.</div>
-            <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="fieldError"></p>
+          <div class="col-sm-12 d-flex">
+            <div class="flex-grow-1">
+              <label for="id" class="form-label">아이디*</label>
+              <button type="button" class="btn btn-secondary btn-sm" id="idCheckBtn">중복체크</button> <!-- 아이디 중복 체크 버튼 -->
+              <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="아이디를 입력해주세요." required>
+              <div class="invalid-feedback">유효한 아이디를 입력해 주세요.</div>
+              <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="fieldError"></p>
+            </div>
           </div>
-
 
           <!-- Password Field -->
           <div class="col-12">
@@ -156,11 +204,14 @@
           </div>
 
           <!-- Email Field -->
-          <div class="col-sm-12">
-            <label for="email" class="form-label">이메일 주소*</label>
-            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력해주세요." required>
-            <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
-            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
+          <div class="col-sm-12 d-flex">
+            <div class="flex-grow-1">
+              <label for="email" class="form-label">이메일 주소*</label>
+              <button type="button" class="btn btn-secondary btn-sm" id="emailCheckBtn">중복체크</button> <!-- 이메일 중복 체크 버튼 -->
+              <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력해주세요." required>
+              <div class="invalid-feedback">유효한 이메일 주소를 입력해 주세요.</div>
+              <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
+            </div>
           </div>
 
           <!-- Address Field -->
@@ -282,6 +333,5 @@
     </div>
   </div>
 </div>
-
 </body>
 </html>

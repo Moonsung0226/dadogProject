@@ -11,6 +11,7 @@ import com.keduit.dadog.service.ProtectService;
 import com.keduit.dadog.repository.UserRepository;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -216,5 +217,20 @@ public class MyPageController {
     private String redirectWithError(RedirectAttributes redirectAttributes, String message) {
         redirectAttributes.addFlashAttribute("errorMessage", message);
         return "redirect:/dadog/myPage/myPwd";
+    }
+
+    @GetMapping("/myPage/delete")
+    public String deleteUser(@RequestParam Long userNo, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        userService.deleteUserByNo(userNo);
+
+        // 로그아웃 처리
+        SecurityContextHolder.clearContext(); // 보안 컨텍스트를 클리어하여 인증 정보를 제거
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        redirectAttributes.addFlashAttribute("message", "회원 탈퇴하였습니다.");
+        return "redirect:/dadog/main";
     }
 }

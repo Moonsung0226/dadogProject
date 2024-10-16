@@ -1,6 +1,7 @@
 package com.keduit.dadog.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
 import lombok.*;
@@ -50,6 +51,10 @@ public class User extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "occupy")
+    @Enumerated(EnumType.STRING)
+    private Occupy occupy;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
     private List<Lost> lostList = new ArrayList<>();
@@ -76,6 +81,7 @@ public class User extends BaseTimeEntity{
         String password = passwordEncoder.encode(userDTO.getPassword());
         user.setUserPwd(password);
         user.setRole(Role.USER);
+        user.setOccupy(Occupy.ON);
         return user;
     }
 
@@ -88,6 +94,7 @@ public class User extends BaseTimeEntity{
         // 카카오 사용자는 비밀번호가 없으므로 임의의 값을 설정하거나 null로.
         user.setUserPwd(null);
         user.setRole(Role.KAKAO);
+        user.setOccupy(Occupy.ON);
         return user;
     }
 }

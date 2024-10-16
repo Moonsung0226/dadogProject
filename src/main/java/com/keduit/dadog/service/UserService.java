@@ -1,5 +1,6 @@
 package com.keduit.dadog.service;
 
+import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.entity.User;
@@ -70,11 +71,24 @@ public class UserService implements UserDetailsService {
         return user != null && passwordEncoder.matches(userDTO.getPassword(), user.getUserPwd());
     }
 
+    public boolean isIdDuplicate(String userId) {
+        return userRepository.existsByUserId(userId);  // 데이터베이스에서 id 중복 여부 확인
+    }
+
+    public boolean isEmailDuplicate(String userEmail) {
+        return userRepository.existsByUserEmail(userEmail);  // 데이터베이스에서 email 중복 여부 확인
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByUserId(email);
         if (user == null) {
-            throw new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException("아이디 또는 비밀번호를 확인해 주세요.");
+        }
+
+        // occupy 상태가 OFF인 경우
+        if (user.getOccupy() == Occupy.OFF) {
+            throw new UsernameNotFoundException("탈퇴한 사용자입니다.");
         }
 
         return org.springframework.security.core.userdetails.User.builder()
@@ -91,6 +105,11 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public void deleteUserByNo(Long userNo) {
+        User user = userRepository.findByUserNo(userNo);
+        user.setOccupy(Occupy.OFF); // occupy 상태를 OFF로 변경
+        userRepository.save(user);
+    }
 
     // 카카오 로그인 처리 (닉네임을 이름으로 사용)
     // 카카오 로그인 처리 (수정)

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-public class Application extends BaseTimeEntity{
+public class Application extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "adoptapp_no")
@@ -28,4 +28,13 @@ public class Application extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "adopt_wait_status")
     private AdoptWait adoptWaitStatus = AdoptWait.PENDING;  // 기본 상태는 'PENDING'
+
+    // adoptWaitStatus 설정 메서드
+    public void setStatus(String status) {
+        try {
+            this.adoptWaitStatus = AdoptWait.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid adopt wait status: " + status);
+        }
+    }
 }
