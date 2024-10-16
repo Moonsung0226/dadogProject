@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <div class="footer" th:fragment="footer" style="border-top: 1px solid gainsboro">
     <footer class="py-5" style="">
         <div class="row justify-content-center">
@@ -26,6 +27,33 @@
                             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">보호중</a></li>
                             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">자유게시판</a></li>
                         </ul>
+                        <div>
+                        <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">후원하기</a>
+                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" aria-modal="true" role="dialog">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title fs-2 medium" id="offcanvasExampleLabel">DADOG 후원하기</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body">
+                                    <div class="">
+                                       <p class="mb-2">후원금은 유기견 보호단체에 기부될 예정입니다.</p>
+                                        <p>다독이다를 위해 항상 관심 가져주셔서 감사합니다.</p>
+                                    </div>
+                                    <div class="d-flex input-group mb-3">
+                                    <input type="number" value="10000" id="price" name="price" step="10000" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                    <span class="input-group-text col-lg-2">원</span>
+                                    </div>
+                                    <div class="d-flex input-group mb-3">
+                                        <input type="text" placeholder="후원자명" id="name" name="name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        <span class="input-group-text col-lg-2">님</span>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-dark" onclick="requestPay()">후원하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>

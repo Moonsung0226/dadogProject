@@ -3,9 +3,11 @@ package com.keduit.dadog.service;
 import com.keduit.dadog.dto.AdoptDTO;
 import com.keduit.dadog.dto.LostDTO;
 import com.keduit.dadog.dto.ProtectDTO;
+import com.keduit.dadog.dto.SponDTO;
 import com.keduit.dadog.entity.Adopt;
 import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.Protect;
+import com.keduit.dadog.entity.Sponsor;
 import com.keduit.dadog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class MainService {
     private final AdoptRepositoryCustomImpl adoptRepositoryCustom;
     private final LostRepositoryCustomImpl lostRepositoryCustom;
     private final ProtectRepositoryCustomImpl protectRepositoryCustom;
+    private final SponsorRepository sponsorRepositoryCustom;
 
 
     public List<AdoptDTO> getMainAdopts() {
@@ -54,4 +57,13 @@ public class MainService {
         }
         return protectDTOList;
     }
+
+    public boolean addSponsor(SponDTO sponsorDTO) {
+        Sponsor sponsor = new Sponsor();
+        sponsor = sponsor.createSponsor(sponsorDTO);
+        sponsorRepositoryCustom.save(sponsor);
+        return true;
+    }
+
+
 }
