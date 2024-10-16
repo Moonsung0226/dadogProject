@@ -2,6 +2,7 @@ package com.keduit.dadog.controller;
 
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.entity.Wish;
+import com.keduit.dadog.service.ApplicationService;
 import com.keduit.dadog.service.WishService;
 import com.keduit.dadog.service.UserService;
 
@@ -19,17 +20,23 @@ import java.util.List;
 @RequestMapping("/dadog")
 public class WishListController {
 
-    @Autowired
-    private WishService wishService;
+    private final ApplicationService applicationService;
+    private final WishService wishService;
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
+    public WishListController(ApplicationService applicationService, WishService wishService, UserService userService) {
+        this.applicationService = applicationService;
+        this.wishService = wishService;
+        this.userService = userService;
+    }
 
+    // 찜 목록 페이지를 보여주는 메서드
     @GetMapping("/wishList")
     public String getWishList(Model model, Principal principal) {
         if (principal == null) {
             model.addAttribute("message", "로그인이 필요합니다.");
-            return "redirect:/login"; // 로그인 페이지로 리다이렉트
+            return "redirect:/login";
         }
 
         try {
@@ -51,8 +58,7 @@ public class WishListController {
         return "wishList/wishList";
     }
 
-
-     // 삭제
+    // 찜 목록에서 항목을 삭제하는 메서드
     @DeleteMapping("/wish/{wishNo}")
     public @ResponseBody ResponseEntity deleteWish(@PathVariable("wishNo") Long wishNo, Principal principal) {
         if (!wishService.wishValidation(principal.getName(), wishNo)) {
@@ -60,5 +66,18 @@ public class WishListController {
         }
         wishService.deleteWish(wishNo);
         return new ResponseEntity(wishNo, HttpStatus.OK);
+    }
+
+    // 입양 신청을 처리하는 메서드
+    @PostMapping("/adopt/{adoptNo}")
+    @ResponseBody
+    public ResponseEntity<Long> applyForAdoption(@PathVariable Long adoptNo, Principal principal) {
+        if (principal == null) {  // 인증된 사용자가 없는 경우, 401 Unauthorized 상태를 반환.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String userName = principal.getName(); // Principal 객체에서 사용자 이름을 가져오기.
+        Long applicationId = applicationService.applyForAdoption(adoptNo, userName);  // 입양 신청을 처리하는 서비스 메서드를 호출하고, 결과로 신청 ID를 가져옴.
+
+        return ResponseEntity.ok(applicationId);
     }
 }

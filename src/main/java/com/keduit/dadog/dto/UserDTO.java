@@ -59,7 +59,7 @@ public class UserDTO {
         this.address = address;
         this.nickname = nickname;
     }
-
+    // 회원정보 가지고 오기 위한 메서드
     public UserDTO createUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getUserName());

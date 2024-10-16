@@ -62,6 +62,8 @@ public class User extends BaseTimeEntity{
     @JoinColumn(name = "user_no")
     private List<Board> boardList = new ArrayList<>();
 
+
+    // 회원으로 가입을 할껀지 관리자로 가입을 할껀지.
     // 정적 메서드로 사용되는 createUser 메서드
     public static User createUser(UserDTO userDTO, PasswordEncoder passwordEncoder) {
         User user = new User();
