@@ -102,14 +102,6 @@ public class ApplicationService {
         );
     }
 
-    @Transactional
-    public void updateAdoptWaitStatus(Long appNo, String status) {
-        Application application = applicationRepository.findByAppNo(appNo)
-                .orElseThrow(() -> new EntityNotFoundException("Application not found"));
-        application.setAdoptWaitStatus(AdoptWait.valueOf(status.toUpperCase()));
-        applicationRepository.save(application);
-    }
-
     // current Y/N 메서드
     @Transactional
     public Long applyForAdoption(Long adoptNo, String userName) {

@@ -64,7 +64,12 @@ public class MemberController {
     // 로그인 페이지
     @GetMapping("/login")
     public String showLoginPage(Model model) {
+
         model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
+        if (model.containsAttribute("errorMessage")) {
+            String errorMessage = (String) model.getAttribute("errorMessage");
+            model.addAttribute("errorMessage", errorMessage);
+        }
         return "member/sign-in"; // 로그인 페이지로 이동
     }
 
@@ -95,7 +100,7 @@ public class MemberController {
     }
 
     @GetMapping("/login/error")
-    public String loginError(Model model, @RequestParam(required = false) String error) {
+    public String loginError(Model model, @RequestParam(required = false) String error, RedirectAttributes redirectAttributes) {
         // 로그인 오류 처리
         String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
 
@@ -106,8 +111,8 @@ public class MemberController {
             }
         }
 
-        model.addAttribute("errorMessage", errorMessage);
-        return "member/sign-in"; // 로그인 페이지로 이동
+        redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        return "redirect:/dadog/members/login"; // 로그인 페이지로 이동
     }
 
     // 이용약관동의
