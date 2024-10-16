@@ -56,7 +56,7 @@ public class SecurityConfig {
                         "/dadog/adopt/list","/dadog/adopt/list/**","/dadog/adopt/**",
                         "/dadog/protect/list","/dadog/protect/list/","/dadog/protect/get/**",
                         "/dadog/shelter","/dadog/shelter/**","/dadog/members/**").permitAll()
-                .antMatchers("/dadog/admin/adopt/updateApi","/dadog/admin/adopt/api").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
+                .antMatchers("/dadog/admin/adopt/**").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
                 .anyRequest().authenticated(); // 그 외의 모든 요청은 인증 필요
 
         // 예외 처리

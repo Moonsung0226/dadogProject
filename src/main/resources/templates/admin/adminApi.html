@@ -25,16 +25,16 @@
             display: flex;
             flex-direction: row; /* 버튼을 가로로 배치 */
             gap: 20px; /* 버튼 사이 간격 */
-            width: 60%; /* 전체 컨테이너 가로 크기 */
-            height: 30%; /* 전체 컨테이너 높이 */
-            justify-content: center; /* 버튼을 중앙에 정렬 */
-            align-items: center; /* 세로 정렬 */
+            position: absolute; /* 절대 위치 지정 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 중앙 정렬을 위한 변환 */
         }
 
         /* 버튼 스타일 */
-        #fetchAdoptsBtn, #fetchSheltersBtn {
-            width: 30%; /* 각 버튼의 가로 크기 (전체 컨테이너의 30%) */
-            height: 100%; /* 버튼이 컨테이너의 높이 100%를 차지 */
+        #fetchAdoptsBtn, #fetchSheltersBtn, #updateAdoptsBtn {
+            width: 200px;
+            height: 200px;
             font-size: 1.5rem; /* 버튼 글자 크기 */
         }
     </style>
@@ -60,16 +60,11 @@
                 },
                 success: function (response) {
                     overlay.style.display = "none";
-
-                    // 서버에서 리다이렉트할 URL을 응답으로 보냈다면 그 URL로 이동
-                    if (response.redirectUrl) {
-                        alert("데이터 가져오기 성공!");
-                        window.location.href = response.redirectUrl;
-                    }
+                    alert(response.message); // JSON에서 message 속성 출력
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     overlay.style.display = "none";
-                    alert("데이터 가져오기 실패: " + errorThrown);
+                    alert("유기견 업데이트 실패: " + errorThrown);
                 }
             });
         }
@@ -104,6 +99,33 @@
                 }
             });
         }
+
+        // 공고 업데이트 함수
+        function updateAdoptsCurrent() {
+            const overlay = document.getElementById("overlay");
+
+            // 오버레이 보여주기
+            overlay.style.display = "flex";
+
+            // API 호출
+            $.ajax({
+                url: '/dadog/admin/api/fetchCurrent', // 공고 업데이트 URL
+                type: 'GET', // GET 요청
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                success: function (response) {
+                    overlay.style.display = "none";
+                    alert(response.message); // JSON에서 message 속성 출력
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    overlay.style.display = "none";
+                    alert("공고 업데이트 실패: " + errorThrown);
+                }
+            });
+        }
     </script>
 </th:block>
 
@@ -112,6 +134,7 @@
     <div class="button-container">
         <button id="fetchSheltersBtn" class="btn btn-primary" onclick="fetchShelters()">보호소 API</button>
         <button id="fetchAdoptsBtn" class="btn btn-primary" onclick="fetchAdopts()">입양 API</button>
+        <button id="updateAdoptsBtn" class="btn btn-primary" onclick="updateAdoptsCurrent()">공고 업데이트</button> <!-- 추가된 버튼 -->
     </div>
     <div id="overlay">
         <!-- 로딩 스피너 -->

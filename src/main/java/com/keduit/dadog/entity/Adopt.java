@@ -70,4 +70,5 @@ public class Adopt {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "adopt_no")
     private List<Wish> wishList = new ArrayList<>();
+
 }

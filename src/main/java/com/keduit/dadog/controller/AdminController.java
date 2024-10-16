@@ -238,6 +238,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
+
     @GetMapping({"/dadog/admin/user/list/{page}","/dadog/admin/user/list"})
     public String userList(@PathVariable("page") Optional<Integer> page, Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
@@ -265,27 +266,38 @@ public class AdminController {
         return "admin/adminApi";
     }
 
-
     @GetMapping("/dadog/admin/api/fetchShelters")
     @ResponseBody
-    public Map<String, String> fetchShelters() {
+    public ResponseEntity<Map<String, String>> fetchShelters() {
         shelterService.fetchAndSaveShelterData();
 
         // 리다이렉트할 URL을 응답으로 보내기
         Map<String, String> response = new HashMap<>();
-        response.put("redirectUrl", "/dadog/admin/main");
-        return response;
+        response.put("message", "공고 상태가 업데이트되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/dadog/admin/api/fetchAdopts")
     @ResponseBody
-    public Map<String, String> fetchAdopts() {
+    public ResponseEntity<Map<String, String>> fetchAdopts() {
         adoptApiService.fetchAndUpdateAdoptData();
 
         // 리다이렉트할 URL을 응답으로 보내기
         Map<String, String> response = new HashMap<>();
-        response.put("redirectUrl", "/dadog/admin/main");
-        return response;
+        response.put("message", "공고 상태가 업데이트되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
+    // 공고 상태 업데이트
+    @GetMapping("/dadog/admin/api/fetchCurrent")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> updateAdoptCurrentStatus() {
+        // 공고 상태 업데이트 로직 호출
+        applicationService.updateAdoptCurrentStatus();
+
+        // 업데이트 성공 메시지를 JSON 형태로 반환
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "공고 상태가 업데이트되었습니다.");
+        return ResponseEntity.ok(response);
+    }
 }
