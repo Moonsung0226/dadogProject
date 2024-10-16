@@ -40,8 +40,13 @@ dependencies {
 
 	//jackson
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
 	//json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	//채팅 기능을 위한 web socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework:spring-messaging'
 
 }
 
