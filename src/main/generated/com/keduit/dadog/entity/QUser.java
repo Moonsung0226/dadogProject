@@ -29,6 +29,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<Lost, QLost> lostList = this.<Lost, QLost>createList("lostList", Lost.class, QLost.class, PathInits.DIRECT2);
 
+    public final EnumPath<com.keduit.dadog.constant.Occupy> occupy = createEnum("occupy", com.keduit.dadog.constant.Occupy.class);
+
     public final ListPath<Protect, QProtect> protectList = this.<Protect, QProtect>createList("protectList", Protect.class, QProtect.class, PathInits.DIRECT2);
 
     public final EnumPath<com.keduit.dadog.constant.Role> role = createEnum("role", com.keduit.dadog.constant.Role.class);

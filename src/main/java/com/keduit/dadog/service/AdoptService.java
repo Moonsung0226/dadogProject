@@ -2,7 +2,9 @@ package com.keduit.dadog.service;
 
 import com.keduit.dadog.dto.AdoptSearchDTO;
 import com.keduit.dadog.entity.Adopt;
+import com.keduit.dadog.entity.Application;
 import com.keduit.dadog.repository.AdoptRepository;
+import com.keduit.dadog.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +29,6 @@ public class AdoptService {
 
     public Adopt getAdopt(Long adoptNo) {
         return adoptRepository.findById(adoptNo).orElseThrow(EntityNotFoundException::new);
-    }
-
-    public List<Adopt> findAllAdopt() {
-        return adoptRepository.findAll(); // 모든 Adopt 엔티티를 반환
     }
 
     // adopt_edt를 기준으로 최근 6개의 Adopt 데이터를 가져오는 메서드

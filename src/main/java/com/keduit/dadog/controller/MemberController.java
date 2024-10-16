@@ -7,12 +7,16 @@ import com.keduit.dadog.dto.UserDTO;
 import com.keduit.dadog.service.KakaoService;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dadog/members")
@@ -64,6 +68,24 @@ public class MemberController {
         return "member/sign-in"; // 로그인 페이지로 이동
     }
 
+    // 아이디 중복 체크
+    @GetMapping("/check-id")
+    public ResponseEntity<Map<String, Boolean>> checkId(@RequestParam("id") String id) {
+        boolean exists = userService.isIdDuplicate(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
+
+    // 이메일 중복 체크
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam("email") String email) {
+        boolean exists = userService.isEmailDuplicate(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
+
     // 로그아웃
     @PostMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
@@ -73,9 +95,19 @@ public class MemberController {
     }
 
     @GetMapping("/login/error")
-    public String loginError(Model model) {
-        model.addAttribute("errorMessage", "아이디 또는 비밀번호를 확인해 주세요.");
-        return "member/sign-in";
+    public String loginError(Model model, @RequestParam(required = false) String error) {
+        // 로그인 오류 처리
+        String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
+
+        if (error != null) {
+            // error 매개변수에 따라 오류 메시지 설정
+            if ("탈퇴한 회원입니다.".equals(error)) {
+                errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
+            }
+        }
+
+        model.addAttribute("errorMessage", errorMessage);
+        return "member/sign-in"; // 로그인 페이지로 이동
     }
 
     // 이용약관동의
