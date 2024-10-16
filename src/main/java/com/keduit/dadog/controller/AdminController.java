@@ -233,7 +233,7 @@ public class AdminController {
         String status = request.get("status");
 
         // 상태 업데이트 로직
-        applicationService.updateAdoptWaitStatus(appNo, status);
+        applicationService.updateAdoptWaitSt(appNo, status);
 
         return ResponseEntity.ok().build();
     }
