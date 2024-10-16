@@ -78,12 +78,12 @@
       </div>
     </div>
     <div class="container">
-    <article class="mainBody py-3 px-2 px-md-3 px-lg-5">
+    <article class="mainBody py-3 px-2 px-md-3 px-lg-5 bg-body-tertiary rounded-3 mb-4">
       <div class="row">
-      <div th:each="protect : ${protectList.getContent()}" class="col-6 col-md-4 col-lg-3 mb-4">
+      <div th:each="protect : ${protectList.getContent()}" class="col-6 col-md-4 col-lg-3 my-3">
         <a th:href="'/dadog/protect/get/' + ${protect.getProNo()}" class="text-dark link-underline link-underline-opacity-0">
-          <div class="card" style="max-width: 250px;">
-          <img th:src="${protect.getProImgUrl()}" th:alt="사진" class="card-img" width="250"/>
+          <div class="card" style="max-width: 100%;">
+          <img th:src="${protect.getProImgUrl()}" th:alt="사진" class="card-img" width="100%"/>
           <div class="card-body">
             <h5 class="card-title truncate fw-bolder mb-4" th:text="${protect.getProTitle()}"></h5>
             <p th:text="'견종 : ' + ${protect.getProKind()}" class="card-text mb-1"></p>
