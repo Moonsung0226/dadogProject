@@ -1,15 +1,19 @@
 package com.keduit.dadog.controller;
 
-import com.keduit.dadog.dto.AdoptDTO;
-import com.keduit.dadog.dto.LostDTO;
-import com.keduit.dadog.dto.ProtectDTO;
+import com.keduit.dadog.dto.*;
 import com.keduit.dadog.service.AdoptService;
 import com.keduit.dadog.service.MainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -29,7 +33,6 @@ public class MainController {
         return "main";
     }
 
-
     @GetMapping("/dadog/sign")
     public String signInPage() {
         return "member/sign-in";
@@ -40,7 +43,15 @@ public class MainController {
         return "main"; // 메인 페이지의 Thymeleaf 템플릿 이름을 반환
     }
 
+    @PostMapping("/dadog/spon")
+    public @ResponseBody ResponseEntity addWish(@RequestBody SponDTO sponDTO, Model model) {
+        System.out.println(sponDTO);
+        if (mainService.addSponsor(sponDTO)) {
+            return new ResponseEntity<>(sponDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+}
 
 
 

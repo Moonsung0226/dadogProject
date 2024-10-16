@@ -5,12 +5,15 @@ import com.keduit.dadog.constant.Current;
 import com.keduit.dadog.dto.ApplicationDTO;
 import com.keduit.dadog.entity.Adopt;
 import com.keduit.dadog.entity.Application;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.AdoptRepository;
 import com.keduit.dadog.repository.ApplicationRepository;
+import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -21,8 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationService {
 
-    public final ApplicationRepository applicationRepository;
-    public final AdoptRepository adoptRepository;
+    private final ApplicationRepository applicationRepository;
+    private final UserRepository userRepository;
+    private final AdoptRepository adoptRepository;
 
     public long countPendingApplications() {
         return applicationRepository.countByAdoptWaitStatus(AdoptWait.PENDING);
@@ -30,12 +34,12 @@ public class ApplicationService {
 
     public Page<ApplicationDTO> getApplicationList(Pageable pageable) {
         return applicationRepository.getApplicationListPage(pageable)
-                .map(this::convertToDTO); // Application 엔티티를 DTO로 변환
+                .map(this::convertToDTO);
     }
 
     public Page<ApplicationDTO> getApplicationListByStatus(AdoptWait status, Pageable pageable) {
         return applicationRepository.findByAdoptWaitStatus(status, pageable)
-                .map(this::convertToDTO); // 상태에 따라 필터링된 신청 목록을 DTO로 변환
+                .map(this::convertToDTO);
     }
 
     public void updateAdoptWaitStatus(Long appNo, String status) {
@@ -74,8 +78,8 @@ public class ApplicationService {
 
     public ApplicationDTO findApplicationDTOByAppNo(Long appNo) {
         Application application = applicationRepository.findByAppNo(appNo)
-                .orElseThrow(() -> new EntityNotFoundException("Application not found with appNo : " + appNo));
-        return convertToDTO(application); // Application 엔티티를 DTO로 변환
+                .orElseThrow(() -> new EntityNotFoundException("Application not found with appNo: " + appNo));
+        return convertToDTO(application);
     }
 
     private ApplicationDTO convertToDTO(Application application) {
@@ -97,4 +101,42 @@ public class ApplicationService {
                 application.getAdoptWaitStatus()
         );
     }
+
+    @Transactional
+    public void updateAdoptWaitStatus(Long appNo, String status) {
+        Application application = applicationRepository.findByAppNo(appNo)
+                .orElseThrow(() -> new EntityNotFoundException("Application not found"));
+        application.setAdoptWaitStatus(AdoptWait.valueOf(status.toUpperCase()));
+        applicationRepository.save(application);
+    }
+
+    // current Y/N 메서드
+    @Transactional
+    public Long applyForAdoption(Long adoptNo, String userName) {
+        User user = userRepository.findByUserId(userName);
+        if (user == null) {
+            user = userRepository.findByUserEmail(userName);
+        }
+
+        Adopt adopt = adoptRepository.findById(adoptNo)
+                .orElseThrow(() -> new EntityNotFoundException("Adopt not found with id: " + adoptNo));
+
+        if (adopt.getCurrent() != Current.Y) {
+            throw new IllegalStateException("This dog is not available for adoption.");
+        }
+
+        Application application = new Application();
+        application.setUser(user);
+        application.setAdopt(adopt);
+        application.setAdoptWaitStatus(AdoptWait.PENDING);
+
+        // 유기견의 current 상태를 N으로 변경
+        adopt.setCurrent(Current.N);  // 신청 후 상태를 'N'으로 변경
+        adoptRepository.save(adopt);   // 변경 사항 저장
+
+        applicationRepository.save(application);
+
+        return application.getAppNo();
+    }
+
 }
