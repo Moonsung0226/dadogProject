@@ -1,33 +1,93 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/myPageLayout}">
 
-<div layout:fragment="mainContent">
-  <div class="container mt-5">
-    <h1>입양현황 게시글</h1>
+<!-- 사용자 css -->
+<th:block layout:fragment="css">
+  <style>
+    .card-application {
+      position: relative;
+      color: black;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      transition: box-shadow 0.3s ease;
+    }
 
-    <div class="row">
-      <div th:if="${#lists.isEmpty(posts)}" class="col-12">
-        <div class="alert alert-warning" role="alert">
-          현재 입양현황이 없습니다.
-        </div>
-      </div>
+    .card-application:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-      <div class="col-md-4" th:each="post : ${posts}">
-        <div class="card mb-4">
-          <div class="card-body">
-            <h5 class="card-title" th:text="${post.title}">게시글 제목</h5>
-            <p class="card-text" th:text="${post.content}">게시글 내용</p>
-            <p class="card-text">
-              <small class="text-muted" th:text="${post.author}">작성자</small>
-              <small class="text-muted" th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd')}">작성일</small>
-            </p>
-          </div>
+    .card-header {
+      padding: 10px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .card-header.pending {
+      background-color: #FFA500;
+    }
+
+    .card-header.approved {
+      background-color: #28a745;
+    }
+
+    .card-header.rejected {
+      background-color: #dc3545;
+    }
+
+    /* 이미지 스타일: 크기를 균일하게 조정하고, 비율을 유지하면서 잘림 방지 */
+    .card-application img {
+      width: 100%;
+      height: 200px; /* 고정된 높이 설정 */
+      object-fit: cover; /* 이미지가 비율을 유지하면서 잘리지 않도록 조정 */
+      border-radius: 5px; /* 둥근 모서리 설정 */
+    }
+  </style>
+</th:block>
+
+<!-- 사용자 js -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    function showApplicationDetail(appNo) {
+      const url = '/dadog/myPage/myAdopt/' + appNo;
+      window.location.href = url;
+    }
+  </script>
+</th:block>
+
+<div layout:fragment="mainContent" style="margin-top: 50px">
+  <h1>입양현황</h1>
+
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between">
+      <div class="card card-application" style="width: 30%;"
+           th:each="app : ${applicationList}">
+
+        <!-- 상태에 따른 card-header 출력 -->
+        <div class="card-header"
+             th:classappend="${app.adoptWaitStatus.name().toLowerCase()}">
+          <h5 class="status-text" th:if="${app.adoptWaitStatus != null}"
+              th:text="${app.adoptWaitStatus.name() == 'PENDING' ? '대기' :
+                              app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '거절'}"></h5>
         </div>
+
+        <div class="card-body" style="text-align: center;">
+          <h5 class="card-title" th:text="${app.adoptCareNm}"></h5>
+          <p class="card-text">
+            <img th:src="${app.adoptImgUrl}" alt="입양 동물 이미지">
+            <br>
+            견종 : <span th:text="${app.adoptKind}"></span><br>
+            나이 : <span th:text="${app.adoptAge}"></span><br>
+            보호소 연락처 : <span th:text="${app.adoptCareTel}"></span><br>
+            보호소 이름 : <span th:text="${app.adoptCareNm}"></span><br>
+            공고 종료일 : <span th:text="${app.adoptEdt}"></span>
+          </p>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
-
 </html>

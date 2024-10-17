@@ -98,7 +98,8 @@ public class ApplicationService {
                 application.getAdopt().getAdoptCareNm(),
                 application.getAdopt().getAdoptCareAddr(),
                 application.getAdopt().getAdoptCareTel(),
-                application.getAdoptWaitStatus()
+                application.getAdoptWaitStatus(),
+                application.getAdopt().getAdoptImgUrl()
         );
     }
 
