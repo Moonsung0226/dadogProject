@@ -10,7 +10,6 @@
       location.href = '/dadog/lost/update/' + lostNo;
     }
   </script>
-
 </th:block>
 
 <div layout:fragment="mainContent">
@@ -22,7 +21,7 @@
         <div class="col-md-5"><img class="card-img-top mb-5 mb-md-0" th:src="${lost.getLostImgUrl()}" th:alt="${lost.getLostNo()}" style="max-height: 450px;" /></div>
         <div class="col-md-5">
           <div class="small mb-1" th:text="'작성자 :' +  ${lost.getLostWriter()}"></div>
-          <h4 class="display-5 fw-bolder fs-2">제목 </h4> <span class="fs-4 display-5" th:text="${lost.getLostTitle()}"></span>
+          <h4 class="display-5 bold fs-2">제목 </h4> <span class="fs-4 display-5 medium" th:text="${lost.getLostTitle()}"></span>
           <div class="form-control mt-5 p-4">
           <p><span class="display-5 fw-bolder fs-5">견종 : </span>  <span class="fs-5 display-5" th:text="${lost.getLostKind()}"></span></p>
           <p><span class="display-5 fw-bolder fs-5">전화번호 : </span>  <span class="fs-5 display-5" th:text="${lost.getLostTel()}"></span></p>

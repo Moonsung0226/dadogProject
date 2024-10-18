@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,6 +54,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardNo)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
 
+//        board.setBoardWriter(boardDTO.getBoardWriter()); // 작성자는 수정하지 않도록
         board.setBoardTitle(boardDTO.getBoardTitle());
         board.setBoardContent(boardDTO.getBoardContent());
 
@@ -155,5 +157,12 @@ public class BoardService {
 
         boardDTO.setReplies(replies);
         return boardDTO;
+    }
+    public List<Board> findTop6ByOrderByCreateTimeDesc() {
+        return boardRepository.findTop6ByOrderByCreateTimeDesc();
+    }
+
+    public Board findByBoardNo(Long boardNo) {
+        return boardRepository.findById(boardNo).orElseThrow(() -> new EntityNotFoundException("Board not found with boardNo : " + boardNo));
     }
 }

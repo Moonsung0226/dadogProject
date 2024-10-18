@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}">
+      layout:decorate="~{layouts/myPageLayout}">
 
-<head>
-  <meta charset="UTF-8">
-  <title>내가 쓴 보호중 게시글</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-</head>
-
-<body>
 <div layout:fragment="mainContent">
   <div class="container mt-5">
-    <h1>내가 쓴 보호중 게시글</h1>
+    <h1>입양현황 게시글</h1>
 
     <div class="row">
       <div th:if="${#lists.isEmpty(posts)}" class="col-12">
         <div class="alert alert-warning" role="alert">
-          작성한 보호중 게시글이 없습니다.
+          현재 입양현황이 없습니다.
         </div>
       </div>
 
@@ -36,5 +29,5 @@
     </div>
   </div>
 </div>
-</body>
+
 </html>

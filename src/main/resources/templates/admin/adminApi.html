@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/adminLayout}">
+
+<!-- 사용자 css -->
+<th:block layout:fragment="css">
+    <style>
+        /* 전체 화면을 덮는 오버레이 */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 배경을 어둡게 */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999; /* 다른 요소 위에 표시 */
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            display: flex;
+            flex-direction: row; /* 버튼을 가로로 배치 */
+            gap: 20px; /* 버튼 사이 간격 */
+            position: absolute; /* 절대 위치 지정 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 중앙 정렬을 위한 변환 */
+        }
+
+        /* 버튼 스타일 */
+        #fetchAdoptsBtn, #fetchSheltersBtn, #updateAdoptsBtn {
+            width: 200px;
+            height: 200px;
+            font-size: 1.5rem; /* 버튼 글자 크기 */
+        }
+    </style>
+</th:block>
+
+<!-- 사용자 js -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function fetchShelters() {
+            const overlay = document.getElementById("overlay");
+
+            // 오버레이 보여주기
+            overlay.style.display = "flex";
+
+            // API 호출
+            $.ajax({
+                url: '/dadog/admin/api/fetchShelters',
+                type: 'GET',
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                success: function (response) {
+                    overlay.style.display = "none";
+                    alert(response.message); // JSON에서 message 속성 출력
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    overlay.style.display = "none";
+                    alert("유기견 업데이트 실패: " + errorThrown);
+                }
+            });
+        }
+
+        function fetchAdopts() {
+            const overlay = document.getElementById("overlay");
+
+            // 오버레이 보여주기
+            overlay.style.display = "flex";
+
+            // API 호출
+            $.ajax({
+                url: '/dadog/admin/api/fetchAdopts',
+                type: 'GET',
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                success: function (response) {
+                    overlay.style.display = "none";
+
+                    // 서버에서 리다이렉트할 URL을 응답으로 보냈다면 그 URL로 이동
+                    if (response.redirectUrl) {
+                        alert("데이터 가져오기 성공!");
+                        window.location.href = response.redirectUrl;
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    overlay.style.display = "none";
+                    alert("데이터 가져오기 실패: " + errorThrown);
+                }
+            });
+        }
+
+        // 공고 업데이트 함수
+        function updateAdoptsCurrent() {
+            const overlay = document.getElementById("overlay");
+
+            // 오버레이 보여주기
+            overlay.style.display = "flex";
+
+            // API 호출
+            $.ajax({
+                url: '/dadog/admin/api/fetchCurrent', // 공고 업데이트 URL
+                type: 'GET', // GET 요청
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                success: function (response) {
+                    overlay.style.display = "none";
+                    alert(response.message); // JSON에서 message 속성 출력
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    overlay.style.display = "none";
+                    alert("공고 업데이트 실패: " + errorThrown);
+                }
+            });
+        }
+    </script>
+</th:block>
+
+<!-- 메인 컨텐츠 -->
+<div layout:fragment="mainContent" style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+    <div class="button-container">
+        <button id="fetchSheltersBtn" class="btn btn-primary" onclick="fetchShelters()">보호소 API</button>
+        <button id="fetchAdoptsBtn" class="btn btn-primary" onclick="fetchAdopts()">입양 API</button>
+        <button id="updateAdoptsBtn" class="btn btn-primary" onclick="updateAdoptsCurrent()">공고 업데이트</button> <!-- 추가된 버튼 -->
+    </div>
+    <div id="overlay">
+        <!-- 로딩 스피너 -->
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+</html>

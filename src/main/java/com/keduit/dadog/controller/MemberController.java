@@ -1,20 +1,22 @@
 package com.keduit.dadog.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import com.keduit.dadog.dto.UserDTO;
-import com.keduit.dadog.entity.User;
+import com.keduit.dadog.service.KakaoService;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dadog/members")
@@ -22,53 +24,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MemberController {
 
     private final UserService userService;
+    private final KakaoService kakaoService;
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     @GetMapping("/new")
     public String memberForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
-        return "member/MemberForm";
+        return "member/MemberForm"; // 회원가입 폼
     }
 
     @PostMapping("/new")
-    public String memberForm(@Valid UserDTO userDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "member/MemberForm";
-        }
-
-        try {
-            // 회원 등록 메서드 호출
-            userService.registerMember(userDTO); // 회원 등록
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "member/MemberForm";
-        }
-
-        redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
-        return "redirect:/";
-    }
-
-
-
-    // 로그아웃
-    @PostMapping("/logout")
-    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-        // 세션 무효화
-        session.invalidate();
-        redirectAttributes.addFlashAttribute("message", "성공적으로 로그아웃되었습니다.");
-        return "redirect:/";
-    }
-
-
-    @GetMapping("/login/error")
-    public String loginError(Model model) {
-        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해 주세요.");
-        return "member/memberLoginForm"; // 경로 수정
-    }
-
-    @PostMapping("/members/new")
-    public String registerUser(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model) {
+    public String registerUser(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         // 비밀번호와 비밀번호 확인 검사
         if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.userDTO", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
@@ -80,13 +47,73 @@ public class MemberController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "members/new"; // 에러가 있을 경우 원래 폼으로 돌아가기
+            return "redirect:/dadog/main"; // 에러가 있을 경우 원래 폼으로 돌아가기
         }
 
         // 사용자 등록 로직
-        userService.registerMember(userDTO); // 메소드 이름 변경
-        return "redirect:/login"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
+        try {
+            userService.registerMember(userDTO);
+            redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
+            return "redirect:/dadog/main"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "member/MemberForm"; // 오류 발생 시 폼으로 돌아가기
+        }
     }
 
+    // 로그인 페이지
+    @GetMapping("/login")
+    public String showLoginPage(Model model) {
+        model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
+        return "member/sign-in"; // 로그인 페이지로 이동
+    }
 
+    // 아이디 중복 체크
+    @GetMapping("/check-id")
+    public ResponseEntity<Map<String, Boolean>> checkId(@RequestParam("id") String id) {
+        boolean exists = userService.isIdDuplicate(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
+
+    // 이메일 중복 체크
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam("email") String email) {
+        boolean exists = userService.isEmailDuplicate(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+        session.invalidate();
+        redirectAttributes.addFlashAttribute("message", "성공적으로 로그아웃되었습니다.");
+        return "redirect:/dadog/main";
+    }
+
+    @GetMapping("/login/error")
+    public String loginError(Model model, @RequestParam(required = false) String error) {
+        // 로그인 오류 처리
+        String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
+
+        if (error != null) {
+            // error 매개변수에 따라 오류 메시지 설정
+            if ("탈퇴한 회원입니다.".equals(error)) {
+                errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
+            }
+        }
+
+        model.addAttribute("errorMessage", errorMessage);
+        return "member/sign-in"; // 로그인 페이지로 이동
+    }
+
+    // 이용약관동의
+    @GetMapping("/UseAgree")
+    public String UseAgree(Model model) {
+        model.addAttribute("userDTO", new UserDTO());
+        return "member/UseAgree"; // 회원가입 폼
+    }
 }

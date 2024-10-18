@@ -1,5 +1,6 @@
 package com.keduit.dadog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.keduit.dadog.constant.Current;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties({"applicationList", "wishList"})
 public class Adopt {
 
     @Id
@@ -68,4 +70,5 @@ public class Adopt {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "adopt_no")
     private List<Wish> wishList = new ArrayList<>();
+
 }

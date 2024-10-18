@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdoptApiService {
@@ -87,7 +89,7 @@ public class AdoptApiService {
 
                 for(int pageNo = 1; pageNo <= 30; pageNo++){
                     String pagedUrl = "https://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?serviceKey=" +
-                            serviceKey + bgnde + upKind + "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&_type=json";
+                            serviceKey + bgnde + upKind +"&state=notice"+ "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&_type=json";
 
                     ResponseEntity<String> pagedResponse = restTemplate.getForEntity(pagedUrl, String.class);
                     logger.info("페이지 {} API 호출: {}", pageNo, pagedUrl);//각 페이지 호출 로그
@@ -99,6 +101,7 @@ public class AdoptApiService {
 
                         if(items.isArray()){
                             for(JsonNode item : items){
+
                                 String kindCd = item.path("kindCd").asText().substring(4);
                                 String age = item.path("age").asText();
                                 String careNm = item.path("careNm").asText();
@@ -108,22 +111,124 @@ public class AdoptApiService {
                                 String specialMark = item.path("specialMark").asText();
                                 String popfile = item.path("popfile").asText();
                                 String noticeEdt = item.path("noticeEdt").asText();
+                                String formattedNoticeEdt = null;
+                                if (noticeEdt.length() == 8) { // 8자리 숫자인지 확인
+                                    LocalDate date = LocalDate.parse(noticeEdt, DateTimeFormatter.ofPattern("yyyyMMdd"));
+                                    formattedNoticeEdt = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                }
 
                                 Adopt adopt = new Adopt();
                                 adopt.setAdoptKind(kindCd);
                                 adopt.setAdoptAge(age);
                                 adopt.setAdoptCareNm(careNm);
                                 adopt.setAdoptImgUrl(popfile);
-                                adopt.setAdoptEdt(noticeEdt);
+                                adopt.setAdoptEdt(formattedNoticeEdt);
                                 adopt.setAdoptWeight(weight);
                                 adopt.setAdoptSpecial(specialMark);
                                 adopt.setAdoptCareTel(careTel);
                                 adopt.setAdoptCareAddr(careAddr);
                                 adopt.setCurrent(Current.Y);
+
                                 //저장
                                 adoptRepository.save(adopt);
                                 logger.info("엔티티 저장 완료 : {}", adopt);
 
+                            }
+                        }else{
+                            logger.warn("items가 배열이 아님");
+                        }
+                    }else{
+                        logger.error("페이지 {} API 호출 실패: {}", pageNo, pagedResponse.getStatusCode());
+                    }
+                }
+            }catch (Exception e){
+                logger.error("처리중 오류 발생", e);
+            }
+        }else{
+            logger.error("API 호출 실패 : {}", response.getStatusCode());
+        }
+    }
+    //Adopt 업데이트
+    public void fetchAndUpdateAdoptData(){
+
+        List<Adopt> adoptList = adoptRepository.findAll();
+        String serviceKey = "Dg9XpNoVNbVYRT2U9F4JzIirqPRwWcAcNbYhQUg/ofT0RMFxZQGusAtUYtdL8VHV7yRjPYmLNk2Hu4ScXHFGMw==";
+        String url = BASE_URL +
+                apiUri +
+                serviceKey2 +
+                bgnde +
+                upKind +
+                pageNum +
+                numOfRows +
+                type;
+
+        // 첫 번째 호출에서 totalCount 가져오기
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        logger.info("API 호출 : {}", url);
+
+        if(response.getStatusCode() == HttpStatus.OK){
+            String responseBody = response.getBody();
+            logger.info("API 응답 : {}", responseBody);
+
+            try{
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode root = objectMapper.readTree(responseBody);
+                JsonNode body = root.path("response").path("body");
+                int totalCount = body.path("totalCount").asInt();
+                logger.info("totalCount: {}", totalCount);
+
+                int numOfRows = 100;
+                int totalPages = (int) Math.ceil((double) totalCount / numOfRows);
+                logger.info("전체 페이지 수 : {}",totalPages);
+
+                for(int pageNo = 1; pageNo <= 30; pageNo++){
+                    String pagedUrl = "https://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?serviceKey=" +
+                            serviceKey + bgnde + upKind + "&state=notice"+ "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&_type=json";
+
+                    ResponseEntity<String> pagedResponse = restTemplate.getForEntity(pagedUrl, String.class);
+                    logger.info("페이지 {} API 호출: {}", pageNo, pagedUrl);//각 페이지 호출 로그
+
+                    if(pagedResponse.getStatusCode() == HttpStatus.OK){
+                        String pagedResponseBody = pagedResponse.getBody();
+                        JsonNode pagedRoot = objectMapper.readTree(pagedResponseBody);
+                        JsonNode items = pagedRoot.path("response").path("body").path("items").path("item");
+
+                        if(items.isArray()){
+                            for(JsonNode item : items){
+
+                                String kindCd = item.path("kindCd").asText().substring(4);
+                                String age = item.path("age").asText();
+                                String careNm = item.path("careNm").asText();
+                                String careAddr = item.path("careAddr").asText();
+                                String careTel = item.path("careTel").asText();
+                                String weight = item.path("weight").asText();
+                                String specialMark = item.path("specialMark").asText();
+                                String popfile = item.path("popfile").asText();
+                                String noticeEdt = item.path("noticeEdt").asText();
+                                String formattedNoticeEdt = null;
+                                if (noticeEdt.length() == 8) { // 8자리 숫자인지 확인
+                                    LocalDate date = LocalDate.parse(noticeEdt, DateTimeFormatter.ofPattern("yyyyMMdd"));
+                                    formattedNoticeEdt = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                }
+
+                                Adopt adopt = new Adopt();
+                                adopt.setAdoptKind(kindCd);
+                                adopt.setAdoptAge(age);
+                                adopt.setAdoptCareNm(careNm);
+                                adopt.setAdoptImgUrl(popfile);
+                                adopt.setAdoptEdt(formattedNoticeEdt);
+                                adopt.setAdoptWeight(weight);
+                                adopt.setAdoptSpecial(specialMark);
+                                adopt.setAdoptCareTel(careTel);
+                                adopt.setAdoptCareAddr(careAddr);
+                                adopt.setCurrent(Current.Y);
+
+                                Optional<Adopt> existingAdopt = adoptRepository.findByCareNmAndImgUrl(careNm, popfile);
+                                if (existingAdopt.isPresent()) {
+                                    System.out.println("이미 존재하는 데이터: " + existingAdopt.get());
+                                } else {
+                                    adoptRepository.save(adopt);
+                                }
                             }
                         }else{
                             logger.warn("items가 배열이 아님");

@@ -108,7 +108,8 @@ public class KakaoService {
         JSONObject account = (JSONObject) jsonObj.get("kakao_account");
         JSONObject profile = (JSONObject) account.get("profile");
 
-        long id = (long) jsonObj.get("id");
+        // Long 타입의 id를 String으로 변환
+        String id = String.valueOf(jsonObj.get("id"));
         String email = String.valueOf(account.get("email"));
         String nickname = String.valueOf(profile.get("nickname"));
 

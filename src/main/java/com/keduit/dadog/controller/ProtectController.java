@@ -30,7 +30,7 @@ public class ProtectController {
     public String ProtectList(SearchDTO searchDTO,
                            @PathVariable("page") Optional<Integer> page,
                            Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 20);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 16);
         Page<Protect> protectList = protectService.getProtectList(searchDTO, pageable);
         System.out.println("---------------------------------");
         System.out.println(searchDTO.getSearchBy());
@@ -71,10 +71,10 @@ public class ProtectController {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/dadog/protect/add";
         }
-        return "main";
+        return "redirect:/dadog/main";
     }
 
-    @GetMapping("/{proNo}")
+    @GetMapping("/get/{proNo}")
     public String getProtect(Principal principal, @PathVariable("proNo") Long proNo, Model model) {
         Protect protect =  protectService.getProtect(proNo);
         model.addAttribute("protect", protect);

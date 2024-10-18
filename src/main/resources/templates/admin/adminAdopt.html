@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/adminLayout}">
+
+<!-- 사용자 css -->
+<th:block layout:fragment="css">
+    <style>
+        .modal-dialog {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100% - 1rem);
+        }
+    </style>
+</th:block>
+
+<!-- 사용자 js -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function showAdoptDetail(adoptNo) {
+            const url = '/dadog/admin/adopt/' + adoptNo;
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                cache: false,
+                success: function (result) {
+                    // 모달에 데이터 설정
+                    $('#modalAdoptNo').text(result.adoptNo);
+                    $('#modalAdoptCareNm').text(result.adoptCareNm);
+                    $('#modalAdoptAge').text(result.adoptAge);
+                    $('#modalAdoptEdt').text(result.adoptEdt);
+                    $('#modalAdoptDetail').text(result.adoptDetail);
+                    $('#modalAdoptWeight').text(result.adoptWeight);
+                    $('#modalAdoptSpecial').text(result.adoptSpecial);
+                    $('#modalAdoptCareAddr').text(result.adoptCareAddr);
+                    $('#modalAdoptCareTel').text(result.adoptCareTel);
+                    $('#modalAdoptImg').attr('src', result.adoptImgUrl);
+
+                    // 모달 표시
+                    $('#adoptDetailModal').modal('show');
+                },
+                error: function (xhr) {
+                    if (xhr.status == '401') {
+                        alert("로그인 후 이용하세요");
+                        location.href = "/dadog/login";
+                    } else {
+                        alert(xhr.responseText);
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButton = document.getElementById('deleteAdoptButton');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', function () {
+                    const adoptNo = document.getElementById('modalAdoptNo').textContent;
+
+                    // CSRF 토큰 가져오기
+                    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+                    $.ajax({
+                        url: '/dadog/admin/adopt/delete/' + adoptNo,
+                        type: 'DELETE',
+                        headers: {
+                            [csrfHeader]: csrfToken // CSRF 토큰 추가
+                        },
+                        success: function (result) {
+                            alert("삭제되었습니다.");
+                            $('#adoptDetailModal').modal('hide');
+                            // 페이지 새로고침 또는 리스트 업데이트 로직 추가
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            alert("삭제 실패: " + xhr.responseText);
+                        }
+                    });
+                });
+            }
+        });
+
+        function page(pageNumber) {
+            const url = '/dadog/admin/adopt/list/' + pageNumber;
+            location.href = url; // 새로운 페이지로 이동
+        }
+    </script>
+</th:block>
+
+<div layout:fragment="mainContent" style="margin-top: 50px">
+    <h1>Adopt List</h1>
+    <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between">
+            <div class="card card-lost" style="width: 30%; margin-bottom: 20px; cursor: pointer;"
+                 th:each="adopt : ${adoptList.content}"
+                 th:onclick="'showAdoptDetail(' + ${adopt.adoptNo} + ')'">
+                <img th:src="${adopt.adoptImgUrl}" class="card-img-top" alt="[[${adopt.adoptNo}]]"
+                     style="width: 100%; height: 200px; object-fit: cover;">
+                <div class="card-body" style="text-align: center;">
+                    <h5 class="card-title" th:text="${adopt.adoptCareNm}"></h5>
+                    <p class="card-text">
+                        나이: <span th:text="${adopt.adoptAge}"></span><br>
+                        공고 종료일: <span th:text="${adopt.adoptEdt}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div th:with="start=${(adoptList.number / maxPage) * maxPage + 1},
+              end=${(adoptList.totalPages == 0 ? 1 :
+              (start + (maxPage - 1) < adoptList.totalPages ? start + (maxPage - 1) :
+              adoptList.totalPages))}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${adoptList.first} ? 'disabled'">
+                <a th:onclick="'javascript: page(' + ${adoptList.number - 1} + ')'" aria-label="Previous"
+                   class="page-link">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                th:classappend="${adoptList.number eq page - 1} ? 'active' : ''">
+                <a th:onclick="'javascript: page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${adoptList.last} ? 'disabled'">
+                <a th:onclick="'javascript: page(' + ${adoptList.number + 1} + ')'" aria-label="Next" class="page-link">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 모달 창 -->
+    <div class="modal fade" id="adoptDetailModal" tabindex="-1" aria-labelledby="adoptDetailModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width: 60%; height: auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adoptDetailModalLabel">상세 설명</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex" style="height: auto;">
+                    <img id="modalAdoptImg" src="" alt="Adopt Image"
+                         style="width: 40%; height: auto; object-fit: cover; margin-right: 20px;">
+                    <div style="width: 60%;">
+                        <p>공고 번호: <span id="modalAdoptNo"></span></p>
+                        <p>나이: <span id="modalAdoptAge"></span></p>
+                        <p>공고 종료일: <span id="modalAdoptEdt"></span></p>
+                        <p>상세 내용: <span id="modalAdoptDetail"></span></p>
+                        <p>체중: <span id="modalAdoptWeight"></span></p>
+                        <p>특이사항: <span id="modalAdoptSpecial"></span></p>
+                        <p>보호소: <span id="modalAdoptCareNm"></span></p>
+                        <p>보호소 주소: <span id="modalAdoptCareAddr"></span></p>
+                        <p>보호소 전화번호: <span id="modalAdoptCareTel"></span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteAdoptButton">삭제</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

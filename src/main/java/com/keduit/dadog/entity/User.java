@@ -1,5 +1,7 @@
 package com.keduit.dadog.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
 import lombok.*;
@@ -39,12 +41,19 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_tel")
     private String userTel;
 
+//    @Column(name = "user_nickname")
+//    private String userNickname;
+
     @Column(name = "user_email", unique = true)
     private String userEmail;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "occupy")
+    @Enumerated(EnumType.STRING)
+    private Occupy occupy;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
@@ -58,17 +67,34 @@ public class User extends BaseTimeEntity{
     @JoinColumn(name = "user_no")
     private List<Board> boardList = new ArrayList<>();
 
+
+    // 회원으로 가입을 할껀지 관리자로 가입을 할껀지.
     // 정적 메서드로 사용되는 createUser 메서드
     public static User createUser(UserDTO userDTO, PasswordEncoder passwordEncoder) {
         User user = new User();
         user.setUserId(userDTO.getId());
         user.setUserName(userDTO.getName());
+//        user.setUserNickname(userDTO.getNickname());
         user.setUserEmail(userDTO.getEmail());
         user.setUserAddr(userDTO.getAddress());
         user.setUserTel(userDTO.getTel());
         String password = passwordEncoder.encode(userDTO.getPassword());
         user.setUserPwd(password);
         user.setRole(Role.USER);
+        user.setOccupy(Occupy.ON);
+        return user;
+    }
+
+    // 카카오 사용자를 위한 정적 메서드
+    public static User createKakaoUser(String id, String name, String email) {
+        User user = new User();
+        user.setUserId(id);
+        user.setUserName(name);
+        user.setUserEmail(email);
+        // 카카오 사용자는 비밀번호가 없으므로 임의의 값을 설정하거나 null로.
+        user.setUserPwd(null);
+        user.setRole(Role.KAKAO);
+        user.setOccupy(Occupy.ON);
         return user;
     }
 }

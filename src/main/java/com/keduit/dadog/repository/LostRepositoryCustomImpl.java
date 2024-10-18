@@ -1,7 +1,9 @@
 package com.keduit.dadog.repository;
 
 import com.keduit.dadog.dto.SearchDTO;
+import com.keduit.dadog.entity.Adopt;
 import com.keduit.dadog.entity.Lost;
+import com.keduit.dadog.entity.QAdopt;
 import com.keduit.dadog.entity.QLost;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -32,6 +34,14 @@ public class LostRepositoryCustomImpl implements LostRepositoryCustom {
             return QLost.lost.lostTitle.like("%" + searchQuery + "%");
         }
         return null;
+    }
+
+    public List<Lost> mainLostList(){
+        List<Lost> result = queryFactory.selectFrom(QLost.lost)
+                .orderBy(QLost.lost.lostDate.desc())
+                .limit(4)
+                .fetch();
+        return result;
     }
 
     @Override

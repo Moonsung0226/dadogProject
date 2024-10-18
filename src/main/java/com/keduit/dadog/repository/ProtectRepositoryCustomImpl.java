@@ -1,7 +1,9 @@
 package com.keduit.dadog.repository;
 
 import com.keduit.dadog.dto.SearchDTO;
+import com.keduit.dadog.entity.Lost;
 import com.keduit.dadog.entity.Protect;
+import com.keduit.dadog.entity.QLost;
 import com.keduit.dadog.entity.QProtect;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -23,13 +25,21 @@ public class ProtectRepositoryCustomImpl implements ProtectRepositoryCustom {
         if(StringUtils.equals("kind",searchBy)){
             return QProtect.protect.proKind.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("place",searchBy)){
-            return QProtect.protect.proKind.like("%" + searchQuery + "%");
+            return QProtect.protect.proPlace.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("detail",searchBy)){
             return QProtect.protect.proDetail.like("%" + searchQuery + "%");
         }else if(StringUtils.equals("title",searchBy)){
             return QProtect.protect.proTitle.like("%" + searchQuery + "%");
         }
         return null;
+    }
+
+    public List<Protect> mainProtectList(){
+        List<Protect> result = queryFactory.selectFrom(QProtect.protect)
+                .orderBy(QProtect.protect.proDate.desc())
+                .limit(4)
+                .fetch();
+        return result;
     }
 
     @Override

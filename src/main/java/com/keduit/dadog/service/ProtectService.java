@@ -17,6 +17,8 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -104,6 +106,19 @@ public class ProtectService {
         protectRepository.save(protect);
     }
 
+      //유저의 보호중 글 조회
+    public List<ProtectDTO> getUserProtect(Long userNo){
+        User user = userRepository.findByUserNo(userNo);
+        List<Protect> protectList = protectRepository.findByUser(user);
+        List<ProtectDTO> protectDTOList = new ArrayList<>();
+        for(Protect protect : protectList){
+            ProtectDTO protectDTO = new ProtectDTO();
+            protectDTO = protectDTO.myProtect(protect);
+            protectDTOList.add(protectDTO);
+        }
+        return protectDTOList;
+    }
+
 
     public boolean protectValidation(String userName, Long proNo){
         User user = userRepository.findByUserId(userName);
@@ -113,5 +128,17 @@ public class ProtectService {
         }
         Protect protect = protectRepository.findById(proNo).orElseThrow(EntityNotFoundException::new);
         return Objects.equals(protect.getUser().getUserNo(), user.getUserNo());
+    }
+
+    public List<Protect> findAllProtects() {
+        return protectRepository.findAll(); // 모든 Protect 엔티티를 반환
+    }
+
+    public List<Protect> findTop6ByOrderByCreateTimeDesc() {
+        return protectRepository.findTop6ByOrderByCreateTimeDesc();
+    }
+
+    public Protect findByProtectNo(Long protectNo) {
+        return protectRepository.findById(protectNo).orElseThrow(() -> new EntityNotFoundException("Protect not found with protectNo : " + protectNo));
     }
 }

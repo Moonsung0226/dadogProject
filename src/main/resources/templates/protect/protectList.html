@@ -31,40 +31,78 @@
       text-decoration-line: none;
     }
     .mainBody {
-      width: 80%;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
-      margin: 0 auto;
-      gap: 16px; /* 아이템 간의 간격을 설정할 수 있습니다. */
+      padding-left: 10%;
+      padding-right: 10%;
     }
-    .card{
-      margin: 10px;
+    .card-img{
+      height: 250px;
+      object-fit: cover;
     }
-
+    .truncate {
+      white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+      overflow: hidden; /* 넘치는 부분 숨기기 */
+      text-overflow: ellipsis; /* 넘치는 부분을 "..."으로 표시 */
+    }
   </style>
 </th:block>
 <div layout:fragment="mainContent">
   <form th:action="@{'/dadog/protect' + ${protectList.number}}" role="form" method="get" th:object="${protectList}">
-    <article class="mainBody">
-      <div th:each="protect : ${protectList.getContent()}" class="card">
-        <a th:href="'/dadog/protect/' + ${protect.getProNo()}" class="text-dark link-underline link-underline-opacity-0">
-          <img th:src="${protect.getProImgUrl()}" th:alt="사진" class="card-img-top" width="300" height="300"/>
+    <div class="col-sm-8 pt-5 pb-2 mx-auto">
+      <h1 class="display-5 mb-3 medium d-flex">보호중</h1>
+      <hr class="mb-5">
+      <p class="fs-5">※ 보호중인 유기견의 글 작성은 <a href="/dadog/login" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">로그인</a> 후 이용 가능합니다.</p>
+      <p class="fs-5 mb-5">※ 이 메뉴는 개인이 보호중인 유기견을 게시하는 게시판 입니다.</p>
+      <hr>
+    </div>
+    <div class="form-inline justify-content-center align-middle col-lg-8 mx-auto mb-5 border rounded border-dark-subtle" th:object="${protectSearchDTO}">
+      <div class="row justify-content-center">
+        <div class="col-auto mb-4 mt-4">
+          <select th:field="*{searchBy}" class="form-control border-dark" id="searchBy" style="width: auto;">
+            <option value="kind">견종</option>
+            <option value="title">제목</option>
+            <option value="detail">글 내용</option>
+            <option value="place">발견장소</option>
+          </select>
+        </div>
+        <div class="col-auto mb-4 mt-4">
+          <input th:field="*{searchQuery}" class="form-control border-dark" id="searchQuery" placeholder="검색어">
+        </div>
+        <div class="col-auto mb-4 mt-4">
+          <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+        </div>
+        <div class="col-auto mb-4 mt-4 border-dark">
+          <button class="btn btn-outline-dark" type="button" onclick="addProtect()">
+            글쓰기
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+    <article class="mainBody py-3 px-2 px-md-3 px-lg-5 bg-body-tertiary rounded-3 mb-4">
+      <div class="row">
+      <div th:each="protect : ${protectList.getContent()}" class="col-6 col-md-4 col-lg-3 my-3">
+        <a th:href="'/dadog/protect/get/' + ${protect.getProNo()}" class="text-dark link-underline link-underline-opacity-0">
+          <div class="card" style="max-width: 100%;">
+          <img th:src="${protect.getProImgUrl()}" th:alt="사진" class="card-img" width="100%"/>
           <div class="card-body">
-            <h5 class="card-title" th:text="${protect.getProTitle()}"></h5>
-            <p th:text="${protect.getProKind()}" class="card-text"></p>
-            <p th:text="${protect.getProPlace()}" class="card-text"></p>
-            <p th:text="${protect.getProTel()}" class="card-text"></p>
-            <p th:text="${protect.getProDate()}" class="card-text"></p>
+            <h5 class="card-title truncate fw-bolder mb-4" th:text="${protect.getProTitle()}"></h5>
+            <p th:text="'견종 : ' + ${protect.getProKind()}" class="card-text mb-1"></p>
+            <p th:text="'Tel : ' + ${protect.getProTel()}" class="card-text mb-1"></p>
+            <p th:text="'발견장소 : ' + ${protect.getProPlace()}" class="card-text mb-1"></p>
+            <p th:text="'발견날짜 : ' + ${protect.getProDate()}" class="card-text"></p>
+          </div>
           </div>
         </a>
       </div>
+      </div>
     </article>
+    </div>
     <div th:with="start=${(protectList.number / maxPage) * maxPage + 1},
             end=${(protectList.totalPages == 0 ? 1 :
             (start + (maxPage - 1) < protectList.totalPages ? start + (maxPage - 1):
             protectList.totalPages))}">
       <ul class="pagination justify-content-center">
-        <li class="page-item" th:classappend="${protectList.first} ? 'disabled'">
+        <li class="page-item" th:classappend="${protectList.first} ? 'disabled d-none'">
           <a th:onclick="'javascript: page(' + ${protectList.number -1} + ')'" aria-label="Previous" class="page-link">
             <span aria-hidden="true">Previous</span>
           </a>
@@ -74,25 +112,12 @@
           <a th:onclick="'javascript: page(' +${page -1} + ')'" th:inline="text" class="page-link">[[${page}]]
           </a>
         </li>
-        <li class="page-item" th:classappend="${protectList.last} ? 'disabled'">
+        <li class="page-item" th:classappend="${protectList.last} ? 'disabled d-none'">
           <a th:onclick="'javascript: page(' + ${protectList.number +1} + ')'" aria-label="Next" class="page-link">
             <span aria-hidden="true">Next</span>
           </a>
         </li>
       </ul>
-    </div>
-    <div class="form-inline justify-content-center" th:object="${protectSearchDTO}">
-      <select th:field="*{searchBy}" class="form-control" id="searchBy" style="width: auto;">
-        <option value="kind">견종</option>
-        <option value="title">제목</option>
-        <option value="detail">글 내용</option>
-        <option value="place">실종장소</option>
-      </select>
-      <input th:field="*{searchQuery}" class="form-control" id="searchQuery" placeholder="검색어">
-      <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
-      <button class="btn btn-outline-dark" type="button" onclick="addProtect()">
-        글쓰기
-      </button>
     </div>
   </form>
 </div>
