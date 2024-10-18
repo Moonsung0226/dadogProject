@@ -31,8 +31,8 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/dadog/boards")
-@RequiredArgsConstructor
+@RequestMapping("/dadog/boards")    // 게시물 관련 요청을 처리하는 경로 매핑
+@RequiredArgsConstructor    // 필수 의존성 주입을 위한 롬복 애노테이션
 public class BoardController {
 
     private final BoardService boardService;
@@ -45,6 +45,7 @@ public class BoardController {
     // 게시물 목록 조회 및 검색 처리
     @GetMapping
     public String getAllBoards(Model model, Principal principal,
+                               // Spring Framework에서 HTTP 요청의 파라미터를 메서드의 매개변수로 바인딩하는 데 사용되는 어노테이션
                                @RequestParam(value = "keyword", required = false) String keyword,
                                @RequestParam(value = "searchType", required = false) String searchType,
                                Pageable pageable) {
@@ -65,14 +66,15 @@ public class BoardController {
                     boardPage = boardService.searchByWriter(keyword, pageable); // 작성자로 검색
                     break;
                 default:
+                    // 검색어가 없으면 전체 목록 페이징 처리
                     boardPage = boardService.paging(pageable); // 검색어가 없으면 전체 목록 페이징 처리
                     break;
             }
         } else {
-            boardPage = boardService.paging(pageable); // 검색어가 없을 경우 전체 목록 조회
+            boardPage = boardService.paging(pageable); // 검색어가 없으면 전체 목록 페이징 처리
         }
 
-        // 사용자 ID와 검색 결과를 모델에 추가
+        // 현재 로그인된 사용자 정보와 게시물 목록을 모델에 추가
         model.addAttribute("userId", (principal != null) ? principal.getName() : "Anonymous");
         model.addAttribute("boards", boardPage);
         model.addAttribute("keyword", keyword);
@@ -84,10 +86,14 @@ public class BoardController {
     // 게시물 작성 페이지 이동
     @GetMapping("/new")
     public String addBoard(Model model, Principal principal) {
-        BoardDTO boardDTO = new BoardDTO(); // 새로운 게시물 DTO 생성
-        boardDTO.setBoardWriter(principal.getName()); // 작성자를 현재 로그인된 사용자로 설정
-        model.addAttribute("boardDTO", boardDTO); // 모델에 게시물 DTO 추가
-        model.addAttribute("userId", principal.getName()); // 사용자 ID 추가
+        // 새로운 게시물 DTO 생성
+        BoardDTO boardDTO = new BoardDTO();
+        // 작성자를 현재 로그인된 사용자로 설정
+        boardDTO.setBoardWriter(principal.getName());
+        // 모델에 게시물 DTO 추가
+        model.addAttribute("boardDTO", boardDTO);
+        // 사용자 ID 추가
+        model.addAttribute("userId", principal.getName());
         return "board/add"; // 게시물 작성 페이지로 이동
     }
 
@@ -110,6 +116,7 @@ public class BoardController {
             // 게시물 저장
             boardService.addBoard(boardDTO, username);
         } catch (Exception e) {
+            // 오류가 발생한 경우 오류 메시지를 모델에 추가
             model.addAttribute("errorMsg", e.getMessage());
             return "board/add"; // 오류 발생 시 작성 페이지로 이동
         }
@@ -124,10 +131,13 @@ public class BoardController {
         Board board = boardService.findBoardById(boardNo)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
 
-        boardService.viewBoard(boardNo);    // 조회수 증가
+        // 조회수 증가
+        boardService.viewBoard(boardNo);
 
-        model.addAttribute("board", board); // 조회된 게시물을 모델에 추가
+        // 조회된 게시물을 모델에 추가
+        model.addAttribute("board", board);
 
+        // 로그인된 사용자가 있으면 사용자 정보 추가
         if (principal != null){
 
             User user = userService.findByUserEmail(principal.getName());
@@ -141,6 +151,7 @@ public class BoardController {
 
         //댓글 목록 조회
         List<ReplyDTO> replies = replyService.getReplyByBoardId(boardNo);
+        // 로그인되지 않은 경우 guest로 처리
         model.addAttribute("replies", replies);
         System.out.println(" **********  확인해봅시다  :  " + replies);
         return "board/get"; // 게시물 상세보기 페이지로 이동
@@ -154,7 +165,8 @@ public class BoardController {
         Board board = boardService.findBoardById(boardNo)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
 
-
+//        이거 때문에 무한루프 돌아서 에러남 Because) board를 참조하고있는 Reply 때문/ @ToString 걸어놔서
+//        System.out.println("************************* dto  :  " + board);
 
         // 조회된 게시물 정보를 DTO로 변환하여 모델에 추가
         BoardDTO boardDTO = new BoardDTO(
@@ -166,31 +178,16 @@ public class BoardController {
                 board.getCreateTime(),
                 board.getUpdateTime()
         );
-//        System.out.println("******************** 변환된 boardDTO 생성 중...");
-//        boardDTO.setBoardNo(board.getBoardNo());
-//        System.out.println("******************** 변환된 boardDTO 생성 완료: " + boardDTO);
-//
-//        boardDTO.setBoardWriter(board.getBoardWriter());
-//        System.out.println("******************** 조회된 boardWriter: " + board.getBoardWriter());
-//
-//        boardDTO.setBoardTitle(board.getBoardTitle());
-//        System.out.println("******************** 조회된 boardTitle: " + board.getBoardTitle());
-//
-//        boardDTO.setBoardContent(board.getBoardContent());
-//        System.out.println("******************** 조회된 boardContent: " + board.getBoardContent());
-//
-//        boardDTO.setBoardViews(board.getBoardViews());
-
 
         model.addAttribute("boardDTO", boardDTO); // 수정할 게시물 정보를 모델에 추가
         model.addAttribute("userId", (principal != null) ? principal.getName() : "Anonymous"); // 사용자 ID 추가
-//        System.out.println("************************* dto  :  " + boardDTO);
 
         return "board/update"; // 게시물 수정 페이지로 이동
     }
     @PostMapping("/{boardNo}/update")
     public String updateBoard(@PathVariable Long boardNo,
                               @Valid @RequestBody UpdateBoardDTO boardDTO,
+                              // BindingResult : 폼 데이터의 유효성 검사를 처리하는 데 사용되는 객체입니다. 주로 컨트롤러에서 폼 데이터가 바인딩될 때, 유효성 검사 결과 및 오류 정보를 담고 있음
                               BindingResult bindingResult, Model model, Principal principal) {
 
         // 현재 게시물 조회
@@ -222,40 +219,6 @@ public class BoardController {
         return "redirect:/dadog/boards/" + boardNo; // 수정 완료 후 게시물 상세 페이지로 이동
     }
 
-//    // 게시물 수정 처리
-//    @PostMapping("/{boardNo}/update")
-//    public String updateBoard(@PathVariable Long boardNo,
-//                              @Valid @ModelAttribute BoardDTO boardDTO,
-//                              BindingResult bindingResult, Model model, Principal principal) {
-//
-//        // 현재 게시물 조회
-//        Board board = boardService.findBoardById(boardNo)
-//                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
-//
-//        // 현재 사용자가 게시물 작성자인지 확인
-//        if (!board.getBoardWriter().equals(principal.getName())) {
-//            // 권한이 없는 사용자 접근 시 처리
-//            return "redirect:/dadog/boards?error=unauthorized";
-//        }
-//
-//        // 입력값에 오류가 있을 경우 다시 수정 페이지로 이동
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("errorMsg", "입력값에 오류가 있습니다.");
-//            model.addAttribute("errors", bindingResult.getAllErrors());
-//            return "board/update";
-//        }
-//
-//        try {
-//            // 게시물 수정
-//            boardService.updateBoard(boardNo, boardDTO);
-//        } catch (Exception e) {
-//            model.addAttribute("errorMsg", e.getMessage());
-//            return "board/update"; // 오류 발생 시 수정 페이지로 이동
-//        }
-//        return "redirect:/dadog/boards/" + boardNo; // 수정 완료 후 게시물 상세 페이지로 이동
-//    }
-
-
     // 게시물 삭제 처리
     @PostMapping("/{boardNo}/delete")
     public String deleteBoard(@PathVariable Long boardNo, Principal principal, RedirectAttributes redirectAttributes) {
@@ -273,11 +236,13 @@ public class BoardController {
         }
 
         try {
+            // 게시물 삭제 처리
             boardService.deleteBoard(boardNo);
             redirectAttributes.addFlashAttribute("success", "게시물이 성공적으로 삭제되었습니다.");
             System.out.println("게시물 삭제 성공: " + boardNo);
 
         } catch (Exception e) {
+            // 삭제 도중 오류가 발생한 경우 처리
             redirectAttributes.addFlashAttribute("error", "게시물 삭제 중 오류가 발생했습니다.");
             System.out.println("게시물 삭제 중 오류: " + e.getMessage());
 
@@ -285,7 +250,5 @@ public class BoardController {
         }
         return "redirect:/dadog/boards"; // 삭제 완료 후 게시물 목록 페이지로 이동
     }
-
-
 
 }

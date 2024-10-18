@@ -48,7 +48,7 @@ public class BoardService {
         return boardRepository.findById(boardNo); // ID로 게시물 조회
     }
 
-
+    // 게시물 수정
     public void updateBoard(Long boardNo, UpdateBoardDTO boardDTO) {
         Board board = boardRepository.findById(boardNo)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
@@ -146,12 +146,6 @@ public class BoardService {
 
         board.setBoardViews(views + 1);
 
-//        Long nowViews = board.getBoardViews();
-//
-//        if (nowViews == null){
-//            nowViews = 0L;
-//        }
-//        board.setBoardViews(nowViews + 1);
         return boardRepository.save(board);
     }
     public BoardDTO getBoardWithReply(Long boardNo){
