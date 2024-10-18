@@ -1,42 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시물 수정</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
+<body>
+<div class="container">
+    <h1>게시물 수정</h1>
+    <form id="updateBoardForm" th:action="@{/dadog/boards/{boardNo}/update}" method="post">
+        <input type="hidden" id="boardNo" name="boardNo" th:value="${boardDTO.boardNo}">
+        <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}"/>
+
+        <div class="form-group">
+            <label for="boardTitle">제목:</label>
+            <input type="text" class="form-control" id="boardTitle" name="boardTitle" th:value="${boardDTO.boardTitle}" required>
+        </div>
+        <div class="form-group">
+            <label for="boardContent">내용:</label>
+            <textarea class="form-control" id="boardContent" name="boardContent" rows="5" th:text="${boardDTO.boardContent}" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">수정</button>
+        <a th:href="@{/dadog/boards/{boardNo}}" class="btn btn-secondary">취소</a>
+    </form>
+</div>
+
 <script>
-    document.querySelector('.btn-danger').addEventListener('click', function(event) {
-        if (!confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
-            event.preventDefault(); // 삭제 취소
-        }
+    $(document).ready(function(e) {
+        const csrfToken = $('#csrfToken').val();
+        const csrfHeader = $('#csrfHeader').val();
+
+        $('#updateBoardForm').submit(function(e) {
+            e.preventDefault();
+
+            const updatedData = {
+                boardTitle: $('#boardTitle').val(),
+                boardContent: $('#boardContent').val()
+            };
+
+            console.log("*****************************" + updatedData);
+
+            $.ajax({
+                type: "POST",
+                url: `/dadog/boards/${$('#boardNo').val()}/update`,
+                contentType: "application/json",
+                data: JSON.stringify(updatedData),
+                beforeSend: function(xhr) {
+                    if (csrfToken && csrfHeader) {
+                        xhr.setRequestHeader(csrfHeader, csrfToken);
+                    }
+                },
+                success: function(response) {
+                    alert('게시물이 수정되었습니다.');
+                    window.location.href = `/dadog/boards/${$('#boardNo').val()}`;
+                },
+                error: function(xhr, status, error) {
+                    console.log('게시물 수정 실패:', xhr.responseText);
+                    alert('게시물 수정에 실패했습니다.');
+                }
+            });
+        });
     });
 </script>
-<body>
-<h1>게시물 수정</h1>
-<form th:action="@{/dadog/boards/update/{boardNo}(boardNo=${boardDTO.boardNo})}" method="post" th:object="${boardDTO}">
-    <label for="boardWriter">작성자:</label>
-    <input type="text" id="boardWriter" th:field="*{boardWriter}" required readonly>
-    <br>
-
-    <label for="boardTitle">제목:</label>
-    <input type="text" id="boardTitle" th:field="*{boardTitle}" required>
-    <br>
-
-    <label for="boardContent">내용:</label>
-    <textarea id="boardContent" th:field="*{boardContent}" required></textarea>
-    <br>
-
-    <label for="updateTime">수정일:</label>
-    <input type="text" id="updateTime" th:field="*{updateTime}" required readonly th:value="${#dates.format(boardDTO.updateTime, 'yyyy-MM-dd')}">
-
-    <button type="submit">수정</button>
-    <a href="/dadog/boards">취소</a>
-</form>
-<!-- 삭제 버튼 추가 -->
-<form th:action="@{/dadog/boards/delete/{boardNo}(boardNo=${boardDTO.boardNo})}" method="post" style="display:inline;">
-    <button type="submit" class="btn btn-danger">삭제</button>
-</form>
-<div th:if="${errorMsg}">
-    <p style="color:red;" th:text="${errorMsg}"></p>
-</div>
 </body>
 </html>

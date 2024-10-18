@@ -1,6 +1,8 @@
 package com.keduit.dadog.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -35,11 +37,11 @@ public class Reply {
     @JoinColumn(name = "board_no")
     private Board board;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createTime;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     private LocalDateTime updateTime;
 
 
