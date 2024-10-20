@@ -23,5 +23,6 @@ public class ApplicationDTO {
     private String adoptCareAddr;         // 보호소 주소
     private String adoptCareTel;          // 보호소 전화번호
     private AdoptWait adoptWaitStatus;    // 신청 상태
-    private String adoptImgUrl;            // 사진
+    private String adoptImgUrl;           // 사진
+    private String adoptWeight;           // 몸무게
 }

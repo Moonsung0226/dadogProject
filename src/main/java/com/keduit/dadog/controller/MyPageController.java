@@ -120,6 +120,7 @@ public class MyPageController {
         return "myPage/myMemberForm";
     }
 
+    //회원정보 수정 페이지
     @GetMapping("/myPage/{no}/edit")
     public String edit(@PathVariable Long no, Model model) {
         User userEntity = userRepository.findById(no).orElse(null);
@@ -127,6 +128,7 @@ public class MyPageController {
         return "myPage/edit";
     }
 
+    //회원정보 업데이트
     @PostMapping("/myPage/update")
     public String update(UserDTO userDTO) {
         User userEntity = userDTO.toEntity();
@@ -243,11 +245,13 @@ public class MyPageController {
         return "redirect:/dadog/myPage/myPwd";
     }
 
+    // 에러메세지와 함께 리다이렉트
     private String redirectWithError(RedirectAttributes redirectAttributes, String message) {
         redirectAttributes.addFlashAttribute("errorMessage", message);
         return "redirect:/dadog/myPage/myPwd";
     }
 
+    // 회원 탈퇴
     @GetMapping("/myPage/delete")
     public String deleteUser(@RequestParam Long userNo, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         userService.deleteUserByNo(userNo);

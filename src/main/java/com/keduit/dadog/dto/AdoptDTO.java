@@ -39,6 +39,7 @@ public class AdoptDTO {
         adoptDTO.setAdopt_kind(adopt.getAdoptKind());
         adoptDTO.setAdopt_edt(adopt.getAdoptEdt());
         adoptDTO.setAdopt_carenm(adopt.getAdoptCareNm());
+        adoptDTO.setAdopt_weight(adopt.getAdoptWeight());
 
         // adoptWaitStatus를 "PENDING"으로 설정
         adoptDTO.setAdoptWaitStatus("PENDING");

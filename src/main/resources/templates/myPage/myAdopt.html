@@ -3,90 +3,116 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/myPageLayout}">
 
-<!-- 사용자 css -->
 <th:block layout:fragment="css">
   <style>
+    body {
+      background-color: white;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #333;
+    }
+
+    h1 {
+      text-align: left;
+      margin: 30px 0;
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+
     .card-application {
-      position: relative;
-      color: black;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      transition: box-shadow 0.3s ease;
+      border-radius: 10px;
+      margin: 10px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 270px;
+      display: inline-block;
     }
 
     .card-application:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
     .card-header {
       padding: 10px;
       font-weight: bold;
       color: white;
+      text-align: center;
+      font-size: 1rem;
     }
 
-    .card-header.pending {
-      background-color: #FFA500;
+    .card-header.pending { background-color: #f39c12; }
+    .card-header.approved { background-color: #27ae60; }
+    .card-header.rejected { background-color: #e74c3c; }
+
+    .card-body {
+      text-align: left;
+      padding: 15px;
     }
 
-    .card-header.approved {
-      background-color: #28a745;
-    }
-
-    .card-header.rejected {
-      background-color: #dc3545;
-    }
-
-    /* 이미지 스타일: 크기를 균일하게 조정하고, 비율을 유지하면서 잘림 방지 */
     .card-application img {
       width: 100%;
-      height: 200px; /* 고정된 높이 설정 */
-      object-fit: cover; /* 이미지가 비율을 유지하면서 잘리지 않도록 조정 */
-      border-radius: 5px; /* 둥근 모서리 설정 */
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #34495e;
+      display: inline-block;
+      width: 85px;
+      font-size: 0.9rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #ecf0f1;
+      padding-bottom: 8px;
+    }
+
+    .card-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .card-application {
+        width: calc(50% - 20px);
+      }
     }
   </style>
 </th:block>
 
-<!-- 사용자 js -->
-<th:block layout:fragment="script">
-  <script th:inline="javascript">
-    function showApplicationDetail(appNo) {
-      const url = '/dadog/myPage/myAdopt/' + appNo;
-      window.location.href = url;
-    }
-  </script>
-</th:block>
+<div layout:fragment="mainContent">
+  <h1>입양 신청 현황</h1>
 
-<div layout:fragment="mainContent" style="margin-top: 50px">
-  <h1>입양현황</h1>
+  <div class="d-flex flex-wrap justify-content-start">
+    <div class="card card-application"
+         th:each="app : ${applicationList}">
 
-  <div class="card-body">
-    <div class="d-flex flex-wrap justify-content-between">
-      <div class="card card-application" style="width: 30%;"
-           th:each="app : ${applicationList}">
-
-        <!-- 상태에 따른 card-header 출력 -->
-        <div class="card-header"
-             th:classappend="${app.adoptWaitStatus.name().toLowerCase()}">
-          <h5 class="status-text" th:if="${app.adoptWaitStatus != null}"
-              th:text="${app.adoptWaitStatus.name() == 'PENDING' ? '대기' :
-                              app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '거절'}"></h5>
-        </div>
-
-        <div class="card-body" style="text-align: center;">
-          <h5 class="card-title" th:text="${app.adoptCareNm}"></h5>
-          <p class="card-text">
-            <img th:src="${app.adoptImgUrl}" alt="입양 동물 이미지">
-            <br>
-            견종 : <span th:text="${app.adoptKind}"></span><br>
-            나이 : <span th:text="${app.adoptAge}"></span><br>
-            보호소 연락처 : <span th:text="${app.adoptCareTel}"></span><br>
-            보호소 이름 : <span th:text="${app.adoptCareNm}"></span><br>
-            공고 종료일 : <span th:text="${app.adoptEdt}"></span>
-          </p>
-        </div>
-
+      <div class="card-header" th:classappend="${app.adoptWaitStatus.name().toLowerCase()}">
+        <h5 class="status-text" th:if="${app.adoptWaitStatus != null}"
+            th:text="${app.adoptWaitStatus.name() == 'PENDING' ? '대기' :
+                        app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '미승인'}"></h5>
       </div>
+
+      <img th:src="${app.adoptImgUrl}" alt="입양 동물 이미지">
+
+      <div class="card-body">
+        <h5 class="card-title" th:text="${app.adoptCareNm}"></h5>
+        <p class="card-text">
+          <span class="info-label">견종:</span> <span th:text="${app.adoptKind}"></span><br>
+          <span class="info-label">나이:</span> <span th:text="${app.adoptAge}"></span><br>
+          <span class="info-label">몸무게:</span> <span th:text="${app.getAdoptWeight()}"></span><br>
+          <span class="info-label">연락처:</span> <span th:text="${app.adoptCareTel}"></span><br>
+          <span class="info-label">보호소:</span> <span th:text="${app.adoptCareNm}"></span><br>
+          <span class="info-label">종료일:</span> <span th:text="${app.adoptEdt}"></span>
+        </p>
+      </div>
+
     </div>
   </div>
 </div>
