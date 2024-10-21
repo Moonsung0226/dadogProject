@@ -136,14 +136,12 @@ public class LostService {
         return Objects.equals(lost.getUser().getUserNo(), user.getUserNo());
     }
 
-    public List<Lost> findAllLost() {
-        return lostRepository.findAll(); // 모든 Lost 엔티티를 반환
-    }
-
+    // 최근 등록된 실종신고 6개
     public List<Lost> findTop6ByOrderByLostDateDesc() {
         return lostRepository.findTop6ByOrderByLostDateDesc();
     }
 
+    // lostNo로 게시글 찾기
     public Lost findByLostNo(Long lostNo) {
         return lostRepository.findById(lostNo).orElseThrow(() -> new EntityNotFoundException("Lost not found with lostNo : " + lostNo));
     }

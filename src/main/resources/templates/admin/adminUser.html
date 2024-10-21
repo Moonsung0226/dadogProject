@@ -55,17 +55,18 @@
 
 <div layout:fragment="mainContent" style="margin-top: 50px; padding-left: 20px; width: 80%;">
   <!-- CSRF 토큰 입력 필드 추가 -->
+  <h1 style="margin-bottom: 20px">회원 관리</h1>
   <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
   <input type="hidden" name="_csrf_header" th:value="${_csrf.headerName}"/>
 
-  <table class="table">
+  <table class="table table-hover">
     <thead>
-    <tr>
-      <th scope="col">User No</th>
-      <th scope="col">Email</th>
-      <th scope="col">Telephone</th>
-      <th scope="col">Role</th>
-      <th scope="col">Actions</th>
+    <tr style="font-size: 1.2em">
+      <th scope="col">아이디</th>
+      <th scope="col">이메일</th>
+      <th scope="col">전화번호</th>
+      <th scope="col">권한</th>
+      <th scope="col"></th>
     </tr>
     </thead>
     <tbody class="table-group-divider" th:each="user : ${userList}">

@@ -68,7 +68,7 @@ public class WishListController {
         return new ResponseEntity(wishNo, HttpStatus.OK);
     }
 
-    // 입양 신청을 처리하는 메서드
+    // 찜목록에서 입양 신청을 처리하는 메서드
     @PostMapping("/adopt/{adoptNo}")
     @ResponseBody
     public ResponseEntity<Long> applyForAdoption(@PathVariable Long adoptNo, Principal principal) {

@@ -3,7 +3,10 @@ package com.keduit.dadog.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.service.KakaoService;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +26,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberController {
 
+    // 의존성 주입
     private final UserService userService;
     private final KakaoService kakaoService;
-    private final PasswordEncoder passwordEncoder;
 
-    // 회원가입
+
+    // 회원가입 폼 페이지 표시
     @GetMapping("/new")
     public String memberForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
-        return "member/MemberForm"; // 회원가입 폼
+        return "member/MemberForm";
     }
 
+    // 회원가입 처리
     @PostMapping("/new")
     public String registerUser(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        // 비밀번호와 비밀번호 확인 검사
+        // 비밀번호와 비밀번호 확인 일치 검사
         if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.userDTO", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
@@ -46,25 +51,31 @@ public class MemberController {
             bindingResult.rejectValue("password", "error.userDTO", "비밀번호는 최소 8자 이상이어야 합니다.");
         }
 
+        // 유효성 검사 실패 시 회원가입 폼으로 리다이렉트
         if (bindingResult.hasErrors()) {
-            return "redirect:/dadog/main"; // 에러가 있을 경우 원래 폼으로 돌아가기
+            return "redirect:/dadog/main";
         }
 
         // 사용자 등록 로직
         try {
             userService.registerMember(userDTO);
             redirectAttributes.addFlashAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
-            return "redirect:/dadog/main"; // 성공적으로 등록된 경우 로그인 페이지로 리다이렉트
+            return "redirect:/dadog/main"; // 성공 시 메인 페이지로 리다이렉트
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/MemberForm"; // 오류 발생 시 폼으로 돌아가기
         }
     }
 
-    // 로그인 페이지
+    // 로그인 페이지 표시
     @GetMapping("/login")
     public String showLoginPage(Model model) {
+
         model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
+        if (model.containsAttribute("errorMessage")) {
+            String errorMessage = (String) model.getAttribute("errorMessage");
+            model.addAttribute("errorMessage", errorMessage);
+        }
         return "member/sign-in"; // 로그인 페이지로 이동
     }
 
@@ -86,7 +97,7 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    // 로그아웃
+    // 로그아웃 처리
     @PostMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         session.invalidate();
@@ -94,8 +105,9 @@ public class MemberController {
         return "redirect:/dadog/main";
     }
 
+    // 로그인 오류 처리
     @GetMapping("/login/error")
-    public String loginError(Model model, @RequestParam(required = false) String error) {
+    public String loginError(Model model, @RequestParam(required = false) String error, RedirectAttributes redirectAttributes) {
         // 로그인 오류 처리
         String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
 
@@ -106,14 +118,21 @@ public class MemberController {
             }
         }
 
-        model.addAttribute("errorMessage", errorMessage);
-        return "member/sign-in"; // 로그인 페이지로 이동
+        redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        return "redirect:/dadog/members/login"; // 로그인 페이지로 이동
     }
 
-    // 이용약관동의
+    // 이용약관 동의 페이지 표시
     @GetMapping("/UseAgree")
     public String UseAgree(Model model) {
         model.addAttribute("userDTO", new UserDTO());
-        return "member/UseAgree"; // 회원가입 폼
+        return "member/UseAgree";
+    }
+
+    // 개인정보 처리방침 페이지 표시
+    @GetMapping("/Agreement")
+    public String Agreement(Model model) {
+        model.addAttribute("userDTO", new UserDTO());
+        return "member/AgreementOfCollection";
     }
 }

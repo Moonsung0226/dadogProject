@@ -58,23 +58,23 @@
     <div class="form-inline justify-content-center align-middle col-lg-8 mx-auto mb-5 border rounded border-dark-subtle" th:object="${lostSearchDTO}">
       <div class="row justify-content-center">
         <div class="col-auto mb-4 mt-4">
-      <select th:field="*{searchBy}" class="form-control border-dark" id="searchBy" style="width: auto;">
-        <option value="kind">견종</option>
-        <option value="title">제목</option>
-        <option value="detail">글 내용</option>
-        <option value="place">실종장소</option>
-      </select>
+          <select th:field="*{searchBy}" class="form-control border-dark" id="searchBy" style="width: auto;">
+            <option value="kind">견종</option>
+            <option value="title">제목</option>
+            <option value="detail">글 내용</option>
+            <option value="place">실종장소</option>
+          </select>
         </div>
         <div class="col-auto mb-4 mt-4">
-      <input th:field="*{searchQuery}" class="form-control border-dark" id="searchQuery" placeholder="검색어">
+          <input th:field="*{searchQuery}" class="form-control border-dark" id="searchQuery" placeholder="검색어">
         </div>
         <div class="col-auto mb-4 mt-4">
-      <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+          <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
         </div>
         <div class="col-auto mb-4 mt-4 border-dark">
-      <button class="btn btn-outline-dark" type="button" onclick="addLost()">
-        글쓰기
-      </button>
+          <button class="btn btn-outline-dark" type="button" onclick="addLost()">
+            글쓰기
+          </button>
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@
                   <h5 class="card-title truncate fw-bolder mb-4" th:text="${lost.getLostTitle()}"></h5>
                   <p th:text="'견종 : '+ ${lost.getLostKind()}" class="card-text mb-1"></p>
                   <p th:text="'Tel : ' + ${lost.getLostTel()}" class="card-text mb-1"></p>
-                  <p th:text="'실종장소 : ' +${lost.getLostPlace()}" class="card-text mb-1"></p>
+                  <p th:text="'실종장소 : ' +${lost.getLostPlace()}" class="card-text mb-1 truncate"></p>
                   <p th:text="'실종날짜 : ' + ${lost.getLostDate()}" class="card-text"></p>
                 </div>
               </div>

@@ -1,16 +1,18 @@
 package com.keduit.dadog.controller;
 
 
+import com.keduit.dadog.constant.AdoptWait;
 import com.keduit.dadog.constant.Role;
-import com.keduit.dadog.dto.LostDTO;
-import com.keduit.dadog.dto.ProtectDTO;
-import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.dto.*;
 import com.keduit.dadog.entity.User;
-import com.keduit.dadog.service.LostService;
-import com.keduit.dadog.service.ProtectService;
+import com.keduit.dadog.service.*;
 import com.keduit.dadog.repository.UserRepository;
-import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,9 +36,11 @@ public class MyPageController {
 
     private final UserService userService; // UserService 필드
     private final LostService lostService;
+    private final AdoptService adoptService;
     private final ProtectService protectService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationService applicationService;
 
 
     // 마이페이지
@@ -116,6 +120,7 @@ public class MyPageController {
         return "myPage/myMemberForm";
     }
 
+    //회원정보 수정 페이지
     @GetMapping("/myPage/{no}/edit")
     public String edit(@PathVariable Long no, Model model) {
         User userEntity = userRepository.findById(no).orElse(null);
@@ -123,6 +128,7 @@ public class MyPageController {
         return "myPage/edit";
     }
 
+    //회원정보 업데이트
     @PostMapping("/myPage/update")
     public String update(UserDTO userDTO) {
         User userEntity = userDTO.toEntity();
@@ -135,15 +141,40 @@ public class MyPageController {
         return "redirect:/dadog/myPage/myMemberForm";
     }
 
+    // 입양현황(1)
     @GetMapping("/myPage/myAdopt")
-    public String myAdopt(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String myAdopt(HttpServletRequest request, Model model, Principal principal, @RequestParam(value = "status", required = false) String status
+    ,@RequestParam(value = "page", defaultValue = "0") int page) {
 
-        // 게시글 리스트를 빈 리스트로 초기화
-        List<Object> posts = new ArrayList<>();
-        model.addAttribute("posts", posts); // 빈 리스트 추가
+        Pageable pageable = PageRequest.of(page, 18);
+        Page<ApplicationDTO> applicationList;
+
+        if (status != null) {
+            AdoptWait adoptWaitStatus = AdoptWait.valueOf(status.toUpperCase()); // status를 AdoptWait enum으로 변환
+            applicationList = applicationService.getApplicationListByStatus(adoptWaitStatus, pageable);
+        } else {
+            applicationList = applicationService.getApplicationList(pageable);
+        }
+
+        model.addAttribute("maxPage", 10);
+        model.addAttribute("applicationList", applicationList);
 
         return "myPage/myAdopt"; // Thymeleaf 템플릿 경로
+    }
+
+
+    // 입양현황(2) 상세 조회
+    @GetMapping("/myPage/myAdopt/{appNo}")
+    @ResponseBody
+    public ResponseEntity<?> getApplicationDetail(@PathVariable Long appNo) {
+        // appNo를 사용하여 해당 입양 신청 정보를 찾음.
+        AdoptDTO adoptDTO = adoptService.getApplicationByAppNo(appNo);
+
+        if (adoptDTO != null) {
+            return ResponseEntity.ok(adoptDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("입양 신청 정보를 찾을 수 없습니다.");
+        }
     }
 
     //유저의 실종 신고글 조회
@@ -214,11 +245,13 @@ public class MyPageController {
         return "redirect:/dadog/myPage/myPwd";
     }
 
+    // 에러메세지와 함께 리다이렉트
     private String redirectWithError(RedirectAttributes redirectAttributes, String message) {
         redirectAttributes.addFlashAttribute("errorMessage", message);
         return "redirect:/dadog/myPage/myPwd";
     }
 
+    // 회원 탈퇴
     @GetMapping("/myPage/delete")
     public String deleteUser(@RequestParam Long userNo, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         userService.deleteUserByNo(userNo);

@@ -135,14 +135,12 @@ public class ProtectService {
         return Objects.equals(protect.getUser().getUserNo(), user.getUserNo());
     }
 
-    public List<Protect> findAllProtects() {
-        return protectRepository.findAll(); // 모든 Protect 엔티티를 반환
-    }
-
+    // 최근 등록된 보호중 6개
     public List<Protect> findTop6ByOrderByCreateTimeDesc() {
         return protectRepository.findTop6ByOrderByCreateTimeDesc();
     }
 
+    // proNo로 게시글 찾기
     public Protect findByProtectNo(Long protectNo) {
         return protectRepository.findById(protectNo).orElseThrow(() -> new EntityNotFoundException("Protect not found with protectNo : " + protectNo));
     }

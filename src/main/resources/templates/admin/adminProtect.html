@@ -10,6 +10,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 800px;
             min-height: calc(100% - 1rem);
         }
     </style>
@@ -91,12 +92,12 @@
 </th:block>
 
 <div layout:fragment="mainContent" style="margin-top: 50px">
-    <h1>Protect List</h1>
+    <h1 style="margin-bottom: 20px">보호중 게시글</h1>
     <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between">
             <div class="card card-lost" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="protect : ${protectList.content}"
                  th:onclick="'showProtectDetail(' + ${protect.proNo} + ')'">
-                <img th:src="${protect.proImgUrl}" class="card-img-top" alt="[[${protect.proNo}]]" style="width: 100%; height: 200px; object-fit: cover">
+                <img th:src="${protect.proImgUrl}" class="card-img-top" th:alt="${protect.proNo}" style="width: 100%; height: 250px; object-fit: cover">
                 <div class="card-body" style="text-align: center">
                     <h5 class="card-title" th:text="${protect.proTitle}"></h5>
                     <p class="card-text">
@@ -139,7 +140,7 @@
                     <h5 class="modal-title" id="protectDetailModalLabel">상세 설명</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body d-flex" style="height: auto;">
+                <div class="modal-body d-flex" style="height: auto; overflow-y: auto; word-wrap: break-word;">
                     <img id="modalProImg" src="" alt="Lost Image" style="width: 40%; height: auto; object-fit: cover; margin-right: 20px;">
                     <div style="width: 60%;">
                         <p style="display: none">공고 번호: <span id="modalProNo"></span></p>
@@ -149,7 +150,7 @@
                         <p>견종: <span id="modalProKind"></span></p>
                         <p>발견날짜: <span id="modalProDate"></span></p>
                         <p>발견장소: <span id="modalProPlace"></span></p>
-                        <p>상세 설명: <span id="modalProDetail"></span></p>
+                        <p style="max-width: 440px; word-wrap: break-word;">상세 설명: <span id="modalProDetail"></span></p>
                     </div>
                 </div>
                 <div class="modal-footer">

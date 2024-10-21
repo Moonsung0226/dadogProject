@@ -157,10 +157,12 @@ public class BoardService {
         boardDTO.setReplies(replies);
         return boardDTO;
     }
+    // 최근에 등록한 게시글 6개
     public List<Board> findTop6ByOrderByCreateTimeDesc() {
         return boardRepository.findTop6ByOrderByCreateTimeDesc();
     }
 
+    // bNo로 찾기
     public Board findByBoardNo(Long boardNo) {
         return boardRepository.findById(boardNo).orElseThrow(() -> new EntityNotFoundException("Board not found with boardNo : " + boardNo));
     }
