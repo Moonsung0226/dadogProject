@@ -103,7 +103,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void updateAdoptWaitStatus(Long appNo, String status) {
+    public void updateAdoptWaitStatuss(Long appNo, String status) {
         Application application = applicationRepository.findByAppNo(appNo)
                 .orElseThrow(() -> new EntityNotFoundException("Application not found"));
         application.setAdoptWaitStatus(AdoptWait.valueOf(status.toUpperCase()));

@@ -123,7 +123,7 @@ public class UserService implements UserDetailsService {
                     .userName(kakaoDTO.getNickname())
                     .userId(userId)
                     .userPwd(passwordEncoder.encode("kakao_password"))
-                    .role(Role.USER)
+                    .role(Role.KAKAO)
                     .build();
             userRepository.save(user);
         } else if (user.getRole() != Role.KAKAO) {
@@ -214,4 +214,7 @@ public class UserService implements UserDetailsService {
     public Page<User> getUserList(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
+
+
+
 }

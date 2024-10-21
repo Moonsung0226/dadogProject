@@ -1,5 +1,6 @@
 package com.keduit.dadog.service;
 
+import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.ReplyDTO;
 import com.keduit.dadog.entity.Board;
 import com.keduit.dadog.entity.Reply;
@@ -8,6 +9,8 @@ import com.keduit.dadog.repository.BoardRepository;
 import com.keduit.dadog.repository.ReplyRepository;
 import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,63 +38,115 @@ public class ReplyService {
     // 새 댓글 추가
     @Transactional
     public ReplyDTO addReply(ReplyDTO replyDTO) {
-
-        System.out.println(" *** 보드 넘버  : " + replyDTO.getBoardNo());
-        System.out.println(" *** 유저 넘버  :  " + replyDTO.getUserNo());
-
         // 게시물 조회
         Board board = boardRepository.findById(replyDTO.getBoardNo())
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다.")); // 게시물이 존재하지 않을 경우 예외 발생
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
 
-        User user = userRepository.findById(replyDTO.getUserNo())
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다.")); // 사용자가 존재하지 않을 경우 예외 발생
+        User user = getUserFromPrincipal();
 
-//        replyDTO.setReplyWriter(user.getUserId());
+        // 로그인 방식에 따라 replyWriter 결정 (카카오 로그인: 이메일, 일반 회원: userId)
+        String replyWriter;
+        if (isKakaoUser(user)) {  // 카카오 사용자인지 여부를 확인하는 메서드
+            replyWriter = user.getUserEmail();  // 카카오 사용자: 이메일
+        } else {
+            replyWriter = user.getUserId();  // 일반 사용자: userId
+        }
+        System.out.println("Reply Writer: " + replyWriter);  // 최종 결정된 replyWriter 값 출력
 
+        // 댓글 작성자 설정
+        replyDTO.setReplyWriter(replyWriter);
+        replyDTO.setUserNo(user.getUserNo());
+
+        // Reply 엔티티 생성 및 저장
         Reply reply = Reply.builder()
                 .replyContent(replyDTO.getReplyContent())
-                .replyWriter(replyDTO.getReplyWriter())
+                .replyWriter(replyWriter)
                 .board(board)
                 .user(user)
+                .createTime(LocalDateTime.now())
                 .build();
 
-        return entityToDto(replyRepository.save(reply)); // DTO로 변환하여 반환
-    }
-    // 댓글 삭제
-    public void deleteReply(Long replyNo, String username) {
-        Reply reply = replyRepository.findById(replyNo)
-                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다.")); // 댓글이 존재하지 않을 경우 예외 발생
-        replyRepository.delete(reply); // 댓글 삭제
-    }
 
+        return entityToDto(replyRepository.save(reply));
+//        // 로그인된 사용자 정보 조회
+//        String loggedInUserId = getLoggedInUser();
+//
+//        User user;
+//
+//        // 로그인 방식에 따라 적절한 사용자 조회
+//        if (loggedInUserId.contains("@")) { // 카카오 사용자 확인 (이메일이 @ 포함)
+//            user = userRepository.findByUserEmail(loggedInUserId);
+//        } else { // 일반 홈페이지 사용자
+//            user = userRepository.findByUserId(loggedInUserId);
+//        }
+//
+//        if (user == null) {
+//            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+//        }
+//
+//        // 댓글 작성자 설정
+//        replyDTO.setReplyWriter(user.getUserId());
+//        replyDTO.setUserNo(user.getUserNo());
+//
+//        // Reply 엔티티 생성 및 저장
+//        Reply reply = Reply.builder()
+//                .replyContent(replyDTO.getReplyContent())
+//                .replyWriter(replyDTO.getReplyWriter())
+//                .board(board)
+//                .user(user)
+//                .createTime(LocalDateTime.now())
+//                .build();
+//
+//        return entityToDto(replyRepository.save(reply));
+    }
+    // 카카오 사용자 여부를 확인하는 메서드
+    private boolean isKakaoUser(User user) {
+        // 카카오 로그인 사용자는 이메일에 "kakao"라는 단어가 포함될 가능성이 높음
+        boolean isKakao = user.getUserEmail() != null && user.getUserEmail().contains("kakao");
+        System.out.println("Is Kakao User: " + isKakao + " for email: " + user.getUserEmail());
+        return isKakao;
+    }
+    @Transactional
     // 댓글 수정
-    public void updateReply(Long replyNo, ReplyDTO replyDTO, String username) {
+    public void updateReply(Long replyNo, ReplyDTO replyDTO, Long userNo) {
         Reply reply = replyRepository.findById(replyNo)
                 .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
         // 현재 사용자가 댓글 작성자인지 확인
-        if (!reply.getReplyWriter().equals(username)) {
+        if (!reply.getUser().getUserNo().equals(userNo)) {
             throw new SecurityException("댓글을 수정할 권한이 없습니다.");
         }
-        reply.setReplyContent(replyDTO.getReplyContent());
+
         reply.setReplyContent(replyDTO.getReplyContent());
         reply.setUpdateTime(LocalDateTime.now());
         replyRepository.save(reply);
     }
 
+    @Transactional
+    // 댓글 삭제
+    public void deleteReply(Long replyNo, Long userNo) {
+        Reply reply = replyRepository.findById(replyNo)
+                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-    private void validateReplyDTO(ReplyDTO replyDTO) {
-        if (replyDTO.getBoardNo() == null || replyDTO.getUserNo() == null || replyDTO.getReplyContent() == null) {
-            throw new IllegalArgumentException("필수 필드가 누락되었습니다.");
+        // 현재 사용자가 댓글 작성자인지 확인
+        if (!reply.getUser().getUserNo().equals(userNo)) {
+            throw new SecurityException("댓글을 삭제할 권한이 없습니다.");
         }
+
+        replyRepository.delete(reply);
     }
-    // ReplyDTO를 Reply 엔티티로 변환
-    private Reply dtoToEntity(ReplyDTO replyDTO, Board board, User user) {
-        return Reply.builder()
-                .replyContent(replyDTO.getReplyContent()) // DTO에서 내용 설정
-                .board(board) // 관련 게시물 설정
-                .user(user) // 관련 사용자 설정
-                .build(); // Reply 엔티티 생성 및 반환
+
+    // 로그인된 사용자 정보 조회
+    private String getLoggedInUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            // 일반 회원가입한 사용자의 경우
+            return ((UserDetails) principal).getUsername();
+        } else {
+            // OAuth2 로그인의 경우 (예: Kakao)
+            return principal.toString(); // 이메일을 반환할 가능성이 높음
+        }
     }
 
     // Reply 엔티티를 ReplyDTO로 변환
@@ -99,11 +154,22 @@ public class ReplyService {
         return ReplyDTO.builder()
                 .replyNo(reply.getReplyNo()) // 댓글 번호 설정
                 .boardNo(reply.getBoard().getBoardNo()) // 관련 게시물 번호 설정
-                .replyWriter(reply.getUser().getUserId()) // 댓글 작성자 (사용자 ID) 설정
+                .replyWriter(reply.getReplyWriter()) // 댓글 작성자 (사용자 ID) 설정
                 .replyContent(reply.getReplyContent()) // 댓글 내용 설정
                 .updateTime(reply.getUpdateTime()) // 수정 시간 설정
                 .createTime(reply.getCreateTime()) // 생성 시간 설정
                 .userNo(reply.getUser().getUserNo()) // 사용자 번호 설정
                 .build(); // ReplyDTO 생성 및 반환
+    }
+
+    private User getUserFromPrincipal() {
+        String loggedInUserId = getLoggedInUser();
+        System.out.println("Logged in User ID: " + loggedInUserId);  // 로그인된 사용자 ID 출력
+
+        User user = loggedInUserId.contains("@") ?
+                userRepository.findByUserEmail(loggedInUserId) :
+                userRepository.findByUserId(loggedInUserId);
+
+        return user;
     }
 }

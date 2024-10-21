@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserName(String userName);
 
     @Query("select o from User o where o.userEmail = :userEmail")
-    User findByUserEmail(String userEmail); //카카오 로그인 시는 userEmail 로 찾아야함
+    User findByUserEmail(@Param("userEmail") String userEmail); //카카오 로그인 시는 userEmail 로 찾아야함
 
     List<User> findTop6ByOrderByCreateTimeDesc();
 

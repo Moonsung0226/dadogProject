@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class BoardService {
         board.setBoardTitle(boardDTO.getBoardTitle()); // 제목 설정
         board.setBoardContent(boardDTO.getBoardContent()); // 내용 설정
         board.setBoardViews(0L); // 기본 조회수를 0으로 설정
-        board.setCreateTime(LocalDateTime.now()); // 생성 시간 설정
+        board.setCreateTime(LocalDate.now()); // 생성 시간 설정
         return boardRepository.save(board); // Board 엔티티를 데이터베이스에 저장
     }
 
@@ -54,11 +55,9 @@ public class BoardService {
         Board board = boardRepository.findById(boardNo)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
 
-//        board.setBoardWriter(boardDTO.getBoardWriter()); // 작성자는 수정하지 않도록
         board.setBoardTitle(boardDTO.getBoardTitle());
         board.setBoardContent(boardDTO.getBoardContent());
 
-        // 추가적인 속성이 있다면 여기에 포함
         boardRepository.save(board); // 변경된 게시물 저장
     }
 

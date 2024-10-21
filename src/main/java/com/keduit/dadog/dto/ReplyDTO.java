@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -31,7 +30,7 @@ public class ReplyDTO {
 
     public ReplyDTO(){}
 
-    public ReplyDTO(Long replyNo, Long boardNo, String replyWriter, String replyContent, LocalDateTime updateReply, LocalDateTime createReply, Long userNo) {
+    public ReplyDTO(Long replyNo, Long boardNo, String replyWriter, String replyContent, LocalDateTime updateTime, LocalDateTime createTime, Long userNo) {
         this.replyNo = replyNo;
         this.boardNo = boardNo;
         this.replyWriter = replyWriter;
@@ -40,4 +39,5 @@ public class ReplyDTO {
         this.createTime = createTime;
         this.userNo = userNo;
     }
+
 }

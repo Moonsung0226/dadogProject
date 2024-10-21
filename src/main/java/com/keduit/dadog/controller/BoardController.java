@@ -38,7 +38,6 @@ public class BoardController {
     private final BoardService boardService;
 
     private final ReplyService replyService;
-    private final BoardRepository boardRepository;
     private final UserService userService;
     private final UserRepository userRepository;
 
@@ -74,8 +73,15 @@ public class BoardController {
             boardPage = boardService.paging(pageable); // 검색어가 없으면 전체 목록 페이징 처리
         }
 
-        // 현재 로그인된 사용자 정보와 게시물 목록을 모델에 추가
-        model.addAttribute("userId", (principal != null) ? principal.getName() : "Anonymous");
+        // 로그인된 사용자 정보 추가
+        if (principal != null) {
+            // 로그인된 사용자의 ID를 모델에 추가
+            String userId = principal.getName();
+            model.addAttribute("userId", userId);  // 이메일 또는 ID
+        } else {
+            model.addAttribute("userId", "Anonymous");
+        }
+
         model.addAttribute("boards", boardPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("searchType", searchType);
@@ -134,20 +140,22 @@ public class BoardController {
         // 조회수 증가
         boardService.viewBoard(boardNo);
 
-        // 조회된 게시물을 모델에 추가
         model.addAttribute("board", board);
 
-        // 로그인된 사용자가 있으면 사용자 정보 추가
-        if (principal != null){
+        // 로그인된 사용자 정보 처리
+        if (principal != null) {
+            User user = principal.getName().contains("@") ?
+                    userRepository.findByUserEmail(principal.getName()) :
+                    userRepository.findByUserId(principal.getName());
+            model.addAttribute("loggedInUserId", user.getUserId());
+            model.addAttribute("userId", principal.getName()); // 로그인된 사용자 이메일
+            model.addAttribute("userNo", user.getUserNo());    // 사용자 번호
+        } else {
+            // 비로그인 사용자는 guest로 처리
+            model.addAttribute("loggedInUserId", null);
+            model.addAttribute("userId", "guest");
+        }
 
-            User user = userService.findByUserEmail(principal.getName());
-
-            model.addAttribute("userId", principal.getName());
-            model.addAttribute("userNo", user.getUserNo());
-
-           } else {
-               model.addAttribute("userId", "guest");
-           }
 
         //댓글 목록 조회
         List<ReplyDTO> replies = replyService.getReplyByBoardId(boardNo);

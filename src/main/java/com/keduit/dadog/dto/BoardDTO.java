@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +31,10 @@ public class BoardDTO {
 
     private Long boardViews; // 조회수
 
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    private LocalDate createTime;
+    private LocalDate updateTime;
 
-    public BoardDTO(Long boardNo, String boardWriter, String boardTitle, String boardContent, Long boardViews, LocalDateTime createTime, LocalDateTime updateTime) {
+    public BoardDTO(Long boardNo, String boardWriter, String boardTitle, String boardContent, Long boardViews, LocalDate createTime, LocalDate updateTime) {
         this.boardNo = boardNo;
         this.boardWriter = boardWriter;
         this.boardTitle = boardTitle;
