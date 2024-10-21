@@ -5,111 +5,128 @@
 
 <head>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <title>이용약관동의</title>
+  <title>이용약관</title>
 
-  <!-- 사용자 CSS 추가 -->
   <th:block layout:fragment="css">
     <style>
-      .fieldError {
-        color: #bd2130;
+      body {
+        background-color: #f4f4f4;
+        font-family: 'Noto Sans KR', sans-serif;
       }
       .form-container {
-        margin: 0 auto;
-        max-width: 800px; /* 최대 너비 설정 */
-        padding: 20px; /* 내부 여백 */
-        background-color: #f9f9f9; /* 배경색 */
-        border-radius: 5px; /* 모서리 둥글게 */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 */
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       }
       h1 {
-        text-align: center; /* 제목 중앙 정렬 */
-      }
-      .btn-primary {
-        width: 100%; /* 버튼 너비 100% */
-      }
-      #successMessage {
-        color: green; /* 성공 메시지 색상 */
         text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 700;
+      }
+      .terms-content {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        background-color: #fafafa;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .terms-content h2 {
+        color: #2c3e50;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+      .btn-back {
+        color: #666;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      .btn-back:hover {
+        color: #333;
+      }
+      .terms-content::-webkit-scrollbar {
+        width: 8px;
+      }
+      .terms-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .terms-content::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      .terms-content::-webkit-scrollbar-thumb:hover {
+        background: #555;
       }
     </style>
-  </th:block>
-
-
   </th:block>
 </head>
 <body>
 
 <div layout:fragment="mainContent">
-  <div class="col-md-7 col-lg-11">
-    <div class="form-container">
+  <div class="form-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <a href="#" onclick="history.go(-1);return false;" class="btn-back">← 뒤로가기</a>
+      <h1>이용약관</h1>
+      <div></div>
+    </div>
 
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="#none" onclick="history.go(-1);return false;" class="btn btn-link">뒤로가기</a>
-        <h1 class="text-center flex-grow-1 mb-0">이용약관 동의</h1>
-        <div></div> <!-- 오른쪽 여백을 채우기 위한 빈 div -->
-      </div>
+    <div class="terms-content">
+      <h2>제 1 조 (목적)</h2>
+      <p>이 약관은 서비스 이름을 제공하는 [회사명] (이하 "회사")와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.</p>
 
+      <h2>제 2 조 (정의)</h2>
+      <p>"이용자"란 본 약관에 따라 서비스를 이용하는 자를 말합니다.</p>
+      <p>"회원"이란 서비스에 가입하여 회사와 이용계약을 체결한 자를 말합니다.</p>
+      <p>"비회원"이란 회원가입을 하지 않고 서비스를 이용하는 자를 말합니다.</p>
 
+      <h2>제 3 조 (이용계약의 성립)</h2>
+      <p>이용계약은 이용자가 본 약관에 동의하고, 회사가 이를 승낙함으로써 성립합니다.</p>
+      <p>회사는 이용자의 신청에 대해 승낙을 할 의무가 없습니다.</p>
 
+      <h2>제 4 조 (이용자의 의무)</h2>
+      <p>이용자는 서비스 이용 시 타인의 정보를 도용하지 않아야 하며, 불법적인 행위를 해서는 안 됩니다.</p>
+      <p>이용자는 서비스에 게시된 정보 및 자료를 무단으로 복제, 배포, 변형할 수 없습니다.</p>
 
-      <hr class="my-4">
-      <form action="/dadog/members/new" method="post" th:object="${userDTO}" class="needs-validation" novalidate>
-        <div class="row g-3">
-<p>이용약관
-  제 1 조 (목적)
-  이 약관은 서비스 이름을 제공하는 [회사명] (이하 "회사")와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.
-<br><br>
-  제 2 조 (정의)
-  "이용자"란 본 약관에 따라 서비스를 이용하는 자를 말합니다.
-  "회원"이란 서비스에 가입하여 회사와 이용계약을 체결한 자를 말합니다.
-  "비회원"이란 회원가입을 하지 않고 서비스를 이용하는 자를 말합니다.
-  <br><br>
-  제 3 조 (이용계약의 성립)
-  이용계약은 이용자가 본 약관에 동의하고, 회사가 이를 승낙함으로써 성립합니다.
-  회사는 이용자의 신청에 대해 승낙을 할 의무가 없습니다.
-  <br><br>
-  제 4 조 (이용자의 의무)
-  이용자는 서비스 이용 시 타인의 정보를 도용하지 않아야 하며, 불법적인 행위를 해서는 안 됩니다.
-  이용자는 서비스에 게시된 정보 및 자료를 무단으로 복제, 배포, 변형할 수 없습니다.
-  <br><br>
-  제 5 조 (서비스 제공)
-  회사는 이용자에게 서비스 이용을 위한 계정을 제공합니다.
-  회사는 서비스의 내용 및 운영을 변경할 수 있으며, 변경 사항은 사전 공지합니다.
-  <br><br>
-  제 6 조 (회원 가입)
-  회원 가입은 회사가 정한 양식에 따라 신청하며, 가입 신청자가 본 약관에 동의해야 합니다.
-  회원은 자신의 정보를 정확하게 기재해야 하며, 변경 사항이 있을 경우 즉시 수정해야 합니다.
-  <br><br>
-  제 7 조 (이용 요금)
-  서비스는 무료 또는 유료로 제공될 수 있으며, 유료 서비스의 경우 요금 및 결제 방법을 별도로 안내합니다.
-  이용자는 서비스 이용에 필요한 요금을 정해진 방법으로 지불해야 합니다.
-  <br><br>
-  제 8 조 (저작권 및 지적 재산권)
-  서비스 내의 모든 콘텐츠 및 자료에 대한 저작권은 회사 또는 원저작자에게 있습니다.
-  이용자는 회사의 사전 동의 없이 해당 콘텐츠를 무단으로 사용할 수 없습니다.
-  <br><br>
-  제 9 조 (면책 조항)
-  회사는 서비스 이용 중 발생할 수 있는 손해에 대해 책임을 지지 않습니다.
-  회사는 서비스의 중단, 지연 등으로 인한 손해에 대해 책임을 지지 않습니다.
-  <br><br>
-  제 10 조 (개인정보 보호)
-  회사는 이용자의 개인정보를 보호하며, 개인정보 수집 및 이용에 대한 사항은 별도의 개인정보처리방침에 따릅니다.
-  <br><br>
-  제 11 조 (이용약관의 변경)
-  회사는 본 약관을 변경할 수 있으며, 변경된 약관은 서비스 내 공지 또는 이메일 등을 통해 사전 고지합니다.
-  <br><br>
-  제 12 조 (분쟁 해결)
-  본 약관과 관련하여 발생하는 분쟁에 대해서는 [관할 법원]의 법원에 제소하여 해결합니다.
-  <br><br>
-  제 13 조 (기타)
-  본 약관에 명시되지 않은 사항은 관련 법령 및 상관습에 따릅니다.
-  이용자는 본 약관을 숙지하고 동의한 것으로 간주합니다.
-</p>
+      <h2>제 5 조 (서비스 제공)</h2>
+      <p>회사는 이용자에게 서비스 이용을 위한 계정을 제공합니다.</p>
+      <p>회사는 서비스의 내용 및 운영을 변경할 수 있으며, 변경 사항은 사전 공지합니다.</p>
 
+      <h2>제 6 조 (회원 가입)</h2>
+      <p>회원 가입은 회사가 정한 양식에 따라 신청하며, 가입 신청자가 본 약관에 동의해야 합니다.</p>
+      <p>회원은 자신의 정보를 정확하게 기재해야 하며, 변경 사항이 있을 경우 즉시 수정해야 합니다.</p>
 
+      <h2>제 7 조 (이용 요금)</h2>
+      <p>서비스는 무료 또는 유료로 제공될 수 있으며, 유료 서비스의 경우 요금 및 결제 방법을 별도로 안내합니다.</p>
+      <p>이용자는 서비스 이용에 필요한 요금을 정해진 방법으로 지불해야 합니다.</p>
 
-</div>
-      </form>
+      <h2>제 8 조 (저작권 및 지적 재산권)</h2>
+      <p>서비스 내의 모든 콘텐츠 및 자료에 대한 저작권은 회사 또는 원저작자에게 있습니다.</p>
+      <p>이용자는 회사의 사전 동의 없이 해당 콘텐츠를 무단으로 사용할 수 없습니다.</p>
+
+      <h2>제 9 조 (면책 조항)</h2>
+      <p>회사는 서비스 이용 중 발생할 수 있는 손해에 대해 책임을 지지 않습니다.</p>
+      <p>회사는 서비스의 중단, 지연 등으로 인한 손해에 대해 책임을 지지 않습니다.</p>
+
+      <h2>제 10 조 (개인정보 보호)</h2>
+      <p>회사는 이용자의 개인정보를 보호하며, 개인정보 수집 및 이용에 대한 사항은 별도의 개인정보처리방침에 따릅니다.</p>
+
+      <h2>제 11 조 (이용약관의 변경)</h2>
+      <p>회사는 본 약관을 변경할 수 있으며, 변경된 약관은 서비스 내 공지 또는 이메일 등을 통해 사전 고지합니다.</p>
+
+      <h2>제 12 조 (분쟁 해결)</h2>
+      <p>본 약관과 관련하여 발생하는 분쟁에 대해서는 [관할 법원]의 법원에 제소하여 해결합니다.</p>
+
+      <h2>제 13 조 (기타)</h2>
+      <p>본 약관에 명시되지 않은 사항은 관련 법령 및 상관습에 따릅니다.</p>
+      <p>이용자는 본 약관을 숙지하고 동의한 것으로 간주합니다.</p>
     </div>
   </div>
 </div>
