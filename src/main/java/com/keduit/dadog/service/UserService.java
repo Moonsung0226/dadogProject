@@ -171,10 +171,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findTop6ByOrderByCreateTimeDesc();
     }
 
-    public void updateUserRole(Long userId, Role newRole) {
-        User user = userRepository.findById(userId)
+    public void updateUserRole(Long userNo, Role Role) {
+        User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
-        user.setRole(newRole);
+        user.setRole(Role);
         userRepository.save(user);
     }
     // 변경된 비밀번호로 로그인하기위해(1) ->  이 메서드에서 사용자의 비밀번호를 변경.

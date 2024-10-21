@@ -3,7 +3,10 @@ package com.keduit.dadog.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.service.KakaoService;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -95,19 +98,9 @@ public class MemberController {
     }
 
     @GetMapping("/login/error")
-    public String loginError(Model model, @RequestParam(required = false) String error) {
-        // 로그인 오류 처리
-        String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
-
-        if (error != null) {
-            // error 매개변수에 따라 오류 메시지 설정
-            if ("탈퇴한 회원입니다.".equals(error)) {
-                errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
-            }
-        }
-
-        model.addAttribute("errorMessage", errorMessage);
-        return "member/sign-in"; // 로그인 페이지로 이동
+    public String loginError(Model model) {
+        model.addAttribute("errorMessage", "아이디 또는 비밀번호를 확인해 주세요.");
+        return "member/sign-in";
     }
 
     // 이용약관동의
