@@ -70,6 +70,8 @@ public class MemberController {
     // 로그인 페이지 표시
     @GetMapping("/login")
     public String showLoginPage(Model model) {
+
+        model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
         if (model.containsAttribute("errorMessage")) {
             String errorMessage = (String) model.getAttribute("errorMessage");
             model.addAttribute("errorMessage", errorMessage);
@@ -109,8 +111,11 @@ public class MemberController {
         // 로그인 오류 처리
         String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
 
-        if (error != null && "탈퇴한 회원입니다.".equals(error)) {
-            errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
+        if (error != null) {
+            // error 매개변수에 따라 오류 메시지 설정
+            if ("탈퇴한 회원입니다.".equals(error)) {
+                errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
+            }
         }
 
         redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
