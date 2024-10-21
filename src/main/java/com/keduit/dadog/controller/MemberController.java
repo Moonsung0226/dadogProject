@@ -3,7 +3,10 @@ package com.keduit.dadog.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.service.KakaoService;
 import com.keduit.dadog.service.UserService;
 import lombok.RequiredArgsConstructor;
