@@ -175,10 +175,10 @@ public class UserService implements UserDetailsService {
     }
 
     // 사용자의 역할을 업데이트하는 메서드
-    public void updateUserRole(Long userId, Role newRole) {
+    public void updateUserRole(Long userId, Role role) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
-        user.setRole(newRole);
+        user.setRole(role);
         userRepository.save(user);
     }
 

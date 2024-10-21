@@ -10,7 +10,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 500px;
             min-height: calc(100% - 1rem);
+        }
+
+        .my-3 .btn-warning, .my-3 .btn-danger, .my-3 .btn-success {
+            width: 25%;
         }
 
         .btn-warning, .btn-warning:hover {
@@ -114,7 +119,7 @@
 </th:block>
 
 <div layout:fragment="mainContent" style="margin-top: 50px">
-    <h1>Application List</h1>
+    <h1>입양 관리</h1>
     <div class="d-flex justify-content-center my-3">
         <button class="btn btn-warning mx-1" onclick="filterApplications('PENDING')">대기</button>
         <button class="btn btn-success mx-1" onclick="filterApplications('APPROVED')">승인</button>
@@ -130,7 +135,7 @@
                     <!-- 상태 텍스트 표시 -->
                     <h5 class="status-text" th:if="${app.adoptWaitStatus != null}"
                         th:text="${app.adoptWaitStatus.name() == 'PENDING' ? '대기' :
-                              app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '거절'}"></h5>
+                              app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '미승인'}"></h5>
                 </div>
                 <div class="card-body" style="text-align: center;">
                     <h5 class="card-title" th:text="${app.adoptCareNm}"></h5>

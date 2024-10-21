@@ -45,6 +45,7 @@ public class AdminController {
         return "redirect:/dadog/main";
     }
 
+    // 메인
     @GetMapping("/dadog/admin/main")
     public String mainPage(Model model) {
         List<Lost> recentLostList = lostService
@@ -71,6 +72,7 @@ public class AdminController {
         return "admin/adminMain";
     }
 
+    // 입양하기 페이지
     @GetMapping({"/dadog/admin/adopt/list/{page}","/dadog/admin/adopt/list"})
     public String adoptList(AdoptSearchDTO adoptSearchDTO,
                             @PathVariable("page") Optional<Integer> page,
@@ -83,6 +85,7 @@ public class AdminController {
         return "admin/adminAdopt";
     }
 
+    // 입양하기 상세페이지
     @GetMapping("/dadog/admin/adopt/{adoptNo}")
     public ResponseEntity<Adopt> getAdoptDetail(@PathVariable Long adoptNo) {
         Adopt adopt = adoptService.findByAdoptNo(adoptNo);
@@ -92,6 +95,7 @@ public class AdminController {
         return ResponseEntity.ok(adopt);
     }
 
+    // 입양하기 삭제
     @DeleteMapping("/dadog/admin/adopt/delete/{adoptNo}")
     public ResponseEntity<Void> deleteAdopt(@PathVariable Long adoptNo) {
         try {
@@ -104,6 +108,7 @@ public class AdminController {
         }
     }
 
+    // 실종신고 페이지
     @GetMapping({"/dadog/admin/lost/list/{page}","/dadog/admin/lost/list"})
     public String lostList(SearchDTO searchDTO,
                            @PathVariable("page") Optional<Integer> page,
@@ -115,6 +120,7 @@ public class AdminController {
         return "admin/adminLost";
     }
 
+    // 실종신고 상세페이지
     @GetMapping("/dadog/admin/lost/{lostNo}")
     public ResponseEntity<Lost> getLostDetail(@PathVariable Long lostNo) {
         Lost lost = lostService.findByLostNo(lostNo);
@@ -124,6 +130,7 @@ public class AdminController {
         return ResponseEntity.ok(lost);
     }
 
+    // 실종신고 삭제
     @DeleteMapping("/dadog/admin/lost/delete/{lostNo}")
     public ResponseEntity<Void> deleteLost(@PathVariable Long lostNo) {
         try {
@@ -136,6 +143,7 @@ public class AdminController {
         }
     }
 
+    // 보호중 페이지
     @GetMapping({"/dadog/admin/protect/list/{page}","/dadog/admin/protect/list"})
     public String protectList(SearchDTO searchDTO,
                               @PathVariable("page") Optional<Integer> page,
@@ -147,6 +155,7 @@ public class AdminController {
         return "admin/adminProtect";
     }
 
+    // 보호중 상세페이지
     @GetMapping("/dadog/admin/protect/{protectNo}")
     public ResponseEntity<Protect> getProtectDetail(@PathVariable Long protectNo) {
         Protect protect = protectService.findByProtectNo(protectNo);
@@ -156,6 +165,7 @@ public class AdminController {
         return ResponseEntity.ok(protect);
     }
 
+    // 보호중 삭제
     @DeleteMapping("/dadog/admin/protect/delete/{protectNo}")
     public ResponseEntity<Void> deleteProtect(@PathVariable Long protectNo) {
         try {
@@ -168,7 +178,7 @@ public class AdminController {
         }
     }
 
-    // Board 관련 API
+    // 게시판 페이지
     @GetMapping({"/dadog/admin/board/list/{page}","/dadog/admin/board/list"})
     public String boardList(@PathVariable("page") Optional<Integer> page, Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
@@ -178,6 +188,7 @@ public class AdminController {
         return "admin/adminBoard";
     }
 
+    // 게시판 상세페이지
     @GetMapping("/dadog/admin/board/{boardNo}")
     public ResponseEntity<Board> getBoardDetail(@PathVariable Long boardNo) {
         Board board = boardService.findByBoardNo(boardNo);
@@ -187,6 +198,7 @@ public class AdminController {
         return ResponseEntity.ok(board);
     }
 
+    // 게시판 삭제
     @DeleteMapping("/dadog/admin/board/delete/{boardNo}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long boardNo) {
         try {
@@ -199,6 +211,7 @@ public class AdminController {
         }
     }
 
+    // 입양신청 페이지
     @GetMapping("/dadog/admin/application/list")
     public String applicationList(@RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "status", required = false) String status,
@@ -218,7 +231,7 @@ public class AdminController {
         return "admin/adminApplication";
     }
 
-
+    // 입양신청 상세페이지
     @GetMapping("/dadog/admin/application/{appNo}")
     public ResponseEntity<ApplicationDTO> getApplicationDetail(@PathVariable Long appNo) {
         ApplicationDTO applicationDTO = applicationService.findApplicationDTOByAppNo(appNo); // DTO 반환
@@ -228,6 +241,7 @@ public class AdminController {
         return ResponseEntity.ok(applicationDTO);
     }
 
+    // 입양신청 승인/미승인 업데이트
     @PostMapping("/dadog/admin/application/update/{appNo}")
     public ResponseEntity<Void> updateAdoptWaitStatus(@PathVariable Long appNo, @RequestBody Map<String, String> request) {
         String status = request.get("status");
@@ -238,7 +252,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-
+    // 회원관리 페이지
     @GetMapping({"/dadog/admin/user/list/{page}","/dadog/admin/user/list"})
     public String userList(@PathVariable("page") Optional<Integer> page, Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
@@ -248,6 +262,7 @@ public class AdminController {
         return "admin/adminUser";
     }
 
+    // 회원 권한 업데이트
     @PostMapping("/dadog/admin/user/update/{userNo}/{role}")
     public ResponseEntity<String> updateUserRole(@PathVariable("userNo") Long userId,
                                                  @PathVariable("role") String role) {
@@ -261,11 +276,13 @@ public class AdminController {
         return ResponseEntity.ok("사용자 역할이 성공적으로 업데이트되었습니다.");
     }
 
+    // api 다운 페이지
     @GetMapping("/dadog/admin/api")
     public String apiPage(Model model) {
         return "admin/adminApi";
     }
 
+    // 보호소 api
     @GetMapping("/dadog/admin/api/fetchShelters")
     @ResponseBody
     public ResponseEntity<Map<String, String>> fetchShelters() {
@@ -277,6 +294,7 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
+    // 입양 api
     @GetMapping("/dadog/admin/api/fetchAdopts")
     @ResponseBody
     public ResponseEntity<Map<String, String>> fetchAdopts() {

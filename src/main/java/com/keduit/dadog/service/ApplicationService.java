@@ -34,16 +34,19 @@ public class ApplicationService {
         return applicationRepository.countByAdoptWaitStatus(AdoptWait.PENDING);
     }
 
+    // 페이지네이션
     public Page<ApplicationDTO> getApplicationList(Pageable pageable) {
         return applicationRepository.getApplicationListPage(pageable)
                 .map(this::convertToDTO);
     }
 
+    // 현황별 페이지네이션
     public Page<ApplicationDTO> getApplicationListByStatus(AdoptWait status, Pageable pageable) {
         return applicationRepository.findByAdoptWaitStatus(status, pageable)
                 .map(this::convertToDTO);
     }
 
+    // 신청현황(AdoptWait) 업데이트
     public void updateAdoptWaitStatus(Long appNo, String status) {
         Application application = applicationRepository.findById(appNo)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid application ID"));
@@ -61,6 +64,7 @@ public class ApplicationService {
         applicationRepository.save(application); // 변경사항 저장
     }
 
+    // 오늘자 기준 공고현황(Current) 업데이트
     public void updateAdoptCurrentStatus() {
         List<Adopt> adoptList = adoptRepository.findAll(); // 모든 Adopt 엔티티 가져오기
         LocalDate today = LocalDate.now();
@@ -78,12 +82,14 @@ public class ApplicationService {
         adoptRepository.saveAll(adoptList);
     }
 
+    // appNo로 신청서 찾기
     public ApplicationDTO findApplicationDTOByAppNo(Long appNo) {
         Application application = applicationRepository.findByAppNo(appNo)
                 .orElseThrow(() -> new EntityNotFoundException("Application not found with appNo: " + appNo));
         return convertToDTO(application);
     }
 
+    // appDTO 변환
     private ApplicationDTO convertToDTO(Application application) {
         // application에서 필요한 정보를 DTO로 변환
         return new ApplicationDTO(
@@ -156,4 +162,5 @@ public class ApplicationService {
         // 생성된 Application의 ID 반환
         return application.getAppNo();
     }
+
 }
