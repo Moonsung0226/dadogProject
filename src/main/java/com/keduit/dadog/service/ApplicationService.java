@@ -121,6 +121,7 @@ public class ApplicationService {
     }
 
     // 새로운 입양 신청을 처리하는 메서드 (트랜잭션으로 처리됨)
+    // current Y/N 메서드
     @Transactional
     public Long applyForAdoption(Long adoptNo, String userName) {
         // userName으로 User 엔티티 조회 (먼저 userId로 검색)
