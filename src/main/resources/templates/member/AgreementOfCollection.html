@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>개인정보 수집 및 이용내용</title>
+
+    <th:block layout:fragment="css">
+        <style>
+            body {
+                background-color: #f4f4f4;
+                font-family: 'Noto Sans KR', sans-serif;
+                color: #333;
+            }
+            .form-container {
+                margin: 40px auto;
+                max-width: 800px;
+                padding: 30px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+                margin-bottom: 30px;
+                font-weight: 700;
+            }
+            .terms-content {
+                max-height: 500px;
+                overflow-y: auto;
+                padding: 20px;
+                border: 1px solid #e0e0e0;
+                border-radius: 5px;
+                background-color: #fafafa;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            .terms-content h2 {
+                color: #2c3e50;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                font-size: 18px;
+            }
+            .btn-back {
+                color: #666;
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.3s;
+            }
+            .btn-back:hover {
+                color: #333;
+            }
+            .terms-content::-webkit-scrollbar {
+                width: 8px;
+            }
+            .terms-content::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            .terms-content::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 4px;
+            }
+            .terms-content::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+
+<div layout:fragment="mainContent">
+    <div class="form-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="#" onclick="history.go(-1);return false;" class="btn-back">← 뒤로가기</a>
+            <h1>개인정보 수집 및 이용내용</h1>
+            <div></div>
+        </div>
+
+        <div class="terms-content">
+            <p>[DADOG] (이하 "회사")는 고객님의 개인정보 보호를 중요하게 생각하며, 『개인정보 보호법』에 따라 고객님의 개인정보를 수집, 이용함에 있어 아래의 내용을 안내드립니다. 본 내용을 충분히 읽어보신 후 동의해 주시기 바랍니다.</p>
+
+            <h2>1. 수집하는 개인정보 항목</h2>
+            <p>회사는 다음과 같은 개인정보를 수집합니다:</p>
+            <p>필수 항목: 이름, 이메일 주소, 전화번호, 생년월일, 아이디, 비밀번호</p>
+            <p>선택 항목: 주소, 성별, 관심 분야</p>
+
+            <h2>2. 개인정보 수집 및 이용 목적</h2>
+            <p>회사는 수집된 개인정보를 다음의 목적을 위해 이용합니다:</p>
+            <p>회원관리: 회원제 서비스 이용에 따른 본인확인, 개인 식별, 부정 이용 방지, 회원가입 의사 확인</p>
+            <p>서비스 제공: 맞춤형 서비스 제공, 결제 및 청구, 이벤트 참여, 고객 지원 서비스 제공</p>
+            <p>마케팅 및 광고: 신규 서비스 안내, 이벤트 정보 제공 및 참여 기회 제공, 맞춤형 광고 제공</p>
+
+            <h2>3. 개인정보의 보유 및 이용기간</h2>
+            <p>회사는 원칙적으로 개인정보 수집 및 이용 목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다. 다만, 관계법령에 따라 보존할 필요가 있는 경우에는 다음과 같이 개인정보를 보관합니다:</p>
+            <p>계약 또는 청약철회에 관한 기록: 5년 (전자상거래 등에서의 소비자보호에 관한 법률)</p>
+            <p>대금 결제 및 재화 등의 공급에 관한 기록: 5년 (전자상거래 등에서의 소비자보호에 관한 법률)</p>
+            <p>소비자 불만 또는 분쟁 처리에 관한 기록: 3년 (전자상거래 등에서의 소비자보호에 관한 법률)</p>
+
+            <h2>4. 개인정보의 제3자 제공</h2>
+            <p>회사는 원칙적으로 고객님의 개인정보를 외부에 제공하지 않습니다. 다만, 아래의 경우에는 예외로 합니다:</p>
+            <p>고객님이 사전에 동의한 경우</p>
+            <p>법령의 규정에 의한 경우 또는 법령에 의하여 필요한 경우</p>
+
+            <h2>5. 개인정보의 처리 위탁</h2>
+            <p>회사는 원활한 서비스 제공을 위하여 아래와 같이 개인정보 처리를 위탁하고 있으며, 위탁 계약 시 개인정보 보호에 관한 법적 사항을 명시하여 고객님의 개인정보가 안전하게 관리될 수 있도록 합니다:</p>
+            <p>위탁받는 자: [위탁사명]</p>
+            <p>위탁하는 업무의 내용: 고객 상담 및 불만 처리, 이벤트 운영</p>
+
+            <h2>6. 개인정보의 파기 절차 및 방법</h2>
+            <p>회사는 개인정보 보유기간의 경과, 처리 목적 달성 등 개인정보가 불필요하게 되었을 때에는 해당 정보를 지체 없이 파기합니다. 파기 절차 및 방법은 다음과 같습니다:</p>
+            <p>전자적 파일: 복구 및 재생이 불가능한 방법으로 영구 삭제</p>
+            <p>종이 문서: 분쇄기로 분쇄하거나 소각</p>
+
+            <h2>7. 개인정보 제공 및 동의 거부</h2>
+            <p>고객님은 개인정보 제공 및 동의를 거부할 권리가 있습니다. 다만, 필수 정보 제공에 동의하지 않으실 경우 서비스 이용에 제한이 있을 수 있습니다.</p>
+
+            <h2>8. 개인정보 보호책임자</h2>
+            <p>회사는 고객님의 개인정보를 보호하고 개인정보와 관련한 불만을 처리하기 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다:</p>
+            <p>개인정보 보호책임자: [김정교]</p>
+            <p>연락처: [010-1234-5678] / [DaDog@naver.com]</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
