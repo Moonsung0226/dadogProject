@@ -27,28 +27,27 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // 사용자 저장
+    // 새로운 사용자를 저장하는 메서드
     public User saveUser(User user) {
-        validateUser(user);  // 사용자 유효성 검사
+        validateUser(user);  // 사용자 중복 검사
         return userRepository.save(user);
     }
 
-    public User getUserByUserNo(Long userNo) {
-        return userRepository.findById(userNo).orElse(null); // ID로 사용자 조회
-    }
+//    // 사용자 번호로 사용자를 조회하는 메서드
+//    public User getUserByUserNo(Long userNo) {
+//        return userRepository.findById(userNo).orElse(null);
+//    }
 
+//    // 사용자의 비밀번호를 업데이트하는 메서드
+//    public void updatePassword(UserDTO userDTO) {
+//        Long userId = Long.parseLong(userDTO.getId());
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+//        user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
+//        userRepository.save(user);
+//    }
 
-    // 비밀번호 업데이트
-    public void updatePassword(UserDTO userDTO) {
-        Long userId = Long.parseLong(userDTO.getId());  // String을 Long으로 변환
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
-        user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));  // 암호화된 비밀번호 저장
-        userRepository.save(user);
-    }
-
-
-    // 사용자 정보 가져오기 (유저 ID 또는 이메일 기반)
+    // 사용자 ID 또는 이메일로 사용자를 조회하는 메서드
     public User getUser(String userName) {
         User user = userRepository.findByUserId(userName);
         if (user == null) {
@@ -57,7 +56,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    // 사용자 유효성 검사
+    // 사용자 중복 검사를 수행하는 private 메서드
     private void validateUser(User user) {
         User findUser = userRepository.findByUserId(user.getUserId());
         if (findUser != null) {
@@ -65,20 +64,23 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    // 비밀번호 유효성 검사
+    // 사용자 인증을 확인하는 메서드
     public boolean isValidUser(UserDTO userDTO) {
         User user = userRepository.findByUserId(userDTO.getId());
         return user != null && passwordEncoder.matches(userDTO.getPassword(), user.getUserPwd());
     }
 
+    // 사용자 ID 중복 여부를 확인하는 메서드
     public boolean isIdDuplicate(String userId) {
-        return userRepository.existsByUserId(userId);  // 데이터베이스에서 id 중복 여부 확인
+        return userRepository.existsByUserId(userId);
     }
 
+    // 이메일 중복 여부를 확인하는 메서드
     public boolean isEmailDuplicate(String userEmail) {
-        return userRepository.existsByUserEmail(userEmail);  // 데이터베이스에서 email 중복 여부 확인
+        return userRepository.existsByUserEmail(userEmail);
     }
 
+    // Spring Security의 UserDetailsService 인터페이스 구현 메서드
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByUserId(email);
@@ -86,7 +88,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("아이디 또는 비밀번호를 확인해 주세요.");
         }
 
-        // occupy 상태가 OFF인 경우
         if (user.getOccupy() == Occupy.OFF) {
             throw new UsernameNotFoundException("탈퇴한 사용자입니다.");
         }
@@ -98,21 +99,21 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    // 회원 등록
+    // 새로운 회원을 등록하는 메서드
     public User registerMember(UserDTO userDTO) {
         User user = User.createUser(userDTO, passwordEncoder);
         validateUser(user);
         return userRepository.save(user);
     }
 
+    // 사용자를 삭제(비활성화)하는 메서드
     public void deleteUserByNo(Long userNo) {
         User user = userRepository.findByUserNo(userNo);
-        user.setOccupy(Occupy.OFF); // occupy 상태를 OFF로 변경
+        user.setOccupy(Occupy.OFF);
         userRepository.save(user);
     }
 
-    // 카카오 로그인 처리 (닉네임을 이름으로 사용)
-    // 카카오 로그인 처리 (수정)
+    // 카카오 로그인을 처리하는 메서드
     public User kakaoLogin(UserDTO kakaoDTO) {
         String userId = generateKakaoUserId(kakaoDTO.getKakaoId());
         User user = userRepository.findByUserId(userId);
@@ -134,68 +135,73 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    // 카카오 사용자 ID 생성 (새로운 메서드)
+    // 카카오 사용자 ID를 생성하는 private 메서드
     private String generateKakaoUserId(String kakaoId) {
         return "kakao_" + kakaoId;
     }
 
-    // 사용자 정보 업데이트 (수정)
-    public void updateUser(UserDTO userDTO) {
-        User user = userRepository.findByUserId(userDTO.getId());
-        if (user == null) {
-            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
+//    // 사용자 정보를 업데이트하는 메서드
+//    public void updateUser(UserDTO userDTO) {
+//        User user = userRepository.findByUserId(userDTO.getId());
+//        if (user == null) {
+//            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
+//        }
+//
+//        if (user.getRole() == Role.KAKAO) {
+//            user.setUserTel(userDTO.getTel());
+//            user.setUserAddr(userDTO.getAddress());
+//        } else {
+//            user.setUserName(userDTO.getName());
+//            user.setUserEmail(userDTO.getEmail());
+//            user.setUserTel(userDTO.getTel());
+//            user.setUserAddr(userDTO.getAddress());
+//
+//            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+//                user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
+//            }
+//        }
+//
+//        userRepository.save(user);
+//    }
 
-        if (user.getRole() == Role.KAKAO) {
-            user.setUserTel(userDTO.getTel());
-            user.setUserAddr(userDTO.getAddress());
-        } else {
-            user.setUserName(userDTO.getName());
-            user.setUserEmail(userDTO.getEmail());
-            user.setUserTel(userDTO.getTel());
-            user.setUserAddr(userDTO.getAddress());
-
-            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-                user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
-            }
-        }
-
-        userRepository.save(user);
-    }
-
+    // 모든 사용자를 조회하는 메서드
     public List<User> findAllUsers() {
-        return userRepository.findAll(); // 모든 User 엔티티를 반환
+        return userRepository.findAll();
     }
 
+    // 최근 가입한 6명의 사용자를 조회하는 메서드
     public List<User> findTop6ByOrderByCreateTimeDesc() {
         return userRepository.findTop6ByOrderByCreateTimeDesc();
     }
 
-    public void updateUserRole(Long userNo, Role Role) {
-        User user = userRepository.findById(userNo)
+    // 사용자의 역할을 업데이트하는 메서드
+    public void updateUserRole(Long userId, Role role) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
-        user.setRole(Role);
+        user.setRole(role);
         userRepository.save(user);
     }
-    // 변경된 비밀번호로 로그인하기위해(1) ->  이 메서드에서 사용자의 비밀번호를 변경.
-    public UserDTO getUserInfo(String userId) {
-        User user = userRepository.findByUserId(userId);
-        if (user == null) {
-            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
-        return new UserDTO().createUserDTO(user); // UserDTO로 변환하여 반환
-    }
 
-    // 변경된 비밀번호로 로그인하기위해(2) -> getUserInfo 메서드로 사용자 정보를 조회하는 메서드를 구현. 비밀번호 변경 전 사용자의 정보를 확인.
+//    // 사용자 정보를 DTO로 반환하는 메서드
+//    public UserDTO getUserInfo(String userId) {
+//        User user = userRepository.findByUserId(userId);
+//        if (user == null) {
+//            throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
+//        }
+//        return new UserDTO().createUserDTO(user);
+//    }
+
+    // 사용자의 비밀번호를 변경하는 메서드
     public void changePassword(String userId, String newPassword) {
         User user = userRepository.findByUserId(userId);
         if (user == null) {
             throw new EntityNotFoundException("해당 사용자를 찾을 수 없습니다.");
         }
-        user.setUserPwd(passwordEncoder.encode(newPassword)); // 새 비밀번호로 업데이트
-        userRepository.save(user); // 변경 사항 저장
+        user.setUserPwd(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
+    // 사용자 이름으로 사용자를 조회하는 메서드
     public User getUserByUsername(String userName) {
         User user = userRepository.findByUserId(userName);
         if (user == null) {
@@ -206,6 +212,8 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
+
+    // 페이지네이션된 사용자 목록을 반환하는 메서드
     public Page<User> getUserList(Pageable pageable) {
         return userRepository.findAll(pageable);
     }

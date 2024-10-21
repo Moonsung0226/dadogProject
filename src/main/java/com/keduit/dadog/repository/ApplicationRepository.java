@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;  // 이 줄을 추가하세요
 import java.util.Optional;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
@@ -19,4 +20,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // 상태에 따른 신청 목록 조회
     Page<Application> findByAdoptWaitStatus(AdoptWait adoptWaitStatus, Pageable pageable);
+
+    List<Application> findByUser_UserNo(Long userNo); // User 엔티티의 userNo 속성을 참조
 }
