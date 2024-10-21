@@ -67,8 +67,13 @@ public class MemberController {
     // 로그인 페이지 표시
     @GetMapping("/login")
     public String showLoginPage(Model model) {
+
         model.addAttribute("kakaoUrl", kakaoService.getKakaoLogin());
-        return "member/sign-in";
+        if (model.containsAttribute("errorMessage")) {
+            String errorMessage = (String) model.getAttribute("errorMessage");
+            model.addAttribute("errorMessage", errorMessage);
+        }
+        return "member/sign-in"; // 로그인 페이지로 이동
     }
 
     // 아이디 중복 체크
@@ -99,15 +104,19 @@ public class MemberController {
 
     // 로그인 오류 처리
     @GetMapping("/login/error")
-    public String loginError(Model model, @RequestParam(required = false) String error) {
+    public String loginError(Model model, @RequestParam(required = false) String error, RedirectAttributes redirectAttributes) {
+        // 로그인 오류 처리
         String errorMessage = "아이디 또는 비밀번호를 확인해 주세요."; // 기본 오류 메시지
 
-        if (error != null && "탈퇴한 회원입니다.".equals(error)) {
-            errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
+        if (error != null) {
+            // error 매개변수에 따라 오류 메시지 설정
+            if ("탈퇴한 회원입니다.".equals(error)) {
+                errorMessage = "탈퇴한 회원입니다."; // 탈퇴 메시지 설정
+            }
         }
 
-        model.addAttribute("errorMessage", errorMessage);
-        return "member/sign-in"; // 로그인 페이지로 이동
+        redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        return "redirect:/dadog/members/login"; // 로그인 페이지로 이동
     }
 
     // 이용약관 동의 페이지 표시
