@@ -1,5 +1,6 @@
 package com.keduit.dadog.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -35,6 +36,7 @@ public class Board extends BaseTimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
+    @JsonBackReference
     private User user;
 
     @JsonManagedReference

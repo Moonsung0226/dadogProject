@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -183,7 +184,8 @@ public class AdminController {
     @GetMapping({"/dadog/admin/board/list/{page}","/dadog/admin/board/list"})
     public String boardList(@PathVariable("page") Optional<Integer> page,
                             Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
+        // boardNo를 기준으로 내림차순 정렬하여 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page.orElse(0), 12, Sort.by(Sort.Direction.DESC, "boardNo"));
         Page<Board> boardList = boardService.getBoardList(pageable);
         model.addAttribute("maxPage", 10);
         model.addAttribute("boardList", boardList);
