@@ -10,7 +10,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 500px;
+            width: 700px;
             min-height: calc(100% - 1rem);
         }
 
@@ -23,8 +23,27 @@
         }
 
         .card-application {
+            border-radius: 10px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 270px;
+            display: inline-block;
             position: relative;
             color: black; /* 카드 내 글자색을 검정색으로 설정 */
+        }
+
+        .card-application:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-application img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
         }
 
         /* 상태에 따른 card-header 스타일 */
@@ -68,6 +87,7 @@
                     $('#modalUserTel').text(result.userTel);
                     $('#modalUserEmail').text(result.userEmail);
                     $('#modalAdoptCareTel').text(result.adoptCareTel);
+                    $('#modalAdoptImg').attr('src', result.adoptImgUrl);
 
                     // 모달 표시
                     $('#applicationDetailModal').modal('show');
@@ -137,6 +157,7 @@
                         th:text="${app.adoptWaitStatus.name() == 'PENDING' ? '대기' :
                               app.adoptWaitStatus.name() == 'APPROVED' ? '승인' : '미승인'}"></h5>
                 </div>
+                <img th:src="${app.adoptImgUrl}" alt="입양 동물 이미지">
                 <div class="card-body" style="text-align: center;">
                     <h5 class="card-title" th:text="${app.adoptCareNm}"></h5>
                     <p class="card-text">
@@ -178,19 +199,22 @@
     <!-- 모달 창 -->
     <div class="modal fade" id="applicationDetailModal" tabindex="-1" aria-labelledby="applicationDetailModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="max-width: 60%; height: auto;">
+        <div class="modal-dialog modal-lg" style="max-width: 80%; height: auto;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="applicationDetailModalLabel">상세 설명</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="height: auto;">
-                    <p>신청 번호: <span id="modalAppNo"></span></p>
-                    <p>공고 종료일: <span id="modalAdoptEdt"></span></p>
-                    <p>보호소: <span id="modalAdoptCareNm"></span></p>
-                    <p>신청자 전화번호: <span id="modalUserTel"></span></p>
-                    <p>신청자 이메일: <span id="modalUserEmail"></span></p>
-                    <p>보호소 전화번호: <span id="modalAdoptCareTel"></span></p>
+                <div class="modal-body d-flex" style="height: auto; overflow-y: auto; word-wrap: break-word;">
+                    <img id="modalAdoptImg" src="" alt="Adopt Image" style="width: 40%; height: auto; object-fit: cover; margin-right: 20px;">
+                    <div style="width: 60%;">
+                        <p>신청 번호: <span id="modalAppNo"></span></p>
+                        <p>공고 종료일: <span id="modalAdoptEdt"></span></p>
+                        <p>보호소: <span id="modalAdoptCareNm"></span></p>
+                        <p>신청자 전화번호: <span id="modalUserTel"></span></p>
+                        <p>신청자 이메일: <span id="modalUserEmail"></span></p>
+                        <p>보호소 전화번호: <span id="modalAdoptCareTel"></span></p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success"

@@ -1,5 +1,7 @@
 package com.keduit.dadog.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,8 +36,10 @@ public class Board extends BaseTimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
+    @JsonBackReference
     private User user;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL ,orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no")
     private List<Reply> replyList = new ArrayList<>();

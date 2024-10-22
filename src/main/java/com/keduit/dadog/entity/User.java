@@ -65,6 +65,7 @@ public class User extends BaseTimeEntity{
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
+    @JsonManagedReference
     private List<Board> boardList = new ArrayList<>();
 
 
