@@ -113,7 +113,8 @@
                 },
                 error: function(xhr) {
                     console.log('댓글 추가 실패:', xhr.responseText);
-                    alert('댓글 추가에 실패했습니다.');
+                    alert('로그인 후 이용해주세요');
+                    location.href = "/dadog/members/login";
                 }
             });
         });
