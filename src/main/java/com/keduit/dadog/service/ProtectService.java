@@ -48,12 +48,17 @@ public class ProtectService {
         if(user == null) {
             System.out.println("--------------> 여기");
             user = userRepository.findByUserEmail(userName);
+            System.out.println("---------------> " + user.getUserNo());
         }
 
         Protect protect = Protect.createProtect(protectDTO, userName, user);
+        System.out.println("-------------->" + protect.getProTitle());
+        System.out.println("---------------->" + protectImg);
         String originalFileName =  protectImg.getOriginalFilename();
         String imgUrl = "";
         String imgName = "";
+        System.out.println("---------------------->"+ originalFileName);
+        System.out.println("--------------------->");
 
         if(!StringUtils.isEmpty(originalFileName)){
             imgName = fileService.uploadFile(proImgLocation, originalFileName, protectImg.getBytes());

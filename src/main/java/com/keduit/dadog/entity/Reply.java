@@ -1,16 +1,20 @@
 package com.keduit.dadog.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @ToString
-public class Reply extends BaseTimeEntity{
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +34,13 @@ public class Reply extends BaseTimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no")
     private Board board;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createTime;
+
+    @LastModifiedDate
+    private LocalDateTime updateTime;
+
+
 }

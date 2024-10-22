@@ -21,7 +21,7 @@ public class UserController {
     @PostMapping("/kakao/login")
     public User kakaoLogin(@RequestBody UserDTO userDTO, HttpServletRequest request) {
         User user = userService.kakaoLogin(userDTO);
-
+        System.out.println("카카오 로그인 ------>" + user.getRole());
         // 로그인 성공 후 사용자 정보를 세션에 저장
         HttpSession session = request.getSession();
         session.setAttribute("user", user);

@@ -42,6 +42,14 @@
     <textarea id="boardContent" th:field="*{boardContent}" required></textarea>
     <br>
 
+<!--    <label for="createTime">작성일:</label>-->
+<!--    <input type="text" id="createTime" th:field="*{createTime}" readonly-->
+<!--    th:value="${#dates.format(boardDTO.createTime, 'yyyy-MM-dd')}">-->
+
+<!--    <label for="updateTime">수정일:</label>-->
+<!--    <input type="text" id="updateTime" th:field="*{updateTime}" readonly-->
+<!--    th:value="${#dates.format(boardDTO.updateTime, 'yyyy-MM-dd')}">-->
+
     <button type="submit">작성</button>
     <a href="/dadog/boards">취소</a>
 </form>
