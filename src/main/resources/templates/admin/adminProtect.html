@@ -13,6 +13,40 @@
             width: 800px;
             min-height: calc(100% - 1rem);
         }
+        .card-protect {
+            border-radius: 10px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 270px;
+            display: inline-block;
+        }
+        .card-protect:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .card-body {
+            text-align: left;
+            padding: 15px;
+        }
+        .card-protect img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+        .card-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
     </style>
 </th:block>
 
@@ -95,7 +129,7 @@
     <h1 style="margin-bottom: 20px">보호중 게시글</h1>
     <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between">
-            <div class="card card-lost" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="protect : ${protectList.content}"
+            <div class="card card-protect" style="width: 30%; margin-bottom: 20px; cursor: pointer;" th:each="protect : ${protectList.content}"
                  th:onclick="'showProtectDetail(' + ${protect.proNo} + ')'">
                 <img th:src="${protect.proImgUrl}" class="card-img-top" th:alt="${protect.proNo}" style="width: 100%; height: 250px; object-fit: cover">
                 <div class="card-body" style="text-align: center">

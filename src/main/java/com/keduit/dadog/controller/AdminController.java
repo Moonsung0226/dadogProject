@@ -55,7 +55,7 @@ public class AdminController {
         List<Adopt> recentAdoptList = adoptService
                 .findTop6ByOrderByAdoptEdtDesc(); // Adopt 6개
         List<Board> recentBoardList = boardService
-                .findTop6ByOrderByCreateTimeDesc(); // Board 6개
+                .findTop9ByOrderByCreateTimeDesc(); // Board 9개
         List<Protect> recentProtectList = protectService
                 .findTop6ByOrderByCreateTimeDesc(); // Protect 6개
         List<User> recentUserList = userService

@@ -182,9 +182,9 @@ public class BoardService {
         boardDTO.setReplies(replies);
         return boardDTO;
     }
-    // 최근에 등록한 게시글 6개
-    public List<Board> findTop6ByOrderByCreateTimeDesc() {
-        return boardRepository.findTop6ByOrderByCreateTimeDesc();
+    // 최근에 등록한 게시글 9개
+    public List<Board> findTop9ByOrderByCreateTimeDesc() {
+        return boardRepository.findTop9ByOrderByCreateTimeDesc();
     }
 
     // bNo로 찾기

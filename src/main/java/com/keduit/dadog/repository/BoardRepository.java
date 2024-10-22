@@ -20,7 +20,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 작성자로 검색
     Page<Board> findByBoardWriterContaining(String writer, Pageable pageable);
-    List<Board> findTop6ByOrderByCreateTimeDesc();
+    List<Board> findTop9ByOrderByCreateTimeDesc();
 
     List<Board> findByUser(User user);
 
