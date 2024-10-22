@@ -1,8 +1,6 @@
 package com.keduit.dadog.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,6 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Board extends BaseTimeEntity{
 
     @Id
@@ -38,5 +39,6 @@ public class Board extends BaseTimeEntity{
     @OneToMany(cascade = CascadeType.ALL ,orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no")
     private List<Reply> replyList = new ArrayList<>();
+
 
 }

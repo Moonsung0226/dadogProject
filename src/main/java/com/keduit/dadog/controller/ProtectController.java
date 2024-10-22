@@ -66,8 +66,10 @@ public class ProtectController {
             return "redirect:/dadog/protect/add";
         }
         try {
+            System.out.println("프로텍트 서비스 호출------------>");
             protectService.addProtect(protectDTO, principal.getName(), protectImg);
         } catch (Exception e) {
+            System.out.println("-------------->" + e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/dadog/protect/add";
         }

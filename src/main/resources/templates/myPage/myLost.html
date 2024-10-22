@@ -14,9 +14,9 @@
         <tbody>
         <tr th:each="lost : ${lostList}" th:onclick="'getLost(' + ${lost.lostNo} + ')'">
             <th scope="row" th:text="${lost.lostNo}" id="lostNo"></th>
-            <td th:text="${lost.lostTitle}"></td>
+            <td th:text="${lost.lostTitle}" class="truncate"></td>
             <td th:text="${lost.lostKind}"></td>
-            <td th:text="${lost.lostPlace}"></td>
+            <td th:text="${lost.lostPlace}" class="truncate"></td>
             <td th:text="${lost.lostDate}"></td>
             <td th:text="${lost.lostCreateDate}"></td>
         </tr>

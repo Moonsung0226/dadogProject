@@ -1,0 +1,27 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="listView">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">글번호</th>
+            <th scope="col">제목</th>
+            <th scope="col">내용</th>
+            <th scope="col">작성일</th>
+            <th scope="col">수정일</th>
+            <th scope="col">조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${boardDTOList}" th:onclick="'getBoard(' + ${board.boardNo} + ')'">
+            <th scope="row" th:text="${board.boardNo}" id="protectNo"></th>
+            <td th:text="${board.boardTitle}"></td>
+            <td th:text="${board.boardContent}" class="truncate"></td>
+            <td th:text="${board.createTime}"></td>
+            <td th:text="${board.updateTime}"></td>
+            <td th:text="${board.boardViews}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</html>

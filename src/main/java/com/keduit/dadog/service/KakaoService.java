@@ -3,6 +3,7 @@ package com.keduit.dadog.service;
 import com.keduit.dadog.domain.KakaoMember;
 //import com.keduit.dadog.dto.KakaoDTO;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.KakaoMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
