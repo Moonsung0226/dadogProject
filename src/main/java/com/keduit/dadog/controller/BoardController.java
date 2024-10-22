@@ -130,7 +130,7 @@ public class BoardController {
     }
 
     // 특정 게시물 상세보기
-    @GetMapping("/{boardNo}")
+    @GetMapping("/get/{boardNo}")
     public String getBoardByNo(@PathVariable Long boardNo, Model model, Principal principal) {
 
         // 게시물 번호로 게시물 조회, 없으면 예외 발생
@@ -166,7 +166,7 @@ public class BoardController {
     }
 
     // 게시물 수정 페이지로 이동
-    @GetMapping("/{boardNo}/update")
+    @GetMapping("/update/{boardNo}")
     public String updateBoard(@PathVariable Long boardNo, Model model, Principal principal) {
 
         // 게시물 번호로 게시물 조회, 없으면 예외 발생
@@ -192,7 +192,7 @@ public class BoardController {
 
         return "board/update"; // 게시물 수정 페이지로 이동
     }
-    @PostMapping("/{boardNo}/update")
+    @PostMapping("/update/{boardNo}")
     public String updateBoard(@PathVariable Long boardNo,
                               @Valid @RequestBody UpdateBoardDTO boardDTO,
                               // BindingResult : 폼 데이터의 유효성 검사를 처리하는 데 사용되는 객체입니다. 주로 컨트롤러에서 폼 데이터가 바인딩될 때, 유효성 검사 결과 및 오류 정보를 담고 있음
@@ -228,7 +228,7 @@ public class BoardController {
     }
 
     // 게시물 삭제 처리
-    @PostMapping("/{boardNo}/delete")
+    @PostMapping("/delete/{boardNo}")
     public String deleteBoard(@PathVariable Long boardNo, Principal principal, RedirectAttributes redirectAttributes) {
         // 게시물 조회
         Board board = boardService.findBoardById(boardNo)
