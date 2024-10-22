@@ -51,6 +51,11 @@ public class MainController {
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/dadog/forbidden")
+    public String forbidden() {
+        return "forbidden";
+    }
 }
 
 
