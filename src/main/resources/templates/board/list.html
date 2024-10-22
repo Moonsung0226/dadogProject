@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
     <title>게시물 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+<div layout:fragment="mainContent">
 <div class="container mt-4">
-    <h1 class="mb-4">게시물 목록</h1>
+    <h1 class="mb-4">자유게시판</h1>
 
     <!-- 검색 폼 -->
     <form class="form-inline mb-4" action="/dadog/boards" method="get">
@@ -77,6 +80,7 @@
             </li>
         </ul>
     </nav>
+</div>
 </div>
 </body>
 </html>

@@ -1,19 +1,212 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시물 상세보기</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body {
+            /*background-color: #f7f7f7;*/
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            /*background-color: #fff;*/
+            padding: 20px;
+            border-radius: 8px;
+            /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        h3, h4 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .form-group label {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .btn {
+            border-radius: 5px;
+            font-size: 1rem;
+            padding: 8px 15px;
+            margin-top: 10px;
+            margin: 2px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .list-group-item strong {
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .list-group-item span {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .list-group-item .btn {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            /*margin: auto;*/
+        }
+
+        .update-btn, .delete-btn {
+            margin-left: 10px;
+        }
+
+        /* 댓글 추가 폼 */
+        #addReplyForm {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+                width: 50%;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+
+            .list-group-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 5px; /* 기존 15px에서 10px으로 조정 */
+                /*background-color: #f9f9f9;*/
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                font-size: 0.9rem; /* 전체 크기 조정을 위해 폰트 크기도 줄임 */
+            }
+
+            .list-group-item strong {
+                color: #333;
+                font-size: 1rem; /* 기존 1.1rem에서 줄임 */
+            }
+
+            .list-group-item span {
+                font-size: 0.8rem; /* 기존 0.9rem에서 줄임 */
+            }
+
+            .list-group-item .btn {
+                font-size: 0.8rem; /* 버튼의 글씨 크기도 줄임 */
+                padding: 4px 8px; /* 버튼의 크기 조정 */
+            }
+            .form-control-plaintext {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
+<div layout:fragment="mainContent">
 <div class="container">
     <h1 th:text="${board.boardTitle}"></h1>
-    <p><strong>작성자:</strong> <span th:text="${board.boardWriter}"></span></p>
-    <p><strong>내용:</strong> <span th:text="${board.boardContent}"></span></p>
-    <p><strong>조회수:</strong> <span th:text="${board.boardViews}"></span></p>
-    <p><strong>작성/수정일:</strong> <span th:text="${board.createTime}"></span></p>
+    <div class="form-floating mb-3">
+        <input type="text" readonly class="form-control-plaintext" id="floatingEmptyPlaintextInput boardWriter" th:value="${board.boardWriter}">
+        <label for="floatingEmptyPlaintextInput boardWriter">작성자</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" readonly class="form-control-plaintext" id="floatingEmptyPlaintextInput boardContent" th:value="${board.boardContent}">
+        <label for="floatingEmptyPlaintextInput boardContent">내용</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" readonly class="form-control-plaintext" id="boardViews" th:value="${board.boardViews}">
+        <label for="boardViews">조회수</label>
+    </div>
+<!--    <div class="input-group mb-3">-->
+<!--        <span class="input-group-text" id="inputGroup-sizing-default boardWriter">작성자:</span>-->
+<!--        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" th:value="${board.boardWriter}">-->
+<!--    </div>-->
+<!--    <div class="input-group mb-3">-->
+<!--        <span class="input-group-text" id="inputGroup-sizing-default boardContent">내용:</span>-->
+<!--        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" th:value="${board.boardContent}">-->
+<!--    </div>-->
+<!--    <div class="input-group mb-3">-->
+<!--        <span class="input-group-text" id="inputGroup-sizing-default boardViews">조회수:</span>-->
+<!--        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" th:value="${board.createTime}">-->
+<!--    </div>-->
+<!--    <p><strong>작성자:</strong> <span th:text="${board.boardWriter}"></span></p>-->
+<!--    <p><strong>내용:</strong> <span th:text="${board.boardContent}"></span></p>-->
+<!--    <p><strong>조회수:</strong> <span th:text="${board.boardViews}"></span></p>-->
+<!--    <p><strong>작성/수정일:</strong> <span th:text="${board.createTime}"></span></p>-->
 
     <div th:if="${userId == board.boardWriter}">
         <a th:href="@{/dadog/boards/{boardNo}/update(boardNo=${board.boardNo})}" class="btn btn-warning">수정</a>
@@ -183,5 +376,6 @@
         return confirm(message);
     }
 </script>
+</div>
 </body>
 </html>
