@@ -4,7 +4,9 @@ import com.keduit.dadog.dto.BoardDTO;
 import com.keduit.dadog.dto.ReplyDTO;
 import com.keduit.dadog.dto.UpdateBoardDTO;
 import com.keduit.dadog.entity.Board;
+import com.keduit.dadog.entity.User;
 import com.keduit.dadog.repository.BoardRepository;
+import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +28,16 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
     private final ReplyService replyService;
 
     // 게시물 추가
     public Board addBoard(BoardDTO boardDTO, String username) {
+        User user = new User();
+        user = userRepository.findByUserId(username);
+        if(user == null){
+            user= userRepository.findByUserEmail(username);
+        }
         // 새로운 Board 엔티티 생성 후 DTO의 데이터를 Board에 매핑
         Board board = new Board();
         board.setBoardWriter(username); // 작성자 설정
@@ -36,6 +45,8 @@ public class BoardService {
         board.setBoardContent(boardDTO.getBoardContent()); // 내용 설정
         board.setBoardViews(0L); // 기본 조회수를 0으로 설정
         board.setCreateTime(LocalDate.now()); // 생성 시간 설정
+        board.setUpdateTime(LocalDate.now()); // 수정일 까지
+        board.setUser(user);
         return boardRepository.save(board); // Board 엔티티를 데이터베이스에 저장
     }
 
@@ -120,7 +131,7 @@ public class BoardService {
         boardDTO.setBoardTitle(board.getBoardTitle()); // 제목 설정
         boardDTO.setBoardContent(board.getBoardContent()); // 내용 설정
         boardDTO.setBoardViews(board.getBoardViews()); // 조회수 설정
-
+        boardDTO.setCreateTime(board.getCreateTime()); // 작성 시간 설정
         boardDTO.setUpdateTime(board.getUpdateTime()); // 수정 시간 설정
         return boardDTO; // DTO 반환
     }
@@ -149,6 +160,20 @@ public class BoardService {
 
         return boardRepository.save(board);
     }
+
+
+    //유저의 게시판 글 조회
+    public List<BoardDTO> getUserBoard(Long userNo){
+        User user = userRepository.findByUserNo(userNo);
+        List<Board> boardList = boardRepository.findByUser(user);
+        List<BoardDTO> boardDTOList = new ArrayList<>();
+        for (Board board : boardList) {
+            BoardDTO boardDTO = changeDTO(board);
+            boardDTOList.add(boardDTO);
+        }
+        return boardDTOList;
+    }
+
     public BoardDTO getBoardWithReply(Long boardNo){
         Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         BoardDTO boardDTO = changeDTO(board);

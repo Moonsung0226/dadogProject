@@ -49,9 +49,20 @@
     function getProtect(no){
       location.href = '/dadog/protect/get/' + no;
     }
-
-
+    function getBoard(no){
+      location.href = '/dadog/boards/get/' + no;
+    }
   </script>
+</th:block>
+
+<th:block layout:fragment="css">
+  <style>
+    .truncate {
+      white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+      overflow: hidden; /* 넘치는 부분 숨기기 */
+      text-overflow: ellipsis; /* 넘치는 부분을 "..."으로 표시 */
+    }
+  </style>
 </th:block>
 
 

@@ -14,11 +14,11 @@
     <tbody>
     <tr th:each="protect : ${protectList}" th:onclick="'getLost(' + ${protect.proNo} + ')'">
       <th scope="row" th:text="${protect.proNo}" id="protectNo"></th>
-      <td th:text="${protect.proTitle}">Mark</td>
-      <td th:text="${protect.proKind}">Otto</td>
-      <td th:text="${protect.proPlace}">@mdo</td>
-      <td th:text="${protect.proDate}">@mdo</td>
-      <td th:text="${protect.protectCreateDate}">@mdo</td>
+      <td th:text="${protect.proTitle}" class="truncate"></td>
+      <td th:text="${protect.proKind}"></td>
+      <td th:text="${protect.proPlace}" class="truncate"></td>
+      <td th:text="${protect.proDate}"></td>
+      <td th:text="${protect.protectCreateDate}"></td>
     </tr>
     </tbody>
   </table>
