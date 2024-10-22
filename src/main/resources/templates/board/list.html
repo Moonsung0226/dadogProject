@@ -46,7 +46,7 @@
             <td th:text="${boards.totalElements - boards.size * boards.number - iterStat.index}"></td>
             <td th:text="${board.boardWriter}"></td>
             <td>
-                <a th:href="@{/dadog/boards/{id}(id=${board.boardNo})}" th:text="${board.boardTitle}"></a>
+                <a th:href="@{/dadog/boards/get/{id}(id=${board.boardNo})}" th:text="${board.boardTitle}"></a>
             </td>
             <td th:text="${board.boardViews}"></td>
             <td>

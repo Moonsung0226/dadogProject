@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
@@ -55,12 +56,13 @@ public class SecurityConfig {
                 .antMatchers("/img/**" ,"/dadog/lost/list","/dadog/lost/list/**","/dadog/lost/get/**",
                         "/dadog/adopt/list","/dadog/adopt/list/**","/dadog/adopt/**",
                         "/dadog/protect/list","/dadog/protect/list/","/dadog/protect/get/**",
-                        "/dadog/shelter","/dadog/shelter/**","/dadog/members/**","/dadog/spon").permitAll()
-                .antMatchers("/dadog/admin/adopt/updateApi","/dadog/admin/adopt/api").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
+                        "/dadog/shelter","/dadog/shelter/**","/dadog/members/**","/dadog/spon","/dadog/boards","/dadog/boards/get/**").permitAll()
+                .antMatchers("/dadog/admin/adopt/updateApi","/dadog/admin/adopt/api","/dadog/admin/**").hasRole("ADMIN") // 관리자 경로는 ADMIN 권한 필요
                 .anyRequest().authenticated(); // 그 외의 모든 요청은 인증 필요
 
         // 예외 처리
         http.exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint()); // 인증되지 않은 사용자에 대한 예외 처리
 
         return http.build();
@@ -71,5 +73,9 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적 리소스 무시
+    }
+
+    @Bean public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDenieHandler();
     }
 }

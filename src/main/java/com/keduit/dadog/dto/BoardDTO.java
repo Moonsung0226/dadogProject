@@ -1,5 +1,6 @@
 package com.keduit.dadog.dto;
 
+import com.keduit.dadog.entity.Board;
 import com.keduit.dadog.entity.Reply;
 import lombok.Getter;
 import lombok.Setter;

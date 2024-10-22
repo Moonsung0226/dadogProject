@@ -73,7 +73,7 @@ public class ProtectController {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/dadog/protect/add";
         }
-        return "redirect:/dadog/main";
+        return "redirect:/dadog/protect/list";
     }
 
     @GetMapping("/get/{proNo}")

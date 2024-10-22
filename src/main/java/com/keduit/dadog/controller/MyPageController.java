@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +40,7 @@ public class MyPageController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationService applicationService;
+    private final BoardService boardService;
 
 
     // 마이페이지
@@ -62,7 +62,7 @@ public class MyPageController {
         List<Object> posts = new ArrayList<>();
         model.addAttribute("posts", posts); // 빈 리스트 추가
 
-        return "myPage/myWriting"; // Thymeleaf 템플릿 경로
+        return "myBoard"; // Thymeleaf 템플릿 경로
     }
 
     // 회원 정보 가져오기(카카오일 경우 이메일은 막기)
@@ -188,6 +188,7 @@ public class MyPageController {
         return "myPage/myLost"; // Thymeleaf 템플릿 경로
     }
 
+    //유저의 보호중 글 조회
     @PostMapping("/myPage/myProtect")
     public String myProtecting(Model model, @RequestBody Map<String, Object> userNo) {
         System.out.println("---------------- userDTO" + userNo);
@@ -196,6 +197,16 @@ public class MyPageController {
         List<ProtectDTO> protectDTOList = protectService.getUserProtect(userNum);
         model.addAttribute("protectList", protectDTOList);
         return "myPage/myProtect"; // Thymeleaf 템플릿 경로
+    }
+
+    @PostMapping("/myPage/myBoard")
+    public String myBoard(Model model, @RequestBody Map<String, Object> userNo) {
+        System.out.println("-------------- userDTO" + userNo);
+        String userNoStr = (String) userNo.get("userNo");
+        Long userNum = Long.valueOf(userNoStr);
+        List<BoardDTO> boardDTOList = boardService.getUserBoard(userNum);
+        model.addAttribute("boardDTOList", boardDTOList);
+        return "myPage/myBoard";
     }
 
     // 비밀번호 변경 페이지

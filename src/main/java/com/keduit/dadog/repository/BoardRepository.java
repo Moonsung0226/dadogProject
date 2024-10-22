@@ -1,10 +1,10 @@
 package com.keduit.dadog.repository;
 
 import com.keduit.dadog.entity.Board;
+import com.keduit.dadog.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,5 +20,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 작성자로 검색
     Page<Board> findByBoardWriterContaining(String writer, Pageable pageable);
-    List<Board> findTop6ByOrderByCreateTimeDesc();
+    List<Board> findTop9ByOrderByCreateTimeDesc();
+
+    List<Board> findByUser(User user);
+
+    Page<Board> findAll(Pageable pageable);
 }
