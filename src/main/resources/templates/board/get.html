@@ -18,35 +18,33 @@
     <div th:if="${userId == board.boardWriter}">
         <a th:href="@{/dadog/boards/{boardNo}/update(boardNo=${board.boardNo})}" class="btn btn-warning">수정</a>
         <form th:action="@{/dadog/boards/{boardNo}/delete(boardNo=${board.boardNo})}" method="post" style="display:inline;">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!-- CSRF 토큰 -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <button type="submit" class="btn btn-danger" onclick="return confirmDelete('게시물을 삭제하시겠습니까?');">삭제</button>
         </form>
     </div>
 
-    <!-- 댓글 목록 -->
     <h3>댓글 목록</h3>
     <ul id="replyList" class="list-group">
         <li class="list-group-item" th:each="reply : ${replies}" th:data-id="${reply.replyNo}">
             <strong th:text="${reply.replyWriter}"></strong>
             <span th:text="${reply.replyContent}"></span>
-            <span th:text="${reply.createTime != null ? #temporals.format(reply.createTime, 'yyyy-MM-dd HH:mm:ss') : ''}"></span> <!-- 날짜 포맷 -->
+            <span th:text="${reply.createTime != null ? #temporals.format(reply.createTime, 'yyyy-MM-dd HH:mm:ss') : ''}"></span>
 
+            <!-- 변경 사항: 수정/삭제 버튼 표시 조건 변경 -->
             <div th:if="${reply.replyWriter.equals(loggedInUserId)}">
-                <!-- 댓글 작성자와 로그인한 사용자가 같을 때만 수정 및 삭제 버튼 표시 -->
                 <button class="btn btn-warning btn-sm float-end update-btn">수정</button>
                 <form th:action="@{/dadog/boards/reply/{boardNo}/delete/{replyNo}(boardNo=${board.boardNo}, replyNo=${reply.replyNo})}" method="post" style="display:inline;">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!-- CSRF Token -->
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <button type="submit" class="btn btn-danger btn-sm float-end delete-btn">삭제</button>
                 </form>
             </div>
         </li>
     </ul>
 
-    <!-- 댓글 추가 폼 -->
     <h4>댓글 추가</h4>
     <form id="addReplyForm">
         <input type="hidden" id="boardNo" th:value="${board.boardNo}">
-        <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!-- CSRF 토큰 추가 -->
+        <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}"/>
         <input type="hidden" id="userNo" th:value="${userNo}"/>
         <input type="hidden" id="replyWriter" th:value="${userId}"/>
@@ -63,22 +61,18 @@
     $(document).ready(function() {
         const csrfToken = $('#csrfToken').val();
         const csrfHeader = $('#csrfHeader').val();
-        const userId = $('#replyWriter').val(); // 로그인한 사용자 ID
+        const userId = $('#replyWriter').val();
 
-        // 댓글 추가 폼 제출 이벤트 처리
         $('#addReplyForm').submit(function(e) {
             e.preventDefault();
 
             const replyData = {
                 replyWriter: userId,
-                userNo: $('#userNo').val(), // userNo 추가
+                userNo: $('#userNo').val(),
                 replyContent: $('#replyContent').val(),
                 boardNo: $('#boardNo').val(),
             };
 
-            console.log(replyData);
-
-            // Ajax 요청으로 댓글 추가
             $.ajax({
                 type: "POST",
                 url: `/dadog/boards/reply/${replyData.boardNo}/add`,
@@ -88,28 +82,25 @@
                     xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function(response) {
-                    console.log("댓글 추가 성공 응답:", response);
-                    console.log('Logged in user ID:', userId);
-                    console.log('Reply writer ID:', response.replyWriter);
+
                     const formattedDate = new Date(response.createTime).toLocaleString();
                     const replyHtml = `
                         <li class="list-group-item" data-id="${response.replyNo}">
                             <strong>${response.replyWriter}</strong>
                             <span>${response.replyContent}</span>
                             <span>${formattedDate}</span>
-                            <div style="display: ${response.userNo === userNo ? 'block' : 'none'};"> <!-- userId로 비교 -->
+                            <div style="display: ${response.replyWriter === userId ? 'block' : 'none'};">  <!-- userNo을 userId로 변경-->
                                 <button class="btn btn-warning btn-sm float-end update-btn">수정</button>
                                 <form action="/dadog/boards/reply/${replyData.boardNo}/delete/${response.replyNo}" method="post" style="display:inline;">
                                     <input type="hidden" name="_csrf" value="${csrfToken}"/>
-                                    <button type="submit" class="btn btn-danger btn-sm float-end delete-btn" onclick="return confirmDelete('댓글을 삭제하시겠습니까?');">삭제</button>
+                                    <button type="submit" class="btn btn-danger btn-sm float-end delete-btn">삭제</button>
                                 </form>
                             </div>
                         </li>
                     `;
 
-                    // 댓글 추가 성공 시 처리
                     $('#replyList').append(replyHtml);
-                    $('#replyContent').val(''); // 입력 필드 초기화
+                    $('#replyContent').val('');
                 },
                 error: function(xhr) {
                     console.log('댓글 추가 실패:', xhr.responseText);
@@ -119,17 +110,14 @@
             });
         });
 
-        // 댓글 삭제
-        $('#replyList').on('click', '.delete-btn', function(e) {
+        $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
             const replyItem = $(this).closest('li');
             const replyNo = replyItem.data('id');
             const boardNo = $('#boardNo').val();
 
-            // confirmDelete 함수를 호출하여 삭제 확인
-            if (confirmDelete('댓글을 삭제하시겠습니까?')) {
-                console.log("댓글 삭제 요청:", { boardNo, replyNo });
+            if (confirm('댓글을 삭제하시겠습니까?')) {
                 $.ajax({
                     type: "POST",
                     url: `/dadog/boards/reply/${boardNo}/delete/${replyNo}`,
@@ -147,8 +135,8 @@
             }
         });
 
-        // 댓글 수정
-        $('#replyList').on('click', '.update-btn', function() {
+
+        $(document).on('click', '.update-btn', function() {
             const replyItem = $(this).closest('li');
             const replyNo = replyItem.data('id');
             const replyContent = replyItem.find('span').eq(0).text();
@@ -156,8 +144,6 @@
 
             if (newContent !== null && newContent.trim() !== '') {
                 const boardNo = $('#boardNo').val();
-
-                console.log("댓글 수정 요청 데이터:", { replyNo, newContent });
 
                 $.ajax({
                     type: "POST",
@@ -179,7 +165,6 @@
         });
     });
 
-    // confirmDelete 함수 정의
     function confirmDelete(message) {
         return confirm(message);
     }
