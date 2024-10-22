@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -165,5 +164,9 @@ public class BoardService {
     // bNo로 찾기
     public Board findByBoardNo(Long boardNo) {
         return boardRepository.findById(boardNo).orElseThrow(() -> new EntityNotFoundException("Board not found with boardNo : " + boardNo));
+    }
+
+    public Page<Board> getBoardList(Pageable pageable) {
+        return boardRepository.findAll(pageable);
     }
 }
