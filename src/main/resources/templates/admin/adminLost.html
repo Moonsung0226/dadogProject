@@ -13,6 +13,36 @@
       width: 800px;
       min-height: calc(100% - 1rem);
     }
+    .card-lost {
+      border-radius: 10px;
+      margin: 10px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 270px;
+      display: inline-block;
+    }
+    .card-lost:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .card-lost img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-title {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #ecf0f1;
+      padding-bottom: 8px;
+    }
+    .card-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
   </style>
 </th:block>
 
@@ -143,7 +173,7 @@
         <div class="modal-body d-flex" style="height: auto; overflow-y: auto; word-wrap: break-word;">
           <img id="modalLostImg" src="" alt="Lost Image" style="width: 40%; height: auto; object-fit: cover; margin-right: 20px;">
           <div style="width: 60%;">
-            <p>공고 번호: <span id="modalLostNo"></span></p>
+            <p>등록 번호: <span id="modalLostNo"></span></p>
             <p>작성자: <span id="modalLostWriter"></span></p>
             <p>연락처: <span id="modalLostTel"></span></p>
             <p>견종: <span id="modalLostKind"></span></p>

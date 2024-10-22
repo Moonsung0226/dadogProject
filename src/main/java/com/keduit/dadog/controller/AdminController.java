@@ -4,6 +4,7 @@ import com.keduit.dadog.constant.AdoptWait;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.AdoptSearchDTO;
 import com.keduit.dadog.dto.ApplicationDTO;
+import com.keduit.dadog.dto.BoardDTO;
 import com.keduit.dadog.dto.SearchDTO;
 import com.keduit.dadog.entity.*;
 import com.keduit.dadog.service.*;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,7 +55,7 @@ public class AdminController {
         List<Adopt> recentAdoptList = adoptService
                 .findTop6ByOrderByAdoptEdtDesc(); // Adopt 6개
         List<Board> recentBoardList = boardService
-                .findTop6ByOrderByCreateTimeDesc(); // Board 6개
+                .findTop9ByOrderByCreateTimeDesc(); // Board 9개
         List<Protect> recentProtectList = protectService
                 .findTop6ByOrderByCreateTimeDesc(); // Protect 6개
         List<User> recentUserList = userService
@@ -180,11 +182,13 @@ public class AdminController {
 
     // 게시판 페이지
     @GetMapping({"/dadog/admin/board/list/{page}","/dadog/admin/board/list"})
-    public String boardList(@PathVariable("page") Optional<Integer> page, Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 12);
-//        Page<Board> boardList = boardService.getBoardList(pageable);
-//        model.addAttribute("maxPage", 10);
-//        model.addAttribute("boardList", boardList);
+    public String boardList(@PathVariable("page") Optional<Integer> page,
+                            Model model) {
+        // boardNo를 기준으로 내림차순 정렬하여 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page.orElse(0), 12, Sort.by(Sort.Direction.DESC, "boardNo"));
+        Page<Board> boardList = boardService.getBoardList(pageable);
+        model.addAttribute("maxPage", 10);
+        model.addAttribute("boardList", boardList);
         return "admin/adminBoard";
     }
 
@@ -200,14 +204,17 @@ public class AdminController {
 
     // 게시판 삭제
     @DeleteMapping("/dadog/admin/board/delete/{boardNo}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable Long boardNo) {
+    public ResponseEntity<String> deleteBoard(@PathVariable Long boardNo) {
+        Board board = boardService.findBoardById(boardNo)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
+
         try {
             boardService.deleteBoard(boardNo);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
+            System.out.println("게시물 삭제 성공: " + boardNo);
+            return ResponseEntity.ok("게시물이 성공적으로 삭제되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            System.out.println("게시물 삭제 중 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시물 삭제 중 오류가 발생했습니다.");
         }
     }
 
