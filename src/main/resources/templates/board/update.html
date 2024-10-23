@@ -90,7 +90,7 @@
 <div layout:fragment="mainContent">
 <div class="container">
     <h1>게시물 수정</h1>
-    <form id="updateBoardForm" th:action="@{/dadog/boards/{boardNo}/update}" method="post">
+    <form id="updateBoardForm" th:action="@{/dadog/boards/update/{boardNo}}" method="post">
         <input type="hidden" id="boardNo" name="boardNo" th:value="${boardDTO.boardNo}">
         <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}"/>
@@ -105,7 +105,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">수정</button>
-        <a th:href="@{/dadog/boards/{boardNo}}" class="btn btn-secondary">취소</a>
+        <a th:href="@{/dadog/boards/get/{boardNo}(boardNo=${boardDTO.boardNo})}" class="btn btn-secondary">취소</a>
     </form>
 </div>
 
@@ -126,7 +126,7 @@
 
             $.ajax({
                 type: "POST",
-                url: `/dadog/boards/${$('#boardNo').val()}/update`,
+                url: `/dadog/boards/update/${$('#boardNo').val()}`,
                 contentType: "application/json",
                 data: JSON.stringify(updatedData),
                 beforeSend: function(xhr) {
@@ -136,7 +136,7 @@
                 },
                 success: function(response) {
                     alert('게시물이 수정되었습니다.');
-                    window.location.href = `/dadog/boards/${$('#boardNo').val()}`;
+                    window.location.href = `/dadog/boards/get/${$('#boardNo').val()}`;
                 },
                 error: function(xhr, status, error) {
                     console.log('게시물 수정 실패:', xhr.responseText);
