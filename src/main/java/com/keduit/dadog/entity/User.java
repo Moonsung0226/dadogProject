@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"lostList", "protectList", "boardList"})  // StackOverflowError 발생. 무한루프때문에 양방향 관계 필드를 제외
 @NoArgsConstructor  // 기본 생성자 필요
 @AllArgsConstructor // 모든 필드를 초기화하는 생성자 필요
 @Builder            // 빌더 패턴 추가
