@@ -77,8 +77,14 @@
       <td>
         <select class="form-select" th:id="'roleSelect-' + ${user.userNo}">
           <option value="ADMIN" th:selected="${user.role.name() == 'ADMIN'}">Admin</option>
-          <option value="KAKAO" th:selected="${user.role.name() == 'KAKAO'}" th:if="${user.role.name() != 'USER'}">Kakao</option>
-          <option value="USER" th:selected="${user.role.name() == 'USER'}" th:if="${user.role.name() != 'KAKAO'}">User</option>
+          <option value="KAKAO" th:selected="${user.role.name() == 'KAKAO'}"
+                  th:if="${user.role.name() != 'USER'} and ${#strings.contains(user.userId, 'kakao')}">
+            Kakao
+          </option>
+          <option value="USER" th:selected="${user.role.name() == 'USER'}"
+                  th:if="${user.role.name() != 'KAKAO'} and ${!#strings.contains(user.userId, 'kakao')}">
+            User
+          </option>
         </select>
       </td>
       <td>
