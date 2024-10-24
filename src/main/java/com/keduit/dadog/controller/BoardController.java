@@ -73,6 +73,8 @@ public class BoardController {
             boardPage = boardService.paging(pageable); // 검색어가 없으면 전체 목록 페이징 처리
         }
 
+//        model.addAttribute("currentPage", boardPage.getNumber()); // 현재 페이지 추가
+
         // 로그인된 사용자 정보 추가
         if (principal != null) {
             // 로그인된 사용자의 ID를 모델에 추가
@@ -224,7 +226,7 @@ public class BoardController {
             model.addAttribute("errorMsg", e.getMessage());
             return "board/update"; // 오류 발생 시 수정 페이지로 이동
         }
-        return "redirect:/dadog/boards/" + boardNo; // 수정 완료 후 게시물 상세 페이지로 이동
+        return "redirect:/dadog/boards/get/" + boardNo; // 수정 완료 후 게시물 상세 페이지로 이동
     }
 
     // 게시물 삭제 처리

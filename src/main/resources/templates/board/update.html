@@ -1,16 +1,96 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시물 수정</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        /* 전체 레이아웃 스타일 */
+        body {
+            /*background-color: #f8f9fa;*/
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 800px;
+            /*background-color: #ffffff;*/
+            padding: 30px;
+            border-radius: 10px;
+            /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%; /* 인풋 가로 길이를 100%로 설정 */
+            max-width: 600px; /* 최대 너비를 600px로 제한 */
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: none; /* 사용자가 텍스트 상자의 크기를 변경하지 못하도록 */
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            width: 100px;
+            padding: 10px 20px;
+        }
+
+        .btn-primary {
+            border-color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn + .btn {
+            margin-left: 10px; /* 버튼 간격 조정 */
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            input[type="text"], textarea {
+                max-width: 100%; /* 모바일에서 최대 너비를 100%로 조정 */
+            }
+
+            .btn {
+                width: 100%; /* 모바일에서 버튼을 100% 너비로 설정 */
+                margin-bottom: 10px;
+            }
+
+            .btn + .btn {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
+<div layout:fragment="mainContent">
 <div class="container">
     <h1>게시물 수정</h1>
-    <form id="updateBoardForm" th:action="@{/dadog/boards/{boardNo}/update}" method="post">
+    <form id="updateBoardForm" th:action="@{/dadog/boards/update/{boardNo}}" method="post">
         <input type="hidden" id="boardNo" name="boardNo" th:value="${boardDTO.boardNo}">
         <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="hidden" id="csrfHeader" th:value="${_csrf.headerName}"/>
@@ -25,7 +105,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">수정</button>
-        <a th:href="@{/dadog/boards/{boardNo}}" class="btn btn-secondary">취소</a>
+        <a th:href="@{/dadog/boards/get/{boardNo}(boardNo=${boardDTO.boardNo})}" class="btn btn-secondary">취소</a>
     </form>
 </div>
 
@@ -46,7 +126,7 @@
 
             $.ajax({
                 type: "POST",
-                url: `/dadog/boards/${$('#boardNo').val()}/update`,
+                url: `/dadog/boards/update/${$('#boardNo').val()}`,
                 contentType: "application/json",
                 data: JSON.stringify(updatedData),
                 beforeSend: function(xhr) {
@@ -56,7 +136,7 @@
                 },
                 success: function(response) {
                     alert('게시물이 수정되었습니다.');
-                    window.location.href = `/dadog/boards/${$('#boardNo').val()}`;
+                    window.location.href = `/dadog/boards/get/${$('#boardNo').val()}`;
                 },
                 error: function(xhr, status, error) {
                     console.log('게시물 수정 실패:', xhr.responseText);
@@ -66,5 +146,6 @@
         });
     });
 </script>
+</div>
 </body>
 </html>
