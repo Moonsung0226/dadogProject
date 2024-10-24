@@ -1,41 +1,41 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>댓글 관리</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-<div class="container mt-5">
-    <h1>댓글 관리</h1>
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>댓글 관리</title>-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container mt-5">-->
+<!--    <h1>댓글 관리</h1>-->
 
-    <form id="replyForm" class="mb-4" th:action="@{/dadog/boards/reply}" method="post" th:object="${replyDTO}">
-        <div class="mb-3">
-            <label for="userNo" class="form-label">사용자 ID</label>
-            <input type="number" id="userNo" name="userNo" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="boardNo" class="form-label">게시물 ID</label>
-            <input type="number" id="boardNo" name="boardNo" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="replyContent" class="form-label">댓글 내용</label>
-            <textarea id="replyContent" name="content" class="form-control" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">댓글 추가</button>
-    </form>
+<!--    <form id="replyForm" class="mb-4" th:action="@{/dadog/boards/reply}" method="post" th:object="${replyDTO}">-->
+<!--        <div class="mb-3">-->
+<!--            <label for="userNo" class="form-label">사용자 ID</label>-->
+<!--            <input type="number" id="userNo" name="userNo" class="form-control" required>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--            <label for="boardNo" class="form-label">게시물 ID</label>-->
+<!--            <input type="number" id="boardNo" name="boardNo" class="form-control" required>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--            <label for="replyContent" class="form-label">댓글 내용</label>-->
+<!--            <textarea id="replyContent" name="content" class="form-control" required></textarea>-->
+<!--        </div>-->
+<!--        <button type="submit" class="btn btn-primary">댓글 추가</button>-->
+<!--    </form>-->
 
-    <h2>댓글 목록</h2>
-    <ul id="replyList" class="list-group">
-        <li th:each="reply : ${replies}" class="list-group-item" th:data-id="${reply.replyNo}">
-            <span th:text="${reply.content}"></span>
-            <button class="btn btn-danger btn-sm float-end delete-btn">삭제</button>
-        </li>
-    </ul>
-</div>
-<script>
-</script>
-</body>
-</html>
+<!--    <h2>댓글 목록</h2>-->
+<!--    <ul id="replyList" class="list-group">-->
+<!--        <li th:each="reply : ${replies}" class="list-group-item" th:data-id="${reply.replyNo}">-->
+<!--            <span th:text="${reply.content}"></span>-->
+<!--            <button class="btn btn-danger btn-sm float-end delete-btn">삭제</button>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+<!--<script>-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
