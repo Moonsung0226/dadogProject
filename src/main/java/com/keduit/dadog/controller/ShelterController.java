@@ -6,6 +6,7 @@ import com.keduit.dadog.service.ShelterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class ShelterController {
 
         Page<Shelter> paginatedShelters;
         PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE);
+        Sort sort = Sort.by(Sort.Direction.ASC, "shelCity"); // 가나다순 정렬
 
         if (keyword != null && !keyword.trim().isEmpty()) {
             if ("name".equals(filter)) {
@@ -54,7 +56,7 @@ public class ShelterController {
                 paginatedShelters = shelterRepository.findAll(pageRequest);
             }
         } else {
-            paginatedShelters = shelterRepository.findAll(pageRequest);
+            paginatedShelters = shelterRepository.findAll(pageRequest.withSort(sort)); // 정렬된 데이터 가져오기
         }
 
         // 페이지네이션 범위 계산
