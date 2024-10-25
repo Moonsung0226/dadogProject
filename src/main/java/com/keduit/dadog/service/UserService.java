@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
     public Long getUserNoByUserId(String userId) {
         return Optional.ofNullable(userRepository.findByUserId(userId))
                 .map(User::getUserNo)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을수 없습니다."));
     }
 
 
