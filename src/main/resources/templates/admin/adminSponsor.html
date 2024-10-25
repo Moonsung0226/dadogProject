@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/adminLayout}">
+
+<!-- 사용자 js -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    function page(pageNumber) {
+      const url = '/dadog/admin/sponsor/list/' + pageNumber;
+      location.href = url; // 새로운 페이지로 이동
+    }
+  </script>
+</th:block>
+
+<div layout:fragment="mainContent" style="margin-top: 50px; padding-left: 20px; width: 80%; display: flex; flex-direction: column; align-items: center; ">
+  <!-- CSRF 토큰 입력 필드 추가 -->
+  <h1 style="margin-bottom: 20px; left: 50px">후원 현황</h1>
+  <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+  <input type="hidden" name="_csrf_header" th:value="${_csrf.headerName}"/>
+
+  <table class="table table-hover" style="width: 50%;">
+    <thead>
+    <tr style="font-size: 1.2em">
+      <th scope="col">이름</th>
+      <th scope="col">금액</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider" th:each="sponsor : ${sponsorList}">
+    <tr>
+      <td th:text="${sponsor.name}" style="vertical-align: middle;"></td>
+      <td th:text="${sponsor.price}" style="vertical-align: middle;"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- 페이지네이션 -->
+  <div th:with="start=${(sponsorList.number / maxPage) * maxPage + 1},
+              end=${(sponsorList.totalPages == 0 ? 1 :
+              (start + (maxPage - 1) < sponsorList.totalPages ? start + (maxPage - 1) :
+              sponsorList.totalPages))}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${sponsorList.first} ? 'disabled'">
+        <a th:onclick="'javascript: page(' + ${sponsorList.number - 1} + ')'" aria-label="Previous"
+           class="page-link">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+          th:classappend="${sponsorList.number eq page - 1} ? 'active' : ''">
+        <a th:onclick="'javascript: page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]
+        </a>
+      </li>
+      <li class="page-item" th:classappend="${sponsorList.last} ? 'disabled'">
+        <a th:onclick="'javascript: page(' + ${sponsorList.number + 1} + ')'" aria-label="Next"
+           class="page-link">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+</html>
