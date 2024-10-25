@@ -7,7 +7,7 @@
     <title>기본 정보 변경</title>
     <th:block layout:fragment="css">
         <style>
-            .form-container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+            .form-container { max-width: 600px; margin: 0 auto; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
             .form-container h1 { text-align: center; }
             .form-container label { font-weight: bold; }
             .form-container input[type="text"],
@@ -100,28 +100,29 @@
 
             // 카카오 사용자라면 이메일 수정 불가
             if (isKakaoUser) {
-                $('#email').prop('readonly', true).prop('disabled', true);
+                $('#email').prop('readonly', true);
             }
 
             // 폼 제출 전 데이터 변경 확인
             $('form').on('submit', function(event) {
                 const currentData = {
-                    name: $('#name').val().trim().toLowerCase(),
-                    id: $('#id').val().trim().toLowerCase(),
+                    name: $('#name').val().trim(),
+                    id: $('#id').val().trim(),
                     tel: $('#tel').val().trim(),
-                    email: $('#email').val().trim().toLowerCase(),
+                    email: $('#email').val().trim(),
                     address: $('#address').val().trim()
                 };
 
-                // 기존 데이터와 현재 입력된 데이터 비교
-                if (JSON.stringify(originalData) === JSON.stringify(currentData)) {
-                    alert('수정된 사항이 없습니다.');
-                    event.preventDefault();  // 폼 제출 차단
-                    return false;  // 더 이상 진행하지 않음
-                }
+                // 변경 사항 여부를 서버로 전달
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'hasChanges',
+                    value: JSON.stringify(originalData) !== JSON.stringify(currentData)
+                }).appendTo('form');
             });
         });
     </script>
 </th:block>
+
 </body>
 </html>
