@@ -26,7 +26,7 @@
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-            function requestPay(){
+            function requestPay() {
 
                 let name = $("#name").val();
                 let price = $("#price").val();
@@ -50,26 +50,26 @@
 
                             const url = "/dadog/spon";
                             const paramData = {
-                                name : name,
-                                price : price
+                                name: name,
+                                price: price
                             }
                             const param = JSON.stringify(paramData);
 
                             $.ajax({
-                                url : url,
-                                type : "POST",
-                                contentType : "application/json",
-                                data : param,
-                                dataType : "json",
-                                beforeSend : function (xhr){
-                                    xhr.setRequestHeader(header,token);
+                                url: url,
+                                type: "POST",
+                                contentType: "application/json",
+                                data: param,
+                                dataType: "json",
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader(header, token);
                                 },
                                 cache: false,
-                                success: function (result,status){
+                                success: function (result, status) {
                                     alert("후원해주셔서 감사합니다!");
                                     location.href = "/dadog/main";
                                 },
-                                error: function (xhr, status, error){
+                                error: function (xhr, status, error) {
                                     alert(xhr.responseText);
                                 }
                             });
@@ -78,23 +78,28 @@
                             alert("오류로 인해 후원이 취소되었습니다.")
                         }
                     }
-                )}
-        </script>
+                )
+            }
+    </script>
     </th:block>
     <th:block layout:fragment="css"></th:block>
     <style>
         body {
             font-family: 'Spoqa Han Sans Neo', 'sans-serif';
         }
+
         .regular {
             font-weight: 400; /* Regular */
         }
+
         .medium {
             font-weight: 500; /* Medium */
         }
+
         .bold {
             font-weight: 700; /* Bold */
         }
+
         .righteous-regular {
             font-family: "Righteous", sans-serif;
             font-weight: 400;
@@ -105,7 +110,7 @@
 <body>
 <div th:replace="fragments/myPageHeader::header"></div>
 <div class="d-flex">
-<div th:replace="fragments/myPageContent::body"></div>
+    <div th:replace="fragments/myPageContent::body"></div>
     <div layout:fragment="mainContent" class="mainContent col-10"></div>
 </div>
 <div th:replace="fragments/footer::footer"></div>

@@ -19,6 +19,7 @@ import java.util.List;
 public class LostRepositoryCustomImpl implements LostRepositoryCustom {
 
     private JPAQueryFactory queryFactory;
+    private UserRepository userRepository;
 
     public LostRepositoryCustomImpl(EntityManager em) {this.queryFactory = new JPAQueryFactory(em);}
 
@@ -60,4 +61,24 @@ public class LostRepositoryCustomImpl implements LostRepositoryCustom {
                 .fetchOne();
         return new PageImpl<>(result, pageable, total);
     }
+
+    @Override
+    public Page<Lost> getMyLostPage(Pageable pageable, Long userNo) {
+
+        List<Lost> result = queryFactory.selectFrom(QLost.lost)
+                .where(QLost.lost.user.userNo.eq(userNo))
+                .orderBy(QLost.lost.lostNo.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory.select(Wildcard.count)
+                .from(QLost.lost)
+                .where(QLost.lost.user.userNo.eq(userNo))
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, total);
+    }
+
+
 }

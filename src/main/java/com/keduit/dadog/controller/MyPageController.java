@@ -4,6 +4,8 @@ package com.keduit.dadog.controller;
 import com.keduit.dadog.constant.AdoptWait;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.*;
+import com.keduit.dadog.entity.Lost;
+import com.keduit.dadog.entity.Protect;
 import com.keduit.dadog.entity.User;
 import com.keduit.dadog.service.*;
 import com.keduit.dadog.repository.UserRepository;
@@ -27,6 +29,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/dadog")
@@ -178,24 +181,28 @@ public class MyPageController {
     }
 
     //유저의 실종 신고글 조회
-    @PostMapping("/myPage/myLost")
-    public String myLost(Model model, @RequestBody Map<String, Object> userNo) {
+    @PostMapping({"/myPage/myLost","/myPage/myLost/{page}"})
+    public String myLost(Model model, @RequestBody Map<String, Object> userNo, @PathVariable("page") Optional<Integer> page) {
         System.out.println("---------------- userDTO" + userNo);
         String userNoStr = (String) userNo.get("userNo");
         Long userNum = Long.valueOf(userNoStr);
-        List<LostDTO> lostList = lostService.getUserLost(userNum);
-        model.addAttribute("lostList", lostList);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 10);
+        model.addAttribute("maxPage", 5);
+        Page<Lost> lostPage = lostService.getMyLostPage(userNum, pageable);
+        model.addAttribute("lostPage", lostPage);
         return "myPage/myLost"; // Thymeleaf 템플릿 경로
     }
 
     //유저의 보호중 글 조회
-    @PostMapping("/myPage/myProtect")
-    public String myProtecting(Model model, @RequestBody Map<String, Object> userNo) {
+    @PostMapping({"/myPage/myProtect", "/myPage/myProtect/{page}"})
+    public String myProtecting(Model model, @RequestBody Map<String, Object> userNo, @PathVariable("page") Optional<Integer> page) {
         System.out.println("---------------- userDTO" + userNo);
         String userNoStr = (String) userNo.get("userNo");
         Long userNum = Long.valueOf(userNoStr);
-        List<ProtectDTO> protectDTOList = protectService.getUserProtect(userNum);
-        model.addAttribute("protectList", protectDTOList);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 10);
+        model.addAttribute("maxPage", 5);
+        Page<Protect> protectPage = protectService.getMyProtectPage(userNum, pageable);
+        model.addAttribute("protectPage", protectPage);
         return "myPage/myProtect"; // Thymeleaf 템플릿 경로
     }
 

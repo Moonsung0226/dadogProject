@@ -124,6 +124,11 @@ public class LostService {
         return lostDTOList;
     }
 
+    public Page<Lost> getMyLostPage(Long userNo, Pageable pageable){
+        Page<Lost> lostPage = lostRepository.getMyLostPage(pageable, userNo);
+        return lostPage;
+    }
+
 
     //유저 확인
     public boolean lostValidation(String userName, Long lostNo){

@@ -9,4 +9,6 @@ public interface ProtectRepositoryCustom {
 
     Page<Protect> getProtectListPage(SearchDTO searchDTO, Pageable pageable);
 
+    Page<Protect> getMyProtectPage(Pageable pageable, Long userNo);
+
 }

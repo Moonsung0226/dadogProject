@@ -1,5 +1,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div id="listView">
+  <h1>보호중 글 리스트</h1>
+  <input type="hidden" id="pageType" value="myLost">
   <table class="table table-hover">
     <thead>
     <tr>
@@ -12,16 +14,38 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="protect : ${protectList}" th:onclick="'getLost(' + ${protect.proNo} + ')'">
-      <th scope="row" th:text="${protect.proNo}" id="protectNo"></th>
-      <td th:text="${protect.proTitle}" class="truncate"></td>
-      <td th:text="${protect.proKind}"></td>
-      <td th:text="${protect.proPlace}" class="truncate"></td>
-      <td th:text="${protect.proDate}"></td>
-      <td th:text="${protect.protectCreateDate}"></td>
+    <tr th:each="protect : ${protectPage.getContent()}" th:onclick="'getLost(' + ${protect.getProNo()} + ')'">
+      <th scope="row" th:text="${protect.getProNo()}" id="lostNo"></th>
+      <td th:text="${protect.getProTitle()}" class="truncate"></td>
+      <td th:text="${protect.getProKind()}"></td>
+      <td th:text="${protect.getProPlace()}" class="truncate"></td>
+      <td th:text="${protect.getProDate()}"></td>
+      <td th:text="${protect.getCreateTime()}"></td>
     </tr>
     </tbody>
   </table>
+  <div th:with="start=${(protectPage.number / maxPage) * maxPage + 1},
+            end=${(protectPage.totalPages == 0 ? 1 :
+            (start + (maxPage - 1) < protectPage.totalPages ? start + (maxPage - 1):
+            protectPage.totalPages))}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${protectPage.first} ? 'disabled d-none'">
+        <a th:onclick="'javascript: page(' + ${protectPage.number -1} + ')'" aria-label="Previous" class="page-link">
+          <span aria-hidden="true">Previous</span>
+        </a>
+      </li>
+      <li class="page-item" th:each="page: ${#numbers.sequence(start,end)}"
+          th:classappend="${protectPage.number eq page -1}? 'active' : ''">
+        <a th:onclick="'javascript: page(' +${page -1} + ')'" th:inline="text" class="page-link">[[${page}]]
+        </a>
+      </li>
+      <li class="page-item" th:classappend="${protectPage.last} ? 'disabled d-none'">
+        <a th:onclick="'javascript: page(' + ${protectPage.number +1} + ')'" aria-label="Next" class="page-link">
+          <span aria-hidden="true">Next</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
-
 </html>
+
