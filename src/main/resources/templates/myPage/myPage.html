@@ -4,6 +4,12 @@
       layout:decorate="~{layouts/myPageLayout}">
 <th:block layout:fragment="script">
   <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd 형식으로 변환
+      document.getElementById('datePicker').setAttribute('max', formattedDate);
+    });
+
     function filterPosts() {
       const selectedDate = document.getElementById('datePicker').value; // 선택한 날짜
       const allHeaders = document.querySelectorAll('.post-container h3'); // 모든 h3 선택

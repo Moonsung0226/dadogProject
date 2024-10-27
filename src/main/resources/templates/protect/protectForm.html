@@ -20,6 +20,12 @@
 </th:block>
 <th:block layout:fragment="script">
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd 형식으로 변환
+      document.getElementById('protectDate').setAttribute('max', formattedDate);
+    });
+
     function previewImage(event) {
       const imagePreview = document.getElementById('imagePreview');
       const imagePreview2 = document.getElementById('imagePreview2');
