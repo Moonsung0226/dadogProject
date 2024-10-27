@@ -17,4 +17,6 @@ public interface LostRepository extends JpaRepository<Lost, Long>, LostRepositor
     Lost findByLostNo(Long lostNo);
 
     List<Lost> findTop6ByOrderByLostDateDesc();
+
+    List<Lost> findByUserOrderByCreateTimeAsc(User user);
 }

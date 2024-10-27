@@ -12,7 +12,13 @@
       font-size: 25px;
       font-weight: 200; /* Medium */
     }
+    .truncate {
+      white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+      overflow: hidden; /* 넘치는 부분 숨기기 */
+      text-overflow: ellipsis; /* 넘치는 부분을 "..."으로 표시 */
+    }
   </style>
+
 </th:block>
 
 <div layout:fragment="mainContent">
@@ -87,7 +93,7 @@
             <div class="card-body p-4">
               <div class="text-center">
                 <h5 class="medium" th:text="'견종 : ' + ${lost.getLostKind()}"></h5>
-                <p class="regular" th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
+                <p class="regular truncate" th:text="'분실장소 : ' + ${lost.getLostPlace()}"></p>
                 <p class="regular" th:text="'분실날짜 : ' + ${lost.getLostDate()}"></p>
               </div>
             </div>
@@ -114,7 +120,7 @@
             <!-- Product details-->
             <div class="card-body p-4">
               <div class="text-center">
-                <h5 class="medium" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
+                <h5 class="medium truncate" th:text="'발견장소 : ' + ${protect.getProPlace()}"></h5>
                 <p class="regular" th:text="'발견날짜 : ' + ${protect.getProDate()}"></p>
               </div>
             </div>

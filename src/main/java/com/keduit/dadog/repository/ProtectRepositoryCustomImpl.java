@@ -57,4 +57,19 @@ public class ProtectRepositoryCustomImpl implements ProtectRepositoryCustom {
                 .fetchOne();
         return new PageImpl<>(result, pageable, total);
     }
+
+    public Page<Protect> getMyProtectPage(Pageable pageable, Long userNo) {
+        List<Protect> result = queryFactory.selectFrom(QProtect.protect)
+                .where(QProtect.protect.user.userNo.eq(userNo))
+                .orderBy(QProtect.protect.proNo.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory.select(Wildcard.count)
+                .from(QProtect.protect)
+                .where(QProtect.protect.user.userNo.eq(userNo))
+                .fetchOne();
+        return new PageImpl<>(result, pageable, total);
+    }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}">
+      layout:decorate="~{layouts/myPageLayout}">
 <th:block layout:fragment="css">
     <style>
         .wish-list-container {
@@ -127,7 +127,7 @@
 </th:block>
 
 <div layout:fragment="mainContent">
-    <div class="wish-list-container">
+    <div class="wish-list-container listView">
         <h1 class="wish-list-title" style="text-align: center; font-size: 2.5rem; font-weight: 700;">찜 목록</h1>
         <div th:if="${message}" th:text="${message}" style="color: red; margin-bottom: 10px;"></div>
         <table class="table">

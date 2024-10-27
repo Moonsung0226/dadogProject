@@ -144,4 +144,9 @@ public class ProtectService {
     public Protect findByProtectNo(Long protectNo) {
         return protectRepository.findById(protectNo).orElseThrow(() -> new EntityNotFoundException("Protect not found with protectNo : " + protectNo));
     }
+
+    public Page<Protect> getMyProtectPage(Long userNum, Pageable pageable) {
+        Page<Protect> protectPage = protectRepository.getMyProtectPage(pageable, userNum);
+        return protectPage;
+    }
 }

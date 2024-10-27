@@ -3,7 +3,13 @@ package com.keduit.dadog.service;
 import com.keduit.dadog.constant.Occupy;
 import com.keduit.dadog.constant.Role;
 import com.keduit.dadog.dto.UserDTO;
+import com.keduit.dadog.entity.Board;
+import com.keduit.dadog.entity.Lost;
+import com.keduit.dadog.entity.Protect;
 import com.keduit.dadog.entity.User;
+import com.keduit.dadog.repository.BoardRepository;
+import com.keduit.dadog.repository.LostRepository;
+import com.keduit.dadog.repository.ProtectRepository;
 import com.keduit.dadog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +25,8 @@ import javax.persistence.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @Transactional
@@ -27,7 +35,15 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LostRepository lostRepository;
+    private final ProtectRepository protectRepository;
+    private final BoardRepository boardRepository;
 
+    // 새로운 사용자를 저장하는 메서드
+    public User saveUser(User user) {
+        validateUser(user);  // 사용자 중복 검사
+        return userRepository.save(user);
+    }
 
     // 입양현황
     public Long getUserNoByUserId(String userId) {
@@ -36,6 +52,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을수 없습니다."));
     }
 
+//    // 사용자의 비밀번호를 업데이트하는 메서드
+//    public void updatePassword(UserDTO userDTO) {
+//        Long userId = Long.parseLong(userDTO.getId());
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+//        user.setUserPwd(passwordEncoder.encode(userDTO.getPassword()));
+//        userRepository.save(user);
+//    }
 
     // 사용자 ID 또는 이메일로 사용자를 조회하는 메서드
     public User getUser(String userName) {
@@ -206,5 +230,35 @@ public class UserService implements UserDetailsService {
     // 페이지네이션된 사용자 목록을 반환하는 메서드
     public Page<User> getUserList(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    public Map<LocalDate, List<Object>> getUserPosts(User user){
+        List<Lost> lostList = lostRepository.findByUserOrderByCreateTimeAsc(user);
+        List<Protect> protectList = protectRepository.findByUserOrderByCreateTimeAsc(user);
+//        List<Board> boardList = boardRepository.findByUserOrderByCreateTimeAsc(user);
+
+        List<Object> allPosts = new ArrayList<>();
+        allPosts.addAll(lostList);
+        allPosts.addAll(protectList);
+//        allPosts.addAll(boardList);
+
+        Map<LocalDate, List<Object>> groupedPosts = new TreeMap<>();
+        for(Object post : allPosts){
+            LocalDate postDate;
+//            System.out.println("Post type: " + post.getClass().getName()); // 객체의 타입 출력
+
+            if(post instanceof Lost){
+                postDate = ((Lost) post).getCreateTime();
+            }else if(post instanceof Protect){
+                postDate = ((Protect) post).getCreateTime();
+//            }else if(post instanceof Board){
+//                postDate = ((Board) post).getCreateTime();
+            }else{
+                continue;
+            }
+            groupedPosts.computeIfAbsent(postDate, k -> new ArrayList<>()).add(post);
+        }
+        return groupedPosts;
+
     }
 }

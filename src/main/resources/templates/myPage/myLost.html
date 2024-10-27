@@ -1,5 +1,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div id="listView">
+    <h1>실종신고 글 리스트</h1>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -12,15 +13,37 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="lost : ${lostList}" th:onclick="'getLost(' + ${lost.lostNo} + ')'">
-            <th scope="row" th:text="${lost.lostNo}" id="lostNo"></th>
-            <td th:text="${lost.lostTitle}" class="truncate"></td>
-            <td th:text="${lost.lostKind}"></td>
-            <td th:text="${lost.lostPlace}" class="truncate"></td>
-            <td th:text="${lost.lostDate}"></td>
-            <td th:text="${lost.lostCreateDate}"></td>
+        <tr th:each="lost : ${lostPage.getContent()}" th:onclick="'getLost(' + ${lost.getLostNo()} + ')'">
+            <th scope="row" th:text="${lost.getLostNo()}" id="lostNo"></th>
+            <td th:text="${lost.getLostTitle()}" class="truncate"></td>
+            <td th:text="${lost.getLostKind()}"></td>
+            <td th:text="${lost.getLostPlace()}" class="truncate"></td>
+            <td th:text="${lost.getLostDate()}"></td>
+            <td th:text="${lost.getCreateTime()}"></td>
         </tr>
         </tbody>
     </table>
+    <div th:with="start=${(lostPage.number / maxPage) * maxPage + 1},
+            end=${(lostPage.totalPages == 0 ? 1 :
+            (start + (maxPage - 1) < lostPage.totalPages ? start + (maxPage - 1):
+            lostPage.totalPages))}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${lostPage.first} ? 'disabled d-none'">
+                <a th:onclick="'javascript: page(' + ${lostPage.number -1} + ')'" aria-label="Previous" class="page-link">
+                    <span aria-hidden="true">Previous</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start,end)}"
+                th:classappend="${lostPage.number eq page -1}? 'active' : ''">
+                <a th:onclick="'javascript: page(' +${page -1} + ')'" th:inline="text" class="page-link">[[${page}]]
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${lostPage.last} ? 'disabled d-none'">
+                <a th:onclick="'javascript: page(' + ${lostPage.number +1} + ')'" aria-label="Next" class="page-link">
+                    <span aria-hidden="true">Next</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 </html>
