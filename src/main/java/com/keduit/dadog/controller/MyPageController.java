@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +52,11 @@ public class MyPageController {
     public String myPage(HttpServletRequest request, Model model, Principal principal) {
         HttpSession session = request.getSession();
         //user 를 가져옴
-        Long userNo = userService.getUser(principal.getName()).getUserNo();
+        User user = userService.getUser(principal.getName());
+        Long userNo = user.getUserNo();
+        Map<LocalDate,List<Object>> posts = userService.getUserPosts(user);
         model.addAttribute("userNo", userNo);
+        model.addAttribute("posts", posts);
         return "myPage/myPage";
     }
 

@@ -4,6 +4,21 @@
       layout:decorate="~{layouts/myPageLayout}">
 <th:block layout:fragment="script">
   <script th:inline="javascript">
+    function filterPosts() {
+      const selectedDate = document.getElementById('datePicker').value; // 선택한 날짜
+      const allHeaders = document.querySelectorAll('.post-container h3'); // 모든 h3 선택
+
+      allHeaders.forEach(header => {
+        const areaDate = header.getAttribute('data-area'); // h3의 data-area 값 가져오기
+        const postContainer = header.parentElement; // h3의 부모 div (post-container)
+
+        if (areaDate !== selectedDate) {
+          postContainer.style.display = 'none'; // 선택한 날짜와 다르면 숨김
+        } else {
+          postContainer.style.display = ''; // 선택한 날짜와 같으면 표시
+        }
+      });
+    }
 
     function getMyList(listName){
       const header = $("meta[name='_csrf_header']").attr('content');
@@ -115,7 +130,37 @@
     <button class="btn btn-outline-dark col-md-2 m-2 themed-grid-col" onclick="getMyList('myBoard')">자유게시판</button>
   </div>
   <div id="listView">
-
+    <h1>내가 쓴 글</h1>
+    <label for="datePicker">날짜 선택:</label>
+    <input type="date" id="datePicker" onchange="filterPosts()">
+    <div th:each="postsKey : ${posts}" class="post-container">
+      <h3 th:text="${postsKey.key} + 일" th:data-area="${postsKey.key}"></h3>
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">글번호</th>
+          <th scope="col">게시판명</th>
+          <th scope="col">제목</th>
+          <th scope="col">작성일</th>
+        </tr>
+        </thead>
+      <tbody th:each="post : ${postsKey.value}">
+      <tr th:if="${post instanceof T(com.keduit.dadog.entity.Lost)}" th:data-date="${post.createTime}" th:onclick="'getLost(' + ${post.lostNo} + ')'">
+          <th scope="row" th:text="${post.lostNo}"></th>
+          <td>실종신고</td>
+          <td th:text="${post.lostTitle}"></td>
+          <td th:text="${post.createTime}"></td>
+        </tr>
+      <tr th:if="${post instanceof T(com.keduit.dadog.entity.Protect)}" th:data-date="${post.createTime}" th:onclick="'getProtect(' + ${post.proNo} + ')'">
+          <th scope="row" th:text="${post.proNo}"></th>
+          <td>보호중</td>
+          <td th:text="${post.proTitle}"></td>
+          <td th:text="${post.createTime}"></td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+    </div>
   </div>
 </div>
 </html>
