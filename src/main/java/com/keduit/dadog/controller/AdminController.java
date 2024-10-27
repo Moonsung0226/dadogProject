@@ -33,6 +33,7 @@ public class AdminController {
     private final ProtectService protectService;
     private final ApplicationService applicationService;
     private final ShelterService shelterService;
+    private final SponsorService sponsorService;
 
 
     @GetMapping("/dadog/admin/adopt/api")
@@ -60,6 +61,8 @@ public class AdminController {
                 .findTop6ByOrderByCreateTimeDesc(); // Protect 6개
         List<User> recentUserList = userService
                 .findTop6ByOrderByCreateTimeDesc(); // User 6개
+        List<Sponsor> recentSponsorList = sponsorService
+                .findTop6ByOrderBySponNoDesc();
 
         // PENDING 상태의 입양 신청 갯수 추가
         long pendingCount = applicationService.countPendingApplications();
@@ -70,6 +73,7 @@ public class AdminController {
         model.addAttribute("protectList", recentProtectList);
         model.addAttribute("userList", recentUserList);
         model.addAttribute("pendingCount", pendingCount); // PENDING 상태 갯수 전달
+        model.addAttribute("sponsorList", recentSponsorList);
 
         return "admin/adminMain";
     }
@@ -281,6 +285,16 @@ public class AdminController {
 
         // 성공 메시지 반환
         return ResponseEntity.ok("사용자 역할이 성공적으로 업데이트되었습니다.");
+    }
+
+    // 후원 현황
+    @GetMapping({"/dadog/admin/sponsor/list", "/dadog/admin/sponsor/list/{page}"})
+    public String sponsorList(@PathVariable("page") Optional<Integer> page, Model model) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
+        Page<Sponsor> sponsorList = sponsorService.getSponsorList(pageable);
+        model.addAttribute("maxPage", 10);
+        model.addAttribute("sponsorList", sponsorList);
+        return "admin/adminSponsor";
     }
 
     // api 다운 페이지

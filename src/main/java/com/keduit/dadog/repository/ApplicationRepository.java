@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;  // 이 줄을 추가하세요
 import java.util.Optional;
+import java.util.stream.DoubleStream;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     long countByAdoptWaitStatus(AdoptWait adoptWaitStatus);
@@ -22,4 +23,11 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Page<Application> findByAdoptWaitStatus(AdoptWait adoptWaitStatus, Pageable pageable);
 
     List<Application> findByUser_UserNo(Long userNo); // User 엔티티의 userNo 속성을 참조
+
+    @Query("SELECT a FROM Application a WHERE a.user.userNo = :userNo")
+    Page<Application> getApplicationUserId(Long userNo, Pageable pageable);
+
+    // User 엔티티의 userNo 속성을 참조하여 입양 신청 목록을 가져오는 메서드
+    Page<Application> findByUser_UserNo(Long userNo, Pageable pageable);
 }
+

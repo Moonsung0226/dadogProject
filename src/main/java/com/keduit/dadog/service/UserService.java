@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.util.List;
+import java.util.Optional;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -43,10 +45,12 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-//    // 사용자 번호로 사용자를 조회하는 메서드
-//    public User getUserByUserNo(Long userNo) {
-//        return userRepository.findById(userNo).orElse(null);
-//    }
+    // 입양현황
+    public Long getUserNoByUserId(String userId) {
+        return Optional.ofNullable(userRepository.findByUserId(userId))
+                .map(User::getUserNo)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을수 없습니다."));
+    }
 
 //    // 사용자의 비밀번호를 업데이트하는 메서드
 //    public void updatePassword(UserDTO userDTO) {

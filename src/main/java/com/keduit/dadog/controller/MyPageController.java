@@ -150,8 +150,17 @@ public class MyPageController {
 
     // 입양현황(1)
     @GetMapping("/myPage/myAdopt")
-    public String myAdopt(HttpServletRequest request, Model model, Principal principal, @RequestParam(value = "status", required = false) String status
-    ,@RequestParam(value = "page", defaultValue = "0") int page) {
+    public String myAdopt(HttpServletRequest request, Model model,
+                          @RequestParam(value = "userNo", required = false) Long userNo,
+                          Principal principal,
+                          @RequestParam(value = "status", required = false) String status,
+                          @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        // userNo가 null인 경우, principal에서 userId를 가져와 userNo로 변환
+        if (userNo == null) {
+            String userId = principal.getName(); // 로그인한 사용자의 ID
+            userNo = userService.getUserNoByUserId(userId); // userId로 userNo 조회
+        }
 
         Pageable pageable = PageRequest.of(page, 18);
         Page<ApplicationDTO> applicationList;
@@ -160,7 +169,7 @@ public class MyPageController {
             AdoptWait adoptWaitStatus = AdoptWait.valueOf(status.toUpperCase()); // status를 AdoptWait enum으로 변환
             applicationList = applicationService.getApplicationListByStatus(adoptWaitStatus, pageable);
         } else {
-            applicationList = applicationService.getApplicationList(pageable);
+            applicationList = applicationService.getApplicationUserId(userNo, pageable);
         }
 
         model.addAttribute("maxPage", 10);
@@ -168,6 +177,7 @@ public class MyPageController {
 
         return "myPage/myAdopt"; // Thymeleaf 템플릿 경로
     }
+
 
 
     // 입양현황(2) 상세 조회

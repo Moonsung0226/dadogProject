@@ -34,6 +34,14 @@ public class ApplicationService {
         return applicationRepository.countByAdoptWaitStatus(AdoptWait.PENDING);
     }
 
+    // 입양현황
+    public Page<ApplicationDTO> getApplicationUserId(Long userNo, Pageable pageable) {
+        return applicationRepository.findByUser_UserNo(userNo, pageable)
+                .map(this::convertToDTO);
+    }
+
+
+
     // 페이지네이션
     public Page<ApplicationDTO> getApplicationList(Pageable pageable) {
         return applicationRepository.getApplicationListPage(pageable)
