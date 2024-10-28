@@ -235,24 +235,19 @@ public class UserService implements UserDetailsService {
     public Map<LocalDate, List<Object>> getUserPosts(User user){
         List<Lost> lostList = lostRepository.findByUserOrderByCreateTimeAsc(user);
         List<Protect> protectList = protectRepository.findByUserOrderByCreateTimeAsc(user);
-//        List<Board> boardList = boardRepository.findByUserOrderByCreateTimeAsc(user);
 
         List<Object> allPosts = new ArrayList<>();
         allPosts.addAll(lostList);
         allPosts.addAll(protectList);
-//        allPosts.addAll(boardList);
 
         Map<LocalDate, List<Object>> groupedPosts = new TreeMap<>();
         for(Object post : allPosts){
             LocalDate postDate;
-//            System.out.println("Post type: " + post.getClass().getName()); // 객체의 타입 출력
 
             if(post instanceof Lost){
                 postDate = ((Lost) post).getCreateTime();
             }else if(post instanceof Protect){
                 postDate = ((Protect) post).getCreateTime();
-//            }else if(post instanceof Board){
-//                postDate = ((Board) post).getCreateTime();
             }else{
                 continue;
             }
