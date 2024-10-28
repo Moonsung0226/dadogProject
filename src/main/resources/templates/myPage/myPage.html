@@ -139,7 +139,7 @@
     <h1>내가 쓴 글</h1>
     <label for="datePicker">날짜 선택:</label>
     <input type="date" id="datePicker" onchange="filterPosts()">
-    <div th:each="postsKey : ${posts}" class="post-container">
+    <div th:each="postsKey : ${posts}" class="post-container mt-5">
       <h3 th:text="${postsKey.key} + 일" th:data-area="${postsKey.key}"></h3>
       <table class="table table-hover">
         <thead>
