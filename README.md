@@ -130,7 +130,7 @@
 ||/dadog/admin/adopt/updateApi|GET|기존 Adoption 데이터를 최신화.|Admin|
 ||/dadog/admin/main|GET|대시보드에 필요한 요약 정보 제공.|Admin|
 ||/dadog/admin/adopt/list/{page}|GET|페이지네이션을 통한 입양 목록 보기.|Admin|
-|/dadog/adopt/list/{page}|GET|입양 목록 조회, 페이지네이션 지원	AdoptSearchDTO를 기반으로 입양 목록 조회.|User|
+||/dadog/adopt/list/{page}|GET|입양 목록 조회, 페이지네이션 지원	AdoptSearchDTO를 기반으로 입양 목록 조회.|User|
 ||/dadog/adopt/list|GET|입양 목록 조회, 첫 페이지 기본값	AdoptSearchDTO를 기반으로 입양 목록 조회.|User|
 ||/dadog/adopt/{adoptNo}|GET|특정 입양 정보 상세 조회	adoptNo 기반 입양 상세 정보 제공.|User|
 ||/dadog/adopt/addWish|POST|찜 목록 추가	WishDTO와 사용자 정보 기반 찜 항목 추가.|User|
