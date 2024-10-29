@@ -2,7 +2,7 @@
 > 1. [프로젝트 소개](#프로젝트-소개)   
 > 2. [유스케이스](#유스케이스)   
 > 3. [ERD 엔티티 관계도](#ERD-엔티티-관계도)
-> 4. [간트 차트](#간트차트)   
+> 4. [간트차트](#간트차트)   
 > 5. [기술 스택](#기술-스택)   
 > 6. [주요 기능](#주요-기능)   
 > 7. [주요 화면](#주요-화면)
@@ -49,11 +49,11 @@
 # 유스케이스
 
 # ERD 엔티티 관계도
-
+<img src="src/main/resources/static/gitImage/ERD.png" width="300px" height="400px"><br/>
 # 간트차트
-
+<img src="src/main/resources/static/gitImage/chart.png" width="400px" height="400px"><br/>
 # 기술 스택
-
+<img src="src/main/resources/static/gitImage/skills.png" width="500px" height="200px"><br/>
 # 주요 기능
 ### 요약
 |공통|사용자|관리자|
@@ -109,5 +109,14 @@
 * 모든 회원의 정보를 조회할 수 있으며, 권한 변경이 가능하다.
 ### 전체 게시판 관리
 * 모든 게시글을 조회할 수 있으며, 삭제가 가능하다.
+
+# 주요 화면
+|메인|보호소 지도|
+|------|---|
+|<img src="src/main/resources/static/gitImage/main.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/map.png" width="450px" height="250px">|
+|입양하기|실종신고|
+|<img src="src/main/resources/static/gitImage/adopt.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/lost.png" width="450px" height="250px">
+|보호중|자유게시판|
+|<img src="src/main/resources/static/gitImage/protect.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/board.png" width="450px" height="250px">
 
 
