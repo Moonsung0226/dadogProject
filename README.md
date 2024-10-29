@@ -47,7 +47,7 @@
 > 자유게시판 구현
 
 # 유스케이스
-
+<img src="src/main/resources/static/gitImage/usecase.png" width="400px" height="400px"><br/>
 # ERD 엔티티 관계도
 <img src="src/main/resources/static/gitImage/ERD.png" width="300px" height="400px"><br/>
 # 간트차트
@@ -111,12 +111,15 @@
 * 모든 게시글을 조회할 수 있으며, 삭제가 가능하다.
 
 # 주요 화면
-|메인|보호소 지도|
+|메인|회원가입|
 |------|---|
-|<img src="src/main/resources/static/gitImage/main.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/map.png" width="450px" height="250px">|
-|입양하기|실종신고|
-|<img src="src/main/resources/static/gitImage/adopt.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/lost.png" width="450px" height="250px">
-|보호중|자유게시판|
-|<img src="src/main/resources/static/gitImage/protect.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/board.png" width="450px" height="250px">
-
+|<img src="src/main/resources/static/gitImage/main.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/register.png" width="450px" height="250px">|
+|보호소 지도|입양하기|
+|<img src="src/main/resources/static/gitImage/map.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/adopt.png" width="450px" height="250px">|
+|실종신고|보호중|
+|<img src="src/main/resources/static/gitImage/lost.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/protect.png" width="450px" height="250px">|
+|자유게시판|마이페이지|
+|<img src="src/main/resources/static/gitImage/board.png" width="450px" height="250px">|<img src="src/main/resources/static/gitImage/mypage.png" width="450px" height="250px">|
+|관리자 페이지|
+<img src="src/main/resources/static/gitImage/admin.png" width="450px" height="250px">|
 
