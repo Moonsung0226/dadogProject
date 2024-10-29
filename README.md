@@ -126,42 +126,42 @@
 # API 명세
 |Domain|URL|Method|Description|Role|
 |------|---|---|---|---|
-|Adopt|/dadog/admin/adopt/api|GET|Adoption 데이터를 외부 API에서 가져와 저장 |Admin|
-||/dadog/admin/adopt/updateApi|GET|기존 Adoption 데이터를 최신화|Admin|
-||/dadog/admin/main|GET|대시보드에 필요한 요약 정보 제공|Admin|
-||/dadog/admin/adopt/list/{page}|GET|페이지네이션을 통한 입양 목록 보기|Admin|
-|/dadog/adopt/list/{page}|GET|입양 목록 조회, 페이지네이션 지원	AdoptSearchDTO를 기반으로 입양 목록 조회|User|
-||/dadog/adopt/list|GET|입양 목록 조회, 첫 페이지 기본값	AdoptSearchDTO를 기반으로 입양 목록 조회|User|
-||/dadog/adopt/{adoptNo}|GET|특정 입양 정보 상세 조회	adoptNo 기반 입양 상세 정보 제공|User|
-||/dadog/adopt/addWish|POST|찜 목록 추가	WishDTO와 사용자 정보 기반 찜 항목 추가|User|
-|Board List|/dadog/boards|GET|선택적 검색 및 페이징을 통한 게시물 목록을 조회합니다.|Public|
-||/dadog/boards/new|GET|새 게시물 작성을 위한 페이지를 반환합니다.|User|
-||/dadog/boards/new|POST|새 게시물을 추가합니다.|User|
-||/dadog/boards/get/{boardNo}|GET|특정 게시물의 상세 정보를 조회합니다.|Public|
-||/dadog/boards/update/{boardNo}|GET|게시물 수정을 위한 페이지를 반환합니다.|User|
-||/dadog/boards/update/{boardNo}|POST|특정 게시물을 업데이트합니다.|User|
-||/dadog/boards/delete/{boardNo}|POST|특정 게시물을 삭제합니다.|User| 
-||/kakao/callback|GET|카카오로부터 인증 코드를 받아 사용자 정보를 요청하고 세션에 저장합니다.|Public|
-|Lost Items|/dadog/lost/list|GET|검색 기준에 따라 분실물의 페이지별 목록을 표시합니다.|Users|
-||/dadog/lost/add|GET|새로운 분실물을 추가하기 위한 양식을 표시합니다.|Users|
-||/dadog/lost/add|POST|새로운 분실물 등록 요청을 처리하며, 입력 검증 및 이미지 업로드를 수행합니다.|Users|
-||/dadog/lost/get/{lostNo}|GET|특정 ID에 따라 분실물의 세부 정보를 조회하고 표시합니다.|Users|
-||/dadog/lost/update/{lostNo}|GET|기존 분실물 수정을 위한 양식을 표시하며, 사용자 권한을 검증합니다.|Users|
-||/dadog/lost/{lostNo}|POST|기존 분실물 수정을 위한 요청을 처리하며, 선택적으로 이미지 업로드를 처리합니다.|Users|
-||/dadog/lost/{lostNo}|DELETE|특정 ID에 따라 분실물을 삭제하며, 사용자 권한을 검증합니다.|Users|
-|Main Page|/dadog/main|GET|메인 페이지를 로드하며, 최근 입양, 분실물, 보호소 정보를 가져와 모델에 추가합니다.|User|
-||/dadog/sign|GET|사용자 로그인 페이지를 표시합니다.|User|
-||/dadog/spon|POST|후원 요청을 처리하고, 성공적으로 추가되면 후원 정보를 반환합니다.|User|
-||/dadog/forbidden|GET|접근 권한이 없는 사용자에게 보여줄 페이지를 반환합니다.|User|
-|User Registration|/dadog/members/new|GET|회원가입 폼 페이지를 표시합니다.|User|
-||/dadog/members/new|POST|회원가입 처리를 수행합니다.|User|
-||/dadog/members/login|GET|로그인 페이지를 표시합니다.|User|
-||/dadog/members/check-id|GET|아이디 중복 체크를 수행합니다.|User|
-||/dadog/members/check-email|GET|이메일 중복 체크를 수행합니다.|User|
-||/dadog/members/logout|POST|로그아웃을 처리합니다.|User|
-||/dadog/members/login/error|GET|로그인 오류를 처리합니다.|User|
-||/dadog/members/UseAgree|GET|이용약관 동의 페이지를 표시합니다.|User|
-||/dadog/members/Agreement|GET|개인정보 처리방침 페이지를 표시합니다.|User|
+|Adopt|/dadog/admin/adopt/api|GET|Adoption 데이터를 외부 API에서 가져와 저장.|Admin|
+||/dadog/admin/adopt/updateApi|GET|기존 Adoption 데이터를 최신화.|Admin|
+||/dadog/admin/main|GET|대시보드에 필요한 요약 정보 제공.|Admin|
+||/dadog/admin/adopt/list/{page}|GET|페이지네이션을 통한 입양 목록 보기.|Admin|
+|/dadog/adopt/list/{page}|GET|입양 목록 조회, 페이지네이션 지원	AdoptSearchDTO를 기반으로 입양 목록 조회.|User|
+||/dadog/adopt/list|GET|입양 목록 조회, 첫 페이지 기본값	AdoptSearchDTO를 기반으로 입양 목록 조회.|User|
+||/dadog/adopt/{adoptNo}|GET|특정 입양 정보 상세 조회	adoptNo 기반 입양 상세 정보 제공.|User|
+||/dadog/adopt/addWish|POST|찜 목록 추가	WishDTO와 사용자 정보 기반 찜 항목 추가.|User|
+|Board List|/dadog/boards|GET|선택적 검색 및 페이징을 통한 게시물 목록을 조회.|Public|
+||/dadog/boards/new|GET|새 게시물 작성을 위한 페이지를 반환.|User|
+||/dadog/boards/new|POST|새 게시물을 추가.|User|
+||/dadog/boards/get/{boardNo}|GET|특정 게시물의 상세 정보를 조회.|Public|
+||/dadog/boards/update/{boardNo}|GET|게시물 수정을 위한 페이지를 반환.|User|
+||/dadog/boards/update/{boardNo}|POST|특정 게시물을 업데이트.|User|
+||/dadog/boards/delete/{boardNo}|POST|특정 게시물을 삭제.|User| 
+||/kakao/callback|GET|카카오로부터 인증 코드를 받아 사용자 정보를 요청하고 세션에 저장.|Public|
+|Lost Items|/dadog/lost/list|GET|검색 기준에 따라 분실물의 페이지별 목록을 표시.|Users|
+||/dadog/lost/add|GET|새로운 분실물을 추가하기 위한 양식을 표시.|Users|
+||/dadog/lost/add|POST|새로운 분실물 등록 요청을 처리하며, 입력 검증 및 이미지 업로드를 수행.|Users|
+||/dadog/lost/get/{lostNo}|GET|특정 ID에 따라 분실물의 세부 정보를 조회하고 표시.|Users|
+||/dadog/lost/update/{lostNo}|GET|기존 분실물 수정을 위한 양식을 표시하며, 사용자 권한을 검증.|Users|
+||/dadog/lost/{lostNo}|POST|기존 분실물 수정을 위한 요청을 처리하며, 선택적으로 이미지 업로드를 처리.|Users|
+||/dadog/lost/{lostNo}|DELETE|특정 ID에 따라 분실물을 삭제하며, 사용자 권한을 검증.|Users|
+|Main Page|/dadog/main|GET|메인 페이지를 로드하며, 최근 입양, 분실물, 보호소 정보를 가져와 모델에 추가.|User|
+||/dadog/sign|GET|사용자 로그인 페이지를 표시.|User|
+||/dadog/spon|POST|후원 요청을 처리하고, 성공적으로 추가되면 후원 정보를 반환.|User|
+||/dadog/forbidden|GET|접근 권한이 없는 사용자에게 보여줄 페이지를 반환.|User|
+|User Registration|/dadog/members/new|GET|회원가입 폼 페이지를 표시.|User|
+||/dadog/members/new|POST|회원가입 처리를 수행.|User|
+||/dadog/members/login|GET|로그인 페이지를 표시.|User|
+||/dadog/members/check-id|GET|아이디 중복 체크를 수행.|User|
+||/dadog/members/check-email|GET|이메일 중복 체크를 수행.|User|
+||/dadog/members/logout|POST|로그아웃을 처리.|User|
+||/dadog/members/login/error|GET|로그인 오류를 처리.|User|
+||/dadog/members/UseAgree|GET|이용약관 동의 페이지를 표시.|User|
+||/dadog/members/Agreement|GET|개인정보 처리방침 페이지를 표시.|User|
 |User Management|/dadog/myPage|GET|사용자의 마이 페이지를 표시하며, 사용자 정보와 게시물을 보여줌.|User|
 ||/dadog/myPage/myWriting|GET|사용자가 작성한 게시물 목록을 표시.|User|
 ||/dadog/myPage/myMemberForm|GET|수정할 사용자의 정보를 가져와서 표시.|User|
@@ -176,25 +176,25 @@
 ||/dadog/myPage/myPwd|GET|사용자를 위한 비밀번호 변경 양식을 표시.|User|
 ||/dadog/myPage/myPwd|POST|비밀번호를 검증하여 사용자의 비밀번호를 업데이트.|User|
 ||/dadog/myPage/delete|GET|사용자의 계정을 삭제하고 로그아웃.|User|
-|Animal Protection List|/dadog/protect/list|GET|검색 기능을 포함한 보호 동물 목록을 표시합니다.|User|
-||/dadog/protect/list/{page}|GET|특정 페이지의 보호 동물 목록을 표시합니다.|User|
-||/dadog/protect/add|GET|보호 동물을 등록하기 위한 폼을 표시합니다.|User|
-||/dadog/protect/add|POST|보호 동물을 등록하고 이미지 파일을 업로드합니다.|User|
-||/dadog/protect/get/{proNo}|GET|특정 보호 동물의 상세 정보를 표시합니다.|User|
-||/dadog/protect/update/{proNo}|GET|특정 보호 동물을 수정하기 위한 폼을 표시합니다.|User|
-||/dadog/protect/{proNo}|POST|보호 동물의 정보를 수정하고 이미지 파일을 업로드합니다.	|User|
-||/dadog/protect/{proNo}|DELETE|특정 보호 동물을 삭제합니다.|User|
-|Get Replies|/dadog/boards/reply/{boardNo}|GET|특정 게시판에 대한 댓글 목록을 조회하고 해당 게시판으로 리디렉션합니다.|User|
-||/dadog/boards/reply/{boardNo}/add|POST|특정 게시판에 댓글을 추가합니다. 로그인 필요.|User|
-||/dadog/boards/reply/{boardNo}/update/{replyNo}|POST|특정 댓글을 수정합니다. 로그인 필요.|User|
-||/dadog/boards/reply/{boardNo}/delete/{replyNo}|POST|특정 댓글을 삭제합니다. 로그인 필요.	|User|
-|Save Shelter Data|/dadog/shelter/api|GET|외부 API에서 보호소 데이터를 가져와 저장합니다.|Admin|
-||/dadog/shelter|GET|보호소 목록을 조회하고 페이지네이션 및 필터링 기능을 제공합니다.|User|
-|Kakao Login|/api/user/kakao/login|POST|카카오 로그인을 처리하고 사용자의 정보를 세션에 저장합니다.|User|
-||/api/user/login|POST|사용자 자격 증명을 검증하고 성공 시 메인 페이지로 리다이렉트합니다. 유효하지 않은 경우 로그인 페이지로 에러 메시지와 함께 리다이렉트합니다.|User|
-|View Wish List|/dadog/wishList|GET|사용자의 찜 목록을 표시합니다. 사용자가 로그인하지 않은 경우 로그인 페이지로 리다이렉트됩니다.|User|
-||/dadog/wish/{wishNo}|DELETE|사용자의 찜 목록에서 항목을 삭제합니다. 사용자가 권한이 없으면 403 Forbidden을 반환합니다.|User|
-||/dadog/adopt/{adoptNo}|POST|특정 항목에 대한 입양 신청을 처리합니다. 사용자가 로그인하지 않은 경우 401 Unauthorized를 반환합니다.|User|
+|Animal Protection List|/dadog/protect/list|GET|검색 기능을 포함한 보호 동물 목록을 표시.|User|
+||/dadog/protect/list/{page}|GET|특정 페이지의 보호 동물 목록을 표시.|User|
+||/dadog/protect/add|GET|보호 동물을 등록하기 위한 폼을 표시.|User|
+||/dadog/protect/add|POST|보호 동물을 등록하고 이미지 파일을 업로드.|User|
+||/dadog/protect/get/{proNo}|GET|특정 보호 동물의 상세 정보를 표시.|User|
+||/dadog/protect/update/{proNo}|GET|특정 보호 동물을 수정하기 위한 폼을 표시.|User|
+||/dadog/protect/{proNo}|POST|보호 동물의 정보를 수정하고 이미지 파일을 업로드.	|User|
+||/dadog/protect/{proNo}|DELETE|특정 보호 동물을 삭제.|User|
+|Get Replies|/dadog/boards/reply/{boardNo}|GET|특정 게시판에 대한 댓글 목록을 조회하고 해당 게시판으로 리디렉션.|User|
+||/dadog/boards/reply/{boardNo}/add|POST|특정 게시판에 댓글을 추가. 로그인 필요.|User|
+||/dadog/boards/reply/{boardNo}/update/{replyNo}|POST|특정 댓글을 수정. 로그인 필요.|User|
+||/dadog/boards/reply/{boardNo}/delete/{replyNo}|POST|특정 댓글을 삭제. 로그인 필요.	|User|
+|Save Shelter Data|/dadog/shelter/api|GET|외부 API에서 보호소 데이터를 가져와 저장.|Admin|
+||/dadog/shelter|GET|보호소 목록을 조회하고 페이지네이션 및 필터링 기능을 제공.|User|
+|Kakao Login|/api/user/kakao/login|POST|카카오 로그인을 처리하고 사용자의 정보를 세션에 저장.|User|
+||/api/user/login|POST|사용자 자격 증명을 검증하고 성공 시 메인 페이지로 리다이렉트. 유효하지 않은 경우 로그인 페이지로 에러 메시지와 함께 리다이렉트.|User|
+|View Wish List|/dadog/wishList|GET|사용자의 찜 목록을 표시. 사용자가 로그인하지 않은 경우 로그인 페이지로 리다이렉트.|User|
+||/dadog/wish/{wishNo}|DELETE|사용자의 찜 목록에서 항목을 삭제. 사용자가 권한이 없으면 403 Forbidden을 반환.|User|
+||/dadog/adopt/{adoptNo}|POST|특정 항목에 대한 입양 신청을 처리. 사용자가 로그인하지 않은 경우 401 Unauthorized를 반환.|User|
 
 # 향후 개선 사항
 > * 사용자 맞춤형 추천 시스템
